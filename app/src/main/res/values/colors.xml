@@ -7,4 +7,16 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+
+    <!-- UI -->
+    <color name="uiNormal">#00A287</color>
+    <color name="uiPressed">#007D68</color>
+    <color name="uiIconPrimary">#EBEBEB</color>
+    <color name="uiRouteDetailsBg">#EBEBEB</color>
+
+
+    <!-- Transparent -->
+    <color name="transparent">#00000000</color>
+
 </resources>
