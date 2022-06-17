@@ -16,6 +16,8 @@ import android.os.Bundle;
 import android.os.Looper;
 import android.widget.Toast;
 
+import com.example.navigation.My.Data;
+import com.example.navigation.My.My_Event;
 import com.example.navigation.My.My_Layout;
 import com.example.navigation.My.My_Map;
 import com.google.android.gms.common.ConnectionResult;
@@ -48,15 +50,16 @@ public class MainActivity extends AppCompatActivity implements
     private GoogleMap mMap;
 
     private CameraPosition cameraPosition;
-    private LatLng now_position = new LatLng(0,0);
+    //private LatLng now_position = new LatLng(0,0);
 
+    private My_Layout my_layout;
     private My_Map my_map;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //setContentView(R.layout.activity_main);
-        My_Layout my_layout = new My_Layout(this);
+        my_layout = new My_Layout(this);
         setContentView(my_layout);
 
 
@@ -72,6 +75,7 @@ public class MainActivity extends AppCompatActivity implements
                 .addApi(LocationServices.API)
                 .build();
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        //設定位置更新所執行的事情
         mLocationCallback = new LocationCallback() {
             @Override
             public void onLocationResult(LocationResult locationResult) {
@@ -79,8 +83,9 @@ public class MainActivity extends AppCompatActivity implements
                     return;
                 Toast.makeText(MainActivity.this, "更新位置", Toast.LENGTH_SHORT).show();
                 Location location = locationResult.getLastLocation();
-                //now_position = new LatLng(location.getLatitude(), location.getLongitude());
-                updateMapLocation(location);
+                LatLng point = new LatLng(location.getLatitude(), location.getLongitude());
+                Data.now_position = point;
+                my_map.moveCamera(Data.now_position);
             }
         };
         mLocationMgr = (LocationManager) getSystemService(LOCATION_SERVICE);
@@ -90,30 +95,10 @@ public class MainActivity extends AppCompatActivity implements
         mMap = googleMap;
         my_map = new My_Map(this, mMap);
         my_map.init();
-//        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-//            return;
-//        }
-//        mMap.setMyLocationEnabled(true);
-//        UiSettings UI  = mMap.getUiSettings();
-//        UI.setMyLocationButtonEnabled(false);
-
+        My_Event my_event = new My_Event(my_layout, my_map);
+        my_event.setEvent();
     }
 
-    private void updateMapLocation(Location location) {
-        // location物件中包含定位的經緯度資料
-        // 移動地圖到新位置
-        //mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
-        //        new LatLng(location.getLatitude(), location.getLongitude()), 15));
-        System.out.println("FYBR");
-        now_position = new LatLng(location.getLatitude(), location.getLongitude());
-        cameraPosition = new CameraPosition.Builder()
-                .target(now_position)
-                .zoom(15)
-                .bearing(mMap.getCameraPosition().bearing)
-                .tilt(mMap.getCameraPosition().tilt)
-                .build();
-        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-    }
     private void enableLocation(boolean on) {
         if (ContextCompat.checkSelfPermission(MainActivity.this,
                 android.Manifest.permission.ACCESS_FINE_LOCATION) !=
@@ -167,7 +152,8 @@ public class MainActivity extends AppCompatActivity implements
                         Toast.makeText(MainActivity.this, "成功取得上一次定位", Toast.LENGTH_LONG).show();
                         //取得上次定位點，並初始化zoom
                         LatLng last = new LatLng(location.getLatitude(), location.getLongitude());
-                        my_map.initCamera(last);
+                        Data.now_position = last;
+                        my_map.initCamera(Data.now_position);
                     } else {
                         Toast.makeText(MainActivity.this, "沒有上一次定位的資料", Toast.LENGTH_LONG).show();
                     }
@@ -204,7 +190,6 @@ public class MainActivity extends AppCompatActivity implements
                     .show();
         }
     }
-
     @Override
     protected void onStart() {
         super.onStart();

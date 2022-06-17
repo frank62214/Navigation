@@ -28,16 +28,37 @@
             android:layout_marginEnd="10dp"
             android:layout_marginBottom="10dp"
             android:orientation="vertical">
-
+            <ImageButton
+                android:id="@+id/btnDirections"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:background="@drawable/btn_round"
+                app:srcCompat="@drawable/ic_directions"
+                tools:ignore="ContentDescription,InvalidId" />
+            <ImageButton
+                android:id="@+id/btnNavigation"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:background="@drawable/btn_round"
+                app:srcCompat="@drawable/ic_navigation"
+                tools:ignore="ContentDescription,InvalidId" />
             <ImageButton
                 android:id="@+id/btnFocusUser"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
+                android:layout_marginTop="5dp"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
                 android:background="@drawable/btn_round"
                 app:srcCompat="@drawable/ic_focus"
                 tools:ignore="ContentDescription,InvalidId" />
+
         </LinearLayout>
         <ImageView
             android:id ="@+id/viewnone"

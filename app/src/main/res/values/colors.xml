@@ -19,4 +19,18 @@
     <!-- Transparent -->
     <color name="transparent">#00000000</color>
 
+    <!--Maps-->
+    <color name="route_color">#000080</color>
+
+    <!-- Instruction Icons -->
+    <color name="dirMain">#3C3C3C</color>
+    <color name="dirBorder">#3C3C3C</color>
+    <color name="dirLight">#48B9A6</color>
+
+    <!-- User Marker icons -->
+    <color name="userArrowLight">#EBEBEB</color>
+    <color name="userArrowDark">#FF6700</color>
+    <color name="userArrowBorder">#ffbcbcbc</color>
+    <color name="markerUser">#FF6700</color>
+
 </resources>

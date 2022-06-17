@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+    <RelativeLayout
+        android:id="@+id/relativeLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="@color/transparent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="ExtraText">
+
+
+        <LinearLayout
+            android:id="@+id/llNext_Turn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_margin="10dp"
+            android:background="@drawable/bg_route"
+            android:orientation="horizontal"
+            android:visibility="gone">
+            <ImageView
+                android:id="@+id/ic_Next_Turn"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_margin="10dp"
+                app:srcCompat="@drawable/dir_continue" />
+            <LinearLayout
+                android:id="@+id/Next_Turn_Text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:background="@drawable/bg_route"
+                android:orientation="vertical">
+                <TextView
+                    android:id="@+id/tv_Next_Road"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="下一條路"
+                    android:textSize="35dp"
+                    android:textColor="@color/white"
+                    android:textStyle="bold" />
+                <TextView
+                    android:id="@+id/tv_Next_Road_Detail"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="下一條路細節"
+                    android:textSize="15dp"
+                    android:textColor="@color/white" />
+                <TextView
+                    android:id="@+id/tv_Now_Position"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="現在位置:"
+                    android:textSize="10dp"
+                    android:textColor="@color/black" />
+                <TextView
+                    android:id="@+id/tv_Next_Dis"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="距離:"
+                    android:textSize="10dp"
+                    android:textColor="@color/black" />
+                <TextView
+                    android:id="@+id/tv_Now_Satellite"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="衛星:"
+                    android:textSize="10dp"
+                    android:textColor="@color/black" />
+                <TextView
+                    android:id="@+id/tv_Now_Location_Status"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="現在使用啥定位"
+                    android:textSize="10dp"
+                    android:textColor="@color/black" />
+                <TextView
+                    android:id="@+id/tv_Now_Record_History"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="歷史行走位置未開啟"
+                    android:textSize="10dp"
+                    android:textColor="@color/black" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/llUserArrow"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/viewnone"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="-6dp"
+            android:layout_marginTop="328dp"
+            android:layout_marginEnd="6dp"
+            android:layout_marginBottom="328dp"
+            android:gravity="center_horizontal"
+            android:visibility="gone">
+
+            <ImageView
+                android:id="@+id/ivUserArrow"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginBottom="25dp"
+                app:srcCompat="@drawable/mk_user_arrow"
+                tools:ignore="ContentDescription" />
+        </LinearLayout>
+
+        <ImageView
+            android:id ="@+id/viewnone"
+            android:layout_width="0px"
+            android:layout_height="0px"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"/>
+    </RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
