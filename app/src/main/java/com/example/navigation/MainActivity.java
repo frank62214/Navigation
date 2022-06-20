@@ -36,6 +36,8 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnSuccessListener;
 
+import java.util.ArrayList;
+
 public class MainActivity extends AppCompatActivity implements
         OnMapReadyCallback,
         GoogleApiClient.ConnectionCallbacks,
@@ -83,13 +85,17 @@ public class MainActivity extends AppCompatActivity implements
                     return;
 
                 //float bearing = locationResult.
-
-                Location location = locationResult.getLastLocation();
-                float bearing = location.getBearing();
+                ArrayList<Location> location = (ArrayList<Location>) locationResult.getLocations();
+                //Location location = locationResult.getLastLocation();
+                int latestLocationIndex = locationResult.getLocations().size() -1;
+                float bearing = location.get(latestLocationIndex).getBearing();
                 System.out.println("Bearing: " + bearing);
-                LatLng point = new LatLng(location.getLatitude(), location.getLongitude());
+
+                LatLng point = new LatLng(location.get(latestLocationIndex).getLatitude(), location.get(latestLocationIndex).getLongitude());
                 Data.now_position = point;
                 Data.now_bearing  = bearing;
+                my_layout.setDataViewNowPosition(point.toString());
+                my_layout.setDataViewBearing(Float.toString(bearing));
                 my_map.moveCamera(Data.now_position);
                 Toast.makeText(MainActivity.this, "更新位置", Toast.LENGTH_SHORT).show();
             }
