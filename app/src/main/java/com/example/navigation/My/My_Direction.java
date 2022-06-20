@@ -23,6 +23,7 @@ public class My_Direction {
     private String Direction_url_4 = "&language=zh-TW&key=";
 
     private String url = "";
+    private int distance;
 
     //private String web_text = "";
     public My_Direction(){
@@ -37,7 +38,36 @@ public class My_Direction {
         url = Direction_url_1 + destination + Direction_url_2 + mode + Direction_url_3 + origin;
         url = url + Direction_url_4 + key;
     }
+    public void setDistanceUrl(LatLng start, LatLng end){
+        //int ans = 0;
+        String origin      = start.latitude+ "," + start.longitude;
+        String destination = end.latitude + "," + end.longitude;
+        String mode = "Driving";
+        url = Direction_url_1 + destination + Direction_url_2 + mode + Direction_url_3 + origin;
+        url = url + Direction_url_4 + key;
 
+        //return ans;
+    }
+    public void SearchDistance(final onDataReadyCallback callback){
+        try {
+            Runnable runnable = new Runnable() {
+                @Override
+                public void run() {
+                    String web_text = run_content(url);
+                    get_Direction(web_text);
+                    callback.onDisReady(distance);
+//                //callback.onDataReady("New Data");
+                }
+            };
+            //runnable.run();
+            Thread t1 = new Thread(runnable);
+            t1.start();
+        }
+        catch(Exception e) {
+            e.printStackTrace();
+            //callback.onDataReady();
+        }
+    }
     public void SearchData(final onDataReadyCallback callback){
         try {
             Runnable runnable = new Runnable() {
@@ -225,6 +255,7 @@ public class My_Direction {
     }
     interface onDataReadyCallback{
         void onDataReady(ArrayList<LatLng> data);
+        void onDisReady(int dis);
     }
 
 }

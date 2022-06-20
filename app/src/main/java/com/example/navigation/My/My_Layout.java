@@ -12,7 +12,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.example.navigation.MainActivity;
 import com.example.navigation.R;
 
 public class My_Layout extends RelativeLayout {
@@ -126,5 +128,10 @@ public class My_Layout extends RelativeLayout {
     }
     public void setDataViewBearing(String text){
         data_view_Bearing.setText(text);
+    }
+
+
+    public void Toast(String text){
+        Toast.makeText(getContext(), text, Toast.LENGTH_SHORT).show();
     }
 }

@@ -45,7 +45,7 @@ public class My_Map {
             return;
         }
         mMap.setMyLocationEnabled(true);
-
+        //mMap.getMyLocation();
         UiSettings UI  = mMap.getUiSettings();
         UI.setMyLocationButtonEnabled(false);
         mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
@@ -64,6 +64,15 @@ public class My_Map {
                 .target(point)
                 .zoom(mMap.getCameraPosition().zoom)
                 .bearing(mMap.getCameraPosition().bearing)
+                .tilt(mMap.getCameraPosition().tilt)
+                .build();
+        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+    }
+    public void moveCamera(LatLng point, float bearing){
+        cameraPosition = new CameraPosition.Builder()
+                .target(point)
+                .zoom(mMap.getCameraPosition().zoom)
+                .bearing(bearing)
                 .tilt(mMap.getCameraPosition().tilt)
                 .build();
         mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));

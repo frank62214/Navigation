@@ -38,6 +38,10 @@ public class My_Event {
                             my_layout.Direction_Page();
                             my_map.Draw_Direction(data);
                         }
+                        @Override
+                        public void onDisReady(int dis) {
+
+                        }
                     });
                 }
             }

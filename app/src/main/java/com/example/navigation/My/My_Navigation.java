@@ -9,6 +9,9 @@ import android.view.View;
 import androidx.annotation.RequiresApi;
 
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.LatLng;
+
+import java.util.ArrayList;
 
 public class My_Navigation implements Runnable{
     private My_Layout my_layout;
@@ -16,6 +19,7 @@ public class My_Navigation implements Runnable{
     private String Road = "";
     private String Road_Detail = "";
     private double distance = 100;
+    private int real_dis = 100;
     @RequiresApi(api = Build.VERSION_CODES.M)
     public My_Navigation(My_Layout layout, My_Map map){
         my_layout = layout;
@@ -28,8 +32,12 @@ public class My_Navigation implements Runnable{
         int count = 1;
         while (count < Data.Steps.size()){
             distance = my_map.Camera_Dis_cal(Data.now_position, Data.Steps.get(count - 1));
-            if(distance < 15){
-                count++;
+            if(distance < 30){
+                //count++;
+                get_Real_Dis(Data.now_position, Data.Steps.get(count-1));
+                if(real_dis<10){
+                    count++;
+                }
             }
             Road = Data.Road.get(count);
             Road_Detail = Data.Road_Detail.get(count);
@@ -47,6 +55,20 @@ public class My_Navigation implements Runnable{
                 my_layout.setNowPosition(Data.now_position.toString());
                 my_layout.setNextRoadDistance(Double.toString(distance));
                 my_layout.setNow_Bearing(Float.toString(Data.now_bearing));
+            }
+        });
+    }
+    private void get_Real_Dis(LatLng now, LatLng next){
+        My_Direction my_direction = new My_Direction();
+        my_direction.setDistanceUrl(now, next);
+        my_direction.SearchDistance(new My_Direction.onDataReadyCallback() {
+            @Override
+            public void onDataReady(ArrayList<LatLng> data) {
+            }
+            @Override
+            public void onDisReady(int dis) {
+                real_dis = dis;
+                my_layout.Toast("距離:" + Integer.toString(dis));
             }
         });
     }

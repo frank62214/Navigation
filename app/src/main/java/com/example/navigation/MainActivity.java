@@ -2,6 +2,7 @@ package com.example.navigation;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -12,6 +13,7 @@ import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Looper;
 import android.widget.Toast;
@@ -57,6 +59,7 @@ public class MainActivity extends AppCompatActivity implements
     private My_Layout my_layout;
     private My_Map my_map;
 
+    @RequiresApi(api = Build.VERSION_CODES.S)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -84,23 +87,19 @@ public class MainActivity extends AppCompatActivity implements
                 if (locationResult == null)
                     return;
 
-                //float bearing = locationResult.
-                ArrayList<Location> location = (ArrayList<Location>) locationResult.getLocations();
-                //Location location = locationResult.getLastLocation();
-                int latestLocationIndex = locationResult.getLocations().size() -1;
-                float bearing = location.get(latestLocationIndex).getBearing();
-                System.out.println("Bearing: " + bearing);
+                Location location = locationResult.getLastLocation();
 
-                LatLng point = new LatLng(location.get(latestLocationIndex).getLatitude(), location.get(latestLocationIndex).getLongitude());
+
+                LatLng point = new LatLng(location.getLatitude(), location.getLongitude());
+
                 Data.now_position = point;
-                Data.now_bearing  = bearing;
-                my_layout.setDataViewNowPosition(point.toString());
-                my_layout.setDataViewBearing(Float.toString(bearing));
+
                 my_map.moveCamera(Data.now_position);
                 Toast.makeText(MainActivity.this, "更新位置", Toast.LENGTH_SHORT).show();
             }
         };
         mLocationMgr = (LocationManager) getSystemService(LOCATION_SERVICE);
+        //mLocationMgr.
     }
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
@@ -166,9 +165,9 @@ public class MainActivity extends AppCompatActivity implements
                         LatLng last = new LatLng(location.getLatitude(), location.getLongitude());
                         Data.now_position = last;
                         my_map.initCamera(Data.now_position);
-                        float bearing = location.getBearing();
-                        my_layout.setDataViewBearing(last.toString());
-                        my_layout.setDataViewBearing(Float.toString(bearing));
+                        //float bearing = location.getBearing();
+                        //my_layout.setDataViewBearing(last.toString());
+                        //my_layout.setDataViewBearing(Float.toString(bearing));
                     } else {
                         Toast.makeText(MainActivity.this, "沒有上一次定位的資料", Toast.LENGTH_LONG).show();
                     }

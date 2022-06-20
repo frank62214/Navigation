@@ -36,6 +36,9 @@ public class My_Sensor extends AppCompatActivity implements SensorEventListener 
     private float azimuthFix;
 
 
+    private float degree;
+    private float lastDegree;
+
     Context context;
 
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -60,44 +63,30 @@ public class My_Sensor extends AppCompatActivity implements SensorEventListener 
         mSensorManager.unregisterListener(this);
     }
     @Override
-    public void onSensorChanged(SensorEvent event) {
-        if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
-            //赋值调用clone方法
-            accelerometerValues = event.values.clone();
-        } else if (event.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD) {
-            //赋值调用clone方法
-            magneticValues = event.values.clone();
-        }
-        float[] R = new float[9];
-        float[] values = new float[3];
-        SensorManager.getRotationMatrix(R,null,accelerometerValues,magneticValues);
-        SensorManager.getOrientation(R, values);
-        values[0] = (float) Math.toDegrees(values[0]);
-        bearing = values[0];
+    public void onSensorChanged(SensorEvent sensorEvent) {
+        //bearing = sensorEvent.values[0]-42;
+        bearing = sensorEvent.values[0];
         //Data.now_bearing = bearing;
-//        //bearing = sensorEvent.values[0]-42;
-//        bearing = sensorEvent.values[0];
-//        //Data.now_bearing = bearing;
-//
-//        String values = "X-axis=" + String.valueOf(sensorEvent.values[0]) + "\n" +
-//                "Y-axis=" + String.valueOf(sensorEvent.values[1]) + "\n" +
-//                "Z-axis=" + String.valueOf(sensorEvent.values[2]) + "\n";
-//
-//
-//        if (sensorEvent.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
-////            accelerometerValues[0] = sensorEvent.values[0];
-////            accelerometerValues[1] = sensorEvent.values[1];
-////            accelerometerValues[2] = sensorEvent.values[2];
-//            accelerometerValues = sensorEvent.values;
-//            //System.out.println(accelerometerValues[0]);
-//        }
-//        if (sensorEvent.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD) {
-////            magneticValues[0] = sensorEvent.values[0];
-////            magneticValues[1] = sensorEvent.values[1];
-////            magneticValues[2] = sensorEvent.values[2];
-//            magneticValues = sensorEvent.values;
-//            calculate();
-//        }
+
+        String values = "X-axis=" + String.valueOf(sensorEvent.values[0]) + "\n" +
+                "Y-axis=" + String.valueOf(sensorEvent.values[1]) + "\n" +
+                "Z-axis=" + String.valueOf(sensorEvent.values[2]) + "\n";
+
+
+        if (sensorEvent.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+//            accelerometerValues[0] = sensorEvent.values[0];
+//            accelerometerValues[1] = sensorEvent.values[1];
+//            accelerometerValues[2] = sensorEvent.values[2];
+            accelerometerValues = sensorEvent.values;
+            //System.out.println(accelerometerValues[0]);
+        }
+        if (sensorEvent.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD) {
+//            magneticValues[0] = sensorEvent.values[0];
+//            magneticValues[1] = sensorEvent.values[1];
+//            magneticValues[2] = sensorEvent.values[2];
+            magneticValues = sensorEvent.values;
+            calculate();
+        }
 //        final float alpha = 0.97f;
 //
 //        synchronized (this) {
@@ -127,20 +116,20 @@ public class My_Sensor extends AppCompatActivity implements SensorEventListener 
 //                // Log.e(TAG, Float.toString(event.values[0]));
 //
 //            }
-//
-//            boolean success = SensorManager.getRotationMatrix(R, I, mGravity,
-//                    mGeomagnetic);
-//            if (success) {
-//                float orientation[] = new float[3];
-//                SensorManager.getOrientation(R, orientation);
-//                // Log.d(TAG, "azimuth (rad): " + azimuth);
-//                azimuth = (float) Math.toDegrees(orientation[0]); // orientation
-//                azimuth = (azimuth + azimuthFix + 360) % 360;
-//                // Log.d(TAG, "azimuth (deg): " + azimuth);
-//                Data.now_bearing = azimuth;
-//                System.out.println(azimuth);
-//            }
-//        }
+
+            boolean success = SensorManager.getRotationMatrix(R, I, mGravity,
+                    mGeomagnetic);
+            if (success) {
+                float orientation[] = new float[3];
+                SensorManager.getOrientation(R, orientation);
+                // Log.d(TAG, "azimuth (rad): " + azimuth);
+                azimuth = (float) Math.toDegrees(orientation[0]); // orientation
+                azimuth = (azimuth + azimuthFix + 360) % 360;
+                // Log.d(TAG, "azimuth (deg): " + azimuth);
+                Data.now_bearing = azimuth;
+                System.out.println(azimuth);
+            }
+
 
     }
 
