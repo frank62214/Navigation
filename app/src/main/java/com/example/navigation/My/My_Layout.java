@@ -29,6 +29,13 @@ public class My_Layout extends RelativeLayout {
     TextView tv_Next_Road;
     TextView tv_Next_Road_Detail;
     TextView tv_Now_Position;
+    TextView tv_Next_Dis;
+    TextView tv_Now_Bearing;
+
+    //activity_data_view
+    LinearLayout lldata_view;
+    TextView data_view_Now_Position;
+    TextView data_view_Bearing;
 
     public My_Layout(Context context) {
         super(context);
@@ -48,6 +55,11 @@ public class My_Layout extends RelativeLayout {
         View navigation_view = layoutInflater.inflate(R.layout.activity_navigation, null);
         this.addView(navigation_view, new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         //---------------------------------------------------------------------------------------------------------------------------------
+        //Here to add the Navigation layout
+        //LayoutInflater layout = ((Activity) context).getLayoutInflater();
+        View data_view = layoutInflater.inflate(R.layout.activity_data_view, null);
+        this.addView(data_view, new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        //---------------------------------------------------------------------------------------------------------------------------------
         //取得acitvity_main的元件
         btnDirections = (ImageButton) layout_view.findViewById(R.id.btnDirections);
         btnFocusUser  = (ImageButton) layout_view.findViewById(R.id.btnFocusUser);
@@ -59,6 +71,12 @@ public class My_Layout extends RelativeLayout {
         tv_Next_Road        = (TextView) llNext_Turn.findViewById(R.id.tv_Next_Road);
         tv_Next_Road_Detail = (TextView) llNext_Turn.findViewById(R.id.tv_Next_Road_Detail);
         tv_Now_Position     = (TextView) llNext_Turn.findViewById(R.id.tv_Now_Position);
+        tv_Next_Dis         = (TextView) llNext_Turn.findViewById(R.id.tv_Next_Dis);
+        tv_Now_Bearing      = (TextView) llNext_Turn.findViewById(R.id.tv_Now_Bearing);
+        //取得activity_data_view
+        lldata_view = (LinearLayout) data_view.findViewById(R.id.lldata_view);
+        data_view_Now_Position = (TextView) lldata_view.findViewById(R.id.data_view_Now_Position);
+        data_view_Bearing      = (TextView) lldata_view.findViewById(R.id.data_view_Bearing);
         Main_Page();
     }
 
@@ -96,5 +114,17 @@ public class My_Layout extends RelativeLayout {
     }
     public void setNowPosition(String text){
         tv_Now_Position.setText(text);
+    }
+    public void setNextRoadDistance(String text) {
+        tv_Next_Dis.setText(text);
+    }
+    public void setNow_Bearing(String text){
+        tv_Now_Bearing.setText(text);
+    }
+    public void setDataViewNowPosition(String text){
+        data_view_Now_Position.setText(text);
+    }
+    public void setDataViewBearing(String text){
+        data_view_Bearing.setText(text);
     }
 }

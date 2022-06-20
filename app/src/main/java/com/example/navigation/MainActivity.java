@@ -81,11 +81,17 @@ public class MainActivity extends AppCompatActivity implements
             public void onLocationResult(LocationResult locationResult) {
                 if (locationResult == null)
                     return;
-                Toast.makeText(MainActivity.this, "更新位置", Toast.LENGTH_SHORT).show();
+
+                //float bearing = locationResult.
+
                 Location location = locationResult.getLastLocation();
+                float bearing = location.getBearing();
+                System.out.println("Bearing: " + bearing);
                 LatLng point = new LatLng(location.getLatitude(), location.getLongitude());
                 Data.now_position = point;
+                Data.now_bearing  = bearing;
                 my_map.moveCamera(Data.now_position);
+                Toast.makeText(MainActivity.this, "更新位置", Toast.LENGTH_SHORT).show();
             }
         };
         mLocationMgr = (LocationManager) getSystemService(LOCATION_SERVICE);
@@ -154,6 +160,9 @@ public class MainActivity extends AppCompatActivity implements
                         LatLng last = new LatLng(location.getLatitude(), location.getLongitude());
                         Data.now_position = last;
                         my_map.initCamera(Data.now_position);
+                        float bearing = location.getBearing();
+                        my_layout.setDataViewBearing(last.toString());
+                        my_layout.setDataViewBearing(Float.toString(bearing));
                     } else {
                         Toast.makeText(MainActivity.this, "沒有上一次定位的資料", Toast.LENGTH_LONG).show();
                     }

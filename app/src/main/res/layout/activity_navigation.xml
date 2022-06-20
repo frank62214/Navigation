@@ -69,17 +69,17 @@
                     android:textSize="10dp"
                     android:textColor="@color/black" />
                 <TextView
-                    android:id="@+id/tv_Now_Satellite"
+                    android:id="@+id/tv_Now_Bearing"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="衛星:"
+                    android:text="方向角:"
                     android:textSize="10dp"
                     android:textColor="@color/black" />
                 <TextView
                     android:id="@+id/tv_Now_Location_Status"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="現在使用啥定位"
+                    android:text="現在使用GPS定位"
                     android:textSize="10dp"
                     android:textColor="@color/black" />
                 <TextView

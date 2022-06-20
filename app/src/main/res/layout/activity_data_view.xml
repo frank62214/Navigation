@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+    <RelativeLayout
+        android:id="@+id/relativeLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="@color/transparent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="ExtraText">
+
+
+        <LinearLayout
+            android:id="@+id/lldata_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="10dp"
+            android:background="@color/white"
+            android:orientation="vertical"
+            android:layout_above="@+id/viewnone">
+
+                <TextView
+                    android:id="@+id/data_view_Now_Position"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="現在位置:"
+                    android:textColor="@color/black"
+                    android:textSize="10dp" />
+
+                <TextView
+                    android:id="@+id/data_view_Bearing"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="歷史行走位置未開啟"
+                    android:textColor="@color/black"
+                    android:textSize="10dp" />
+            </LinearLayout>
+        <ImageView
+            android:id ="@+id/viewnone"
+            android:layout_width="0px"
+            android:layout_height="0px"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"/>
+
+    </RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

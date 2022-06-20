@@ -1,8 +1,11 @@
 package com.example.navigation.My;
 
 import android.content.Context;
+import android.os.Build;
 import android.view.View;
 import android.widget.Toast;
+
+import androidx.annotation.RequiresApi;
 
 import com.example.navigation.MainActivity;
 import com.google.android.gms.maps.GoogleMap;
@@ -47,6 +50,7 @@ public class My_Event {
             }
         });
         my_layout.btnNavigation.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
             public void onClick(View view) {
                 Toast.makeText(my_layout.getContext(), "開始導航", Toast.LENGTH_SHORT).show();

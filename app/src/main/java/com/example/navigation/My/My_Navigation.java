@@ -45,6 +45,8 @@ public class My_Navigation implements Runnable{
                 my_layout.setNextRoadDetailText(Road_Detail);
                 my_layout.Set_Turn_Pic(Road_Detail);
                 my_layout.setNowPosition(Data.now_position.toString());
+                my_layout.setNextRoadDistance(Double.toString(distance));
+                my_layout.setNow_Bearing(Float.toString(Data.now_bearing));
             }
         });
     }

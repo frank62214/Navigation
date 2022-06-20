@@ -45,6 +45,7 @@ public class My_Map {
             return;
         }
         mMap.setMyLocationEnabled(true);
+
         UiSettings UI  = mMap.getUiSettings();
         UI.setMyLocationButtonEnabled(false);
         mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
