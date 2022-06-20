@@ -23,7 +23,7 @@ public class My_Direction {
     private String Direction_url_4 = "&language=zh-TW&key=";
 
     private String url = "";
-    private int distance;
+    private int dis;
 
     //private String web_text = "";
     public My_Direction(){
@@ -54,8 +54,8 @@ public class My_Direction {
                 @Override
                 public void run() {
                     String web_text = run_content(url);
-                    get_Direction(web_text);
-                    callback.onDisReady(distance);
+                    get_Distance(web_text);
+                    callback.onDisReady(dis);
 //                //callback.onDataReady("New Data");
                 }
             };
@@ -146,6 +146,22 @@ public class My_Direction {
             }
         }
         return text;
+    }
+    private void get_Distance(String text){
+        My_Json my_json = new My_Json();
+
+        //取得距離
+        ArrayList<String> routes   = new ArrayList<String>();
+        ArrayList<String> legs     = new ArrayList<String>();
+        ArrayList<String> steps    = new ArrayList<String>();
+        ArrayList<String> distance = new ArrayList<String>();
+        ArrayList<String> value    = new ArrayList<String >();
+        my_json.get_json(text, routes, "routes");
+        my_json.get_json(routes, legs, "legs");
+        my_json.get_json(legs, steps, "steps");
+        my_json.get_json(steps, distance, "distance");
+        my_json.get_json(distance, value, "value");
+        dis = Integer.parseInt(value.get(0));
     }
     private void get_Direction(String text){
         My_Json my_json = new My_Json();
