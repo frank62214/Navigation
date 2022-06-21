@@ -32,6 +32,7 @@ public class My_Layout extends RelativeLayout {
     TextView tv_Next_Road_Detail;
     TextView tv_Now_Position;
     TextView tv_Next_Dis;
+    TextView tv_Last_Dis;
     TextView tv_Now_Bearing;
 
     //activity_data_view
@@ -74,6 +75,7 @@ public class My_Layout extends RelativeLayout {
         tv_Next_Road_Detail = (TextView) llNext_Turn.findViewById(R.id.tv_Next_Road_Detail);
         tv_Now_Position     = (TextView) llNext_Turn.findViewById(R.id.tv_Now_Position);
         tv_Next_Dis         = (TextView) llNext_Turn.findViewById(R.id.tv_Next_Dis);
+        tv_Last_Dis         = (TextView) llNext_Turn.findViewById(R.id.tv_Last_Dis);
         tv_Now_Bearing      = (TextView) llNext_Turn.findViewById(R.id.tv_Now_Bearing);
         //取得activity_data_view
         lldata_view = (LinearLayout) data_view.findViewById(R.id.lldata_view);
@@ -104,6 +106,7 @@ public class My_Layout extends RelativeLayout {
         });
     }
     public void Set_Turn_Pic(String turn){
+        if(turn.contains("繼續直行")){ic_Next_Turn.setImageResource(R.drawable.dir_continue);}
         if(turn.contains("向右轉")){ic_Next_Turn.setImageResource(R.drawable.dir_turnright);}
         if(turn.contains("向左轉")){ic_Next_Turn.setImageResource(R.drawable.dir_turnleft);}
     }
@@ -120,6 +123,7 @@ public class My_Layout extends RelativeLayout {
     public void setNextRoadDistance(String text) {
         tv_Next_Dis.setText(text);
     }
+    public void setLastDistance(String text){  tv_Last_Dis.setText(text);}
     public void setNow_Bearing(String text){
         tv_Now_Bearing.setText(text);
     }
@@ -132,6 +136,11 @@ public class My_Layout extends RelativeLayout {
 
 
     public void Toast(String text){
-        Toast.makeText(getContext(), text, Toast.LENGTH_SHORT).show();
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            public void run() { ;
+                Toast.makeText(getContext(), text, Toast.LENGTH_SHORT).show();
+            }
+        });
+
     }
 }

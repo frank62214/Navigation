@@ -19,7 +19,9 @@ public class My_Navigation implements Runnable{
     private String Road = "";
     private String Road_Detail = "";
     private double distance = 100;
+    private double last_distance = 100;
     private int real_dis = 100;
+    private ArrayList<Boolean> re_direction = new ArrayList<Boolean>();
     @RequiresApi(api = Build.VERSION_CODES.M)
     public My_Navigation(My_Layout layout, My_Map map){
         my_layout = layout;
@@ -30,6 +32,8 @@ public class My_Navigation implements Runnable{
     @Override
     public void run() {
         int count = 1;
+        distance = my_map.Camera_Dis_cal(Data.now_position, Data.Steps.get(count - 1));
+        last_distance  = distance;
         while (count < Data.Steps.size()){
             distance = my_map.Camera_Dis_cal(Data.now_position, Data.Steps.get(count - 1));
             if(distance < 30){
@@ -39,10 +43,24 @@ public class My_Navigation implements Runnable{
                     count++;
                 }
             }
-            Road = Data.Road.get(count);
-            Road_Detail = Data.Road_Detail.get(count);
-            get_Main_Thread();
-            SystemClock.sleep(1000);
+            if(last_distance >= distance){
+                System.out.println(last_distance);
+                last_distance = distance;
+                re_direction.removeAll(re_direction);
+            }
+            else{
+                re_direction.add(true);
+            }
+            if(re_direction.size()<10) {
+                Road = Data.Road.get(count);
+                Road_Detail = Data.Road_Detail.get(count);
+                get_Main_Thread();
+                SystemClock.sleep(1000);
+            }
+            else{
+                re_direction.removeAll(re_direction);
+                Toast("重新搜尋");
+            }
         }
     }
     private void get_Main_Thread(){
@@ -53,7 +71,8 @@ public class My_Navigation implements Runnable{
                 my_layout.setNextRoadDetailText(Road_Detail);
                 my_layout.Set_Turn_Pic(Road_Detail);
                 my_layout.setNowPosition(Data.now_position.toString());
-                my_layout.setNextRoadDistance(Double.toString(distance));
+                my_layout.setNextRoadDistance("距離:" + Double.toString(distance));
+                my_layout.setLastDistance("上次距離:" + Double.toString(last_distance));
                 my_layout.setNow_Bearing(Float.toString(Data.now_bearing));
             }
         });
@@ -68,9 +87,13 @@ public class My_Navigation implements Runnable{
             @Override
             public void onDisReady(int dis) {
                 real_dis = dis;
-                my_layout.Toast("距離:" + Integer.toString(dis));
+                Toast("距離:" + Integer.toString(dis));
+                //my_layout.Toast("距離:" + Integer.toString(dis));
             }
         });
+    }
+    private void Toast(String text){
+        my_layout.Toast(text);
     }
 
 }

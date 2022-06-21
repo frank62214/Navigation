@@ -69,6 +69,13 @@
                     android:textSize="10dp"
                     android:textColor="@color/black" />
                 <TextView
+                    android:id="@+id/tv_Last_Dis"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="上次距離:"
+                    android:textSize="10dp"
+                    android:textColor="@color/black" />
+                <TextView
                     android:id="@+id/tv_Now_Bearing"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
