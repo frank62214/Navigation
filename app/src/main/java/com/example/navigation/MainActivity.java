@@ -88,13 +88,11 @@ public class MainActivity extends AppCompatActivity implements
                     return;
 
                 Location location = locationResult.getLastLocation();
-
-
                 LatLng point = new LatLng(location.getLatitude(), location.getLongitude());
 
                 Data.now_position = point;
-
-                my_map.moveCamera(Data.now_position);
+                my_map.initCamera(Data.now_position);
+                //my_map.moveCamera(Data.now_position);
                 Toast.makeText(MainActivity.this, "更新位置", Toast.LENGTH_SHORT).show();
             }
         };

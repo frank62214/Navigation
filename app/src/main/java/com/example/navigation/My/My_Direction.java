@@ -24,6 +24,7 @@ public class My_Direction {
 
     private String url = "";
     private int dis;
+    private LatLng callback_point;
 
     //private String web_text = "";
     public My_Direction(){
@@ -56,6 +57,29 @@ public class My_Direction {
                     String web_text = run_content(url);
                     get_Distance(web_text);
                     callback.onDisReady(dis);
+//                //callback.onDataReady("New Data");
+                }
+            };
+            //runnable.run();
+            Thread t1 = new Thread(runnable);
+            t1.start();
+        }
+        catch(Exception e) {
+            e.printStackTrace();
+            //callback.onDataReady();
+        }
+    }
+    public void SearchNavigationData(final onDataReadyCallback callback){
+        try {
+            Runnable runnable = new Runnable() {
+                @Override
+                public void run() {
+                    String web_text = run_content(url);
+                    get_Navigation(web_text);
+                    callback.onDataReady(direction);
+                    LatLng start = direction.get(0);
+                    LatLng end = direction.get(1);
+                    callback.onStartLocationReady(start, end);
 //                //callback.onDataReady("New Data");
                 }
             };
@@ -199,7 +223,48 @@ public class My_Direction {
         //my_json.show(html_instrustions_tmp);
 
     }
+    public void get_Navigation(String text){
+        My_Json my_json = new My_Json();
+        //取得OverView PolyLine
+        ArrayList<String> routes = new ArrayList<String>();
+        ArrayList<String> polyline_overview = new ArrayList<String>();
+        ArrayList<String> points = new ArrayList<String>();
+        my_json.get_json(text, routes, "routes");
+        my_json.get_json(routes, polyline_overview, "overview_polyline");
+        my_json.get_json(polyline_overview, points, "points");
+        Polyline_decoder(points, direction);
+
+        //取得Direction 細節
+        ArrayList<String> legs = new ArrayList<String>();
+        ArrayList<String> steps = new ArrayList<String>();
+        ArrayList<String> end_location_s = new ArrayList<String>();
+        ArrayList<String> start_location_s = new ArrayList<String>();
+        ArrayList<String> html_instrustions     = new ArrayList<String> ();
+        ArrayList<String> html_instrustions_tmp = new ArrayList<String>();
+        ArrayList<String> lat = new ArrayList<String>();
+        ArrayList<String> lng = new ArrayList<String>();
+        //get every point
+        my_json.get_json(routes, legs, "legs");
+        my_json.get_json(legs, steps, "steps");
+        my_json.get_json(steps, start_location_s, "start_location");
+        my_json.get_json(steps, end_location_s, "end_location");
+        my_json.get_json(steps, html_instrustions_tmp, "html_instructions");
+        //取得Lat Lng
+        //my_json.get_json(Start_location_s, lat, "lat");
+        //my_json.get_json(end_location_s, lat, "lat");
+        //my_json.get_json(end_location_s, lng, "lng");
+        //取得Lat Lng
+        //my_json.get_json(Start_location_s, lat, "lat");
+        my_json.get_json(start_location_s, lat, "lat");
+        my_json.get_json(start_location_s, lng, "lng");
+
+
+        Store_Step(lat, lng);
+        Store_Road(html_instrustions_tmp);
+    }
     public void Store_Road(ArrayList<String> text){
+        if(Data.Road!=null){ Data.Road.removeAll(Data.Road); }
+        if(Data.Road_Detail!=null){ Data.Road_Detail.removeAll(Data.Road_Detail); }
         ArrayList<String> new_text = new ArrayList<String>();
         ArrayList<String> road = new ArrayList<String>();
         ArrayList<String> road_detail = new ArrayList<String>();
@@ -222,6 +287,7 @@ public class My_Direction {
         Data.Road_Detail = road_detail;
     }
     public void Store_Step(ArrayList<String> lat, ArrayList<String> lng){
+        if(Data.Steps!=null){ Data.Steps.removeAll(Data.Steps); }
         ArrayList<LatLng> ans = new ArrayList<LatLng>();
         for(int i=0; i<lat.size(); i++){
             double Lat = Double.parseDouble(lat.get(i));
@@ -272,6 +338,7 @@ public class My_Direction {
     interface onDataReadyCallback{
         void onDataReady(ArrayList<LatLng> data);
         void onDisReady(int dis);
+        void onStartLocationReady(LatLng start, LatLng end);
     }
 
 }

@@ -7,6 +7,7 @@ import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -40,6 +41,10 @@ public class My_Layout extends RelativeLayout {
     TextView data_view_Now_Position;
     TextView data_view_Bearing;
 
+    //activity_search
+    RelativeLayout rlSearch;
+    EditText et_search;
+
     public My_Layout(Context context) {
         super(context);
         //---------------------------------------------------------------------------------------------------------------------------------
@@ -58,10 +63,15 @@ public class My_Layout extends RelativeLayout {
         View navigation_view = layoutInflater.inflate(R.layout.activity_navigation, null);
         this.addView(navigation_view, new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         //---------------------------------------------------------------------------------------------------------------------------------
-        //Here to add the Navigation layout
+        //Here to add the Text Data View layout
         //LayoutInflater layout = ((Activity) context).getLayoutInflater();
         View data_view = layoutInflater.inflate(R.layout.activity_data_view, null);
         this.addView(data_view, new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        //---------------------------------------------------------------------------------------------------------------------------------
+        //Here to add the Search layout
+        //LayoutInflater layout = ((Activity) context).getLayoutInflater();
+        View search_view = layoutInflater.inflate(R.layout.activity_search, null);
+        this.addView(search_view, new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         //---------------------------------------------------------------------------------------------------------------------------------
         //取得acitvity_main的元件
         btnDirections = (ImageButton) layout_view.findViewById(R.id.btnDirections);
@@ -81,12 +91,18 @@ public class My_Layout extends RelativeLayout {
         lldata_view = (LinearLayout) data_view.findViewById(R.id.lldata_view);
         data_view_Now_Position = (TextView) lldata_view.findViewById(R.id.data_view_Now_Position);
         data_view_Bearing      = (TextView) lldata_view.findViewById(R.id.data_view_Bearing);
+        //取得Search Layout的元件
+        rlSearch = (RelativeLayout) search_view.findViewById(R.id.rlSearch);
+        et_search = (EditText) rlSearch.findViewById(R.id.et_search);
         Main_Page();
     }
 
     public void Main_Page(){
         btnDirections.setVisibility(View.VISIBLE);
         btnNavigation.setVisibility(View.GONE);
+    }
+    public void Search_Page(){
+        rlSearch.setBackgroundColor(getResources().getColor(R.color.white));
     }
     public void Direction_Page(){
         new Handler(Looper.getMainLooper()).post(new Runnable() {

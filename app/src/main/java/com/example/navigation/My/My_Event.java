@@ -2,7 +2,10 @@ package com.example.navigation.My;
 
 import android.content.Context;
 import android.os.Build;
+import android.os.Trace;
+import android.view.KeyEvent;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
@@ -39,9 +42,9 @@ public class My_Event {
                             my_map.Draw_Direction(data);
                         }
                         @Override
-                        public void onDisReady(int dis) {
-
-                        }
+                        public void onDisReady(int dis) {}
+                        @Override
+                        public void onStartLocationReady(LatLng start, LatLng end) {}
                     });
                 }
             }
@@ -59,9 +62,19 @@ public class My_Event {
             public void onClick(View view) {
                 Toast.makeText(my_layout.getContext(), "開始導航", Toast.LENGTH_SHORT).show();
                 my_layout.Navigation_Page();
-                My_Navigation my_navigation = new My_Navigation(my_layout, my_map);
-                Thread t = new Thread(my_navigation);
+//                My_Navigation my_navigation = new My_Navigation(my_layout, my_map);
+//                Thread t = new Thread(my_navigation);
+//                t.start();
+                My_API_Navigation my_api_navigation = new My_API_Navigation(my_layout, my_map);
+                Thread t = new Thread(my_api_navigation);
                 t.start();
+            }
+        });
+        my_layout.et_search.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(my_layout.getContext(), "搜尋目的地", Toast.LENGTH_SHORT).show();
+                my_layout.Search_Page();
             }
         });
     }

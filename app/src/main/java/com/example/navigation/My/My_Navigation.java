@@ -55,7 +55,7 @@ public class My_Navigation implements Runnable{
                 Road = Data.Road.get(count);
                 Road_Detail = Data.Road_Detail.get(count);
                 get_Main_Thread();
-                SystemClock.sleep(1000);
+
             }
             else{
                 re_direction.removeAll(re_direction);
@@ -81,15 +81,18 @@ public class My_Navigation implements Runnable{
         My_Direction my_direction = new My_Direction();
         my_direction.setDistanceUrl(now, next);
         my_direction.SearchDistance(new My_Direction.onDataReadyCallback() {
-            @Override
-            public void onDataReady(ArrayList<LatLng> data) {
-            }
+
             @Override
             public void onDisReady(int dis) {
                 real_dis = dis;
                 Toast("距離:" + Integer.toString(dis));
                 //my_layout.Toast("距離:" + Integer.toString(dis));
             }
+            @Override
+            public void onDataReady(ArrayList<LatLng> data) {
+            }
+            @Override
+            public void onStartLocationReady(LatLng start, LatLng end) {}
         });
     }
     private void Toast(String text){

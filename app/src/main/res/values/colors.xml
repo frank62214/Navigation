@@ -8,6 +8,8 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
+    <!--Search EditText color-->
+    <color name="hint_color">#FFCBCBCB</color>
 
     <!-- UI -->
     <color name="uiNormal">#00A287</color>
