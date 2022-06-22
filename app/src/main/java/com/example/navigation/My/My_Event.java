@@ -1,6 +1,8 @@
 package com.example.navigation.My;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Build;
 import android.os.Trace;
 import android.view.KeyEvent;
@@ -19,19 +21,20 @@ import java.util.ArrayList;
 public class My_Event {
     private My_Layout my_layout;
     private My_Map my_map;
-    public My_Event(My_Layout layout, My_Map map){
+
+    public My_Event(My_Layout layout, My_Map map) {
         my_layout = layout;
         my_map = map;
     }
-    public void setEvent(){
+
+    public void setEvent() {
         my_layout.btnDirections.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(Data.Destination==null) {
+                if (Data.Destination == null) {
                     Toast.makeText(my_layout.getContext(), "請先選擇終點", Toast.LENGTH_SHORT).show();
                     return;
-                }
-                else{
+                } else {
                     Toast.makeText(my_layout.getContext(), "規劃路線", Toast.LENGTH_SHORT).show();
                     My_Direction my_direction = new My_Direction();
                     my_direction.searchDirection();
@@ -41,10 +44,14 @@ public class My_Event {
                             my_layout.Direction_Page();
                             my_map.Draw_Direction(data);
                         }
+
                         @Override
-                        public void onDisReady(int dis) {}
+                        public void onDisReady(int dis) {
+                        }
+
                         @Override
-                        public void onStartLocationReady(LatLng start, LatLng end) {}
+                        public void onStartLocationReady(LatLng start, LatLng end) {
+                        }
                     });
                 }
             }
@@ -73,7 +80,7 @@ public class My_Event {
         my_layout.et_search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(my_layout.getContext(), "搜尋目的地", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(my_layout.getContext(), "搜尋目的地", Toast.LENGTH_SHORT).show();
                 my_layout.Search_Page();
             }
         });

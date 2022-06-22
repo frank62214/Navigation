@@ -71,7 +71,7 @@ public class My_Layout extends RelativeLayout {
         //Here to add the Search layout
         //LayoutInflater layout = ((Activity) context).getLayoutInflater();
         View search_view = layoutInflater.inflate(R.layout.activity_search, null);
-        this.addView(search_view, new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        this.addView(search_view, new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         //---------------------------------------------------------------------------------------------------------------------------------
         //取得acitvity_main的元件
         btnDirections = (ImageButton) layout_view.findViewById(R.id.btnDirections);
@@ -114,10 +114,12 @@ public class My_Layout extends RelativeLayout {
     }
     public void Navigation_Page(){
         new Handler(Looper.getMainLooper()).post(new Runnable() {
-            public void run() { ;
+            public void run() {
+                //隱藏元件
+                rlSearch.setVisibility(View.GONE);
                 btnNavigation.setVisibility(View.GONE);
                 llNext_Turn.setVisibility(View.VISIBLE);
-                llUserArrow.setVisibility(View.VISIBLE);
+                //llUserArrow.setVisibility(View.VISIBLE);
             }
         });
     }

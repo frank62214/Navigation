@@ -9,6 +9,9 @@ public class Data {
 
     public static boolean Init_Camera = true;
 
+    //UI Control
+    public static ArrayList<String> Page_Order = new ArrayList<String>();
+
     //location data
     public static LatLng now_position;
     public static float now_bearing;

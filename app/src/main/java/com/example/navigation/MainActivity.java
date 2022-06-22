@@ -58,6 +58,7 @@ public class MainActivity extends AppCompatActivity implements
 
     private My_Layout my_layout;
     private My_Map my_map;
+    private My_Event my_event;
 
     @RequiresApi(api = Build.VERSION_CODES.S)
     @Override
@@ -104,7 +105,7 @@ public class MainActivity extends AppCompatActivity implements
         mMap = googleMap;
         my_map = new My_Map(this, mMap);
         my_map.init();
-        My_Event my_event = new My_Event(my_layout, my_map);
+        my_event = new My_Event(my_layout, my_map);
         my_event.setEvent();
     }
 
@@ -261,5 +262,27 @@ public class MainActivity extends AppCompatActivity implements
         }
 
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
+    @Override
+    public void onBackPressed(){
+        if(Data.Page_Order.size()!=0){}
+        else{ goBackToDesktop(); }
+
+    }
+    public void goBackToDesktop(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("確定要退出?");
+        builder.setPositiveButton("現在就去", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                finish();
+            }
+        });
+        builder.setNegativeButton("稍後", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int id) {
+            }
+        });
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 }

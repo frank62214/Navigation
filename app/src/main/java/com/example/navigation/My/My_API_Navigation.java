@@ -1,6 +1,9 @@
 package com.example.navigation.My;
 
+import android.os.Handler;
+import android.os.Looper;
 import android.os.SystemClock;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
 
@@ -9,7 +12,7 @@ import java.util.ArrayList;
 public class My_API_Navigation implements Runnable{
     private My_Layout my_layout;
     private My_Map my_map;
-
+    private int distance;
 
 
     public My_API_Navigation(My_Layout layout, My_Map map){
@@ -22,6 +25,7 @@ public class My_API_Navigation implements Runnable{
         my_map.initUserMK();
         while (Data.Steps.size()>0) {
             draw_Direction();
+            set_Navigation_Text();
             SystemClock.sleep(1000);
         }
     }
@@ -41,7 +45,24 @@ public class My_API_Navigation implements Runnable{
                 my_map.set_Navigation_Camera(start, bearing);
             }
             @Override
-            public void onDisReady(int dis) {}
+            public void onDisReady(int dis) {
+                distance = dis;
+            }
+        });
+    }
+    public void set_Navigation_Text(){
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            public void run() {
+                int select = 0;
+                if(distance<100){
+                    select = 1;
+                }
+                my_layout.setNextRoadText(Data.Road.get(select));
+                my_layout.setNextRoadDetailText(Data.Road_Detail.get(select));
+                my_layout.Set_Turn_Pic(Data.Road_Detail.get(select));
+                my_layout.setNowPosition(Data.now_position.toString());
+                my_layout.setNextRoadDistance(Integer.toString(distance));
+            }
         });
     }
 }
