@@ -11,6 +11,10 @@ public class Data {
 
     //UI Control
     public static ArrayList<String> Page_Order = new ArrayList<String>();
+    final public static String Main_Page = "Main";
+    final public static String Search_Page = "Search";
+    final public static String Direction_Page = "Direction";
+    final public static String Navigation_Page = "Navigation";
 
     //location data
     public static LatLng now_position;
@@ -23,5 +27,6 @@ public class Data {
     public static ArrayList<String> Road_Detail = new ArrayList<String>();
 
     //Navigation data
+    public static boolean Navigation_Status = false;
     public static LatLng Navigation_Location;
 }

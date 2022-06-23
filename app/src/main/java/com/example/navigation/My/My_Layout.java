@@ -38,7 +38,7 @@ public class My_Layout extends RelativeLayout {
 
     //activity_data_view
     LinearLayout lldata_view;
-    TextView data_view_Now_Position;
+    TextView data_view_Now_Page;
     TextView data_view_Bearing;
 
     //activity_search
@@ -89,37 +89,73 @@ public class My_Layout extends RelativeLayout {
         tv_Now_Bearing      = (TextView) llNext_Turn.findViewById(R.id.tv_Now_Bearing);
         //取得activity_data_view
         lldata_view = (LinearLayout) data_view.findViewById(R.id.lldata_view);
-        data_view_Now_Position = (TextView) lldata_view.findViewById(R.id.data_view_Now_Position);
+        data_view_Now_Page = (TextView) lldata_view.findViewById(R.id.data_view_Now_Page);
         data_view_Bearing      = (TextView) lldata_view.findViewById(R.id.data_view_Bearing);
         //取得Search Layout的元件
         rlSearch = (RelativeLayout) search_view.findViewById(R.id.rlSearch);
         et_search = (EditText) rlSearch.findViewById(R.id.et_search);
-        Main_Page();
-    }
 
-    public void Main_Page(){
-        btnDirections.setVisibility(View.VISIBLE);
+    }
+    public void Select_Page(My_Map my_map){
+        if(Data.Page_Order.get(Data.Page_Order.size()-1).equals(Data.Main_Page)){ Main_Page(my_map); }
+        if(Data.Page_Order.get(Data.Page_Order.size()-1).equals(Data.Search_Page)){ Search_Page(); }
+        if(Data.Page_Order.get(Data.Page_Order.size()-1).equals(Data.Direction_Page)){
+
+            Direction_Page(my_map);
+        }
+//        if(Data.Page_Order.get(Data.Page_Order.size()-1).equals(Data.Navigation_Page)){ Navigation_Page(my_map); }
+    }
+    public void Main_Page(My_Map my_map){
+        data_view_Now_Page.setText("現在頁面: " + Data.Main_Page);
+        //隱藏元件
+        rlSearch.setBackgroundColor(getResources().getColor(R.color.transparent));
+        my_map.Remove_Direction();
+        my_map.Remove_Destination();
         btnNavigation.setVisibility(View.GONE);
+
+        //顯示元件
+        my_map.setMyLocationEnabled(true);
+        btnDirections.setVisibility(View.VISIBLE);
+
+        //移動相機
+        my_map.moveCamera(Data.now_position, 15,  0);
     }
     public void Search_Page(){
+        data_view_Now_Page.setText("現在頁面: " + Data.Search_Page);
         rlSearch.setBackgroundColor(getResources().getColor(R.color.white));
     }
-    public void Direction_Page(){
+    public void Direction_Page(My_Map my_map){
         new Handler(Looper.getMainLooper()).post(new Runnable() {
             public void run() {
+                data_view_Now_Page.setText("現在頁面: " + Data.Direction_Page);
+                //隱藏元件
                 btnDirections.setVisibility(View.GONE);
+                my_map.Remove_Navigation_MK();
+                llNext_Turn.setVisibility(View.GONE);
+
+                //顯示元件
+                rlSearch.setVisibility(View.VISIBLE);
                 btnNavigation.setVisibility(View.VISIBLE);
+                my_map.setMyLocationEnabled(true);
+                Data.Navigation_Status = false;
+                //移動相機
+                my_map.set_Direction_Camera();
             }
         });
     }
-    public void Navigation_Page(){
+    public void Navigation_Page(My_Map my_map){
         new Handler(Looper.getMainLooper()).post(new Runnable() {
             public void run() {
+                data_view_Now_Page.setText("現在頁面: " + Data.Navigation_Page);
                 //隱藏元件
                 rlSearch.setVisibility(View.GONE);
                 btnNavigation.setVisibility(View.GONE);
                 llNext_Turn.setVisibility(View.VISIBLE);
+                my_map.setMyLocationEnabled(false);
+//                Data.Navigation_Status = true;
+//                System.out.println(Data.Navigation_Status);
                 //llUserArrow.setVisibility(View.VISIBLE);
+
             }
         });
     }
@@ -145,9 +181,9 @@ public class My_Layout extends RelativeLayout {
     public void setNow_Bearing(String text){
         tv_Now_Bearing.setText(text);
     }
-    public void setDataViewNowPosition(String text){
-        data_view_Now_Position.setText(text);
-    }
+    //public void setDataViewNowPosition(String text){
+    //    data_view_Now_Position.setText(text);
+    //}
     public void setDataViewBearing(String text){
         data_view_Bearing.setText(text);
     }

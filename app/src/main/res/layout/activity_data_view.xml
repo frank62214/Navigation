@@ -29,7 +29,7 @@
             android:layout_above="@+id/viewnone">
 
                 <TextView
-                    android:id="@+id/data_view_Now_Position"
+                    android:id="@+id/data_view_Now_Page"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="現在位置:"

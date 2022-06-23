@@ -107,6 +107,8 @@ public class MainActivity extends AppCompatActivity implements
         my_map.init();
         my_event = new My_Event(my_layout, my_map);
         my_event.setEvent();
+        Data.Page_Order.add(Data.Main_Page);
+        my_layout.Select_Page(my_map);
     }
 
     private void enableLocation(boolean on) {
@@ -265,8 +267,13 @@ public class MainActivity extends AppCompatActivity implements
     }
     @Override
     public void onBackPressed(){
-        if(Data.Page_Order.size()!=0){}
-        else{ goBackToDesktop(); }
+        if(Data.Page_Order.size()==1){
+            goBackToDesktop();
+        }
+        else{
+            Data.Page_Order.remove(Data.Page_Order.size()-1);
+            my_layout.Select_Page(my_map);
+        }
 
     }
     public void goBackToDesktop(){

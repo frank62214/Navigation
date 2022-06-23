@@ -23,10 +23,18 @@ public class My_API_Navigation implements Runnable{
     @Override
     public void run() {
         my_map.initUserMK();
+        System.out.println(Data.Navigation_Status);
+        Data.Navigation_Status = true;
         while (Data.Steps.size()>0) {
-            draw_Direction();
-            set_Navigation_Text();
-            SystemClock.sleep(1000);
+            if(Data.Navigation_Status) {
+                draw_Direction();
+                set_Navigation_Text();
+                SystemClock.sleep(1000);
+            }
+            else{
+                set_Direction_Camera();
+                return;
+            }
         }
     }
     public void draw_Direction(){
@@ -62,6 +70,13 @@ public class My_API_Navigation implements Runnable{
                 my_layout.Set_Turn_Pic(Data.Road_Detail.get(select));
                 my_layout.setNowPosition(Data.now_position.toString());
                 my_layout.setNextRoadDistance(Integer.toString(distance));
+            }
+        });
+    }
+    public void set_Direction_Camera(){
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            public void run() {
+                my_map.set_Direction_Camera();
             }
         });
     }

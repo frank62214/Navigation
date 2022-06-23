@@ -31,6 +31,7 @@ public class My_Event {
         my_layout.btnDirections.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Data.Page_Order.add(Data.Direction_Page);
                 if (Data.Destination == null) {
                     Toast.makeText(my_layout.getContext(), "請先選擇終點", Toast.LENGTH_SHORT).show();
                     return;
@@ -41,7 +42,8 @@ public class My_Event {
                     my_direction.SearchData(new My_Direction.onDataReadyCallback() {
                         @Override
                         public void onDataReady(ArrayList<LatLng> data) {
-                            my_layout.Direction_Page();
+                            my_layout.Direction_Page(my_map);
+                            //my_map.set_Direction_Camera();
                             my_map.Draw_Direction(data);
                         }
 
@@ -68,7 +70,8 @@ public class My_Event {
             @Override
             public void onClick(View view) {
                 Toast.makeText(my_layout.getContext(), "開始導航", Toast.LENGTH_SHORT).show();
-                my_layout.Navigation_Page();
+                my_layout.Navigation_Page(my_map);
+                Data.Page_Order.add(Data.Navigation_Page);
 //                My_Navigation my_navigation = new My_Navigation(my_layout, my_map);
 //                Thread t = new Thread(my_navigation);
 //                t.start();
@@ -81,6 +84,7 @@ public class My_Event {
             @Override
             public void onClick(View view) {
                 //Toast.makeText(my_layout.getContext(), "搜尋目的地", Toast.LENGTH_SHORT).show();
+                Data.Page_Order.add(Data.Search_Page);
                 my_layout.Search_Page();
             }
         });
