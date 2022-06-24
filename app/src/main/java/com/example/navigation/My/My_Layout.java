@@ -24,6 +24,9 @@ public class My_Layout extends RelativeLayout {
     ImageButton btnDirections;
     ImageButton btnFocusUser;
     ImageButton btnNavigation;
+    ImageButton btnDrivingMode;
+    ImageButton btnBicyclingMode;
+    ImageButton btnWalkingMode;
 
     //activity_navigation
     LinearLayout llNext_Turn;
@@ -94,7 +97,10 @@ public class My_Layout extends RelativeLayout {
         //取得Search Layout的元件
         rlSearch = (RelativeLayout) search_view.findViewById(R.id.rlSearch);
         et_search = (EditText) rlSearch.findViewById(R.id.et_search);
-
+        //取得mode選擇
+        btnDrivingMode   = (ImageButton) layout_view.findViewById(R.id.btnDrivingMode);
+        btnBicyclingMode = (ImageButton) layout_view.findViewById(R.id.btnBicyclingMode);
+        btnWalkingMode   = (ImageButton) layout_view.findViewById(R.id.btnWalkingMode);
     }
     public void Select_Page(My_Map my_map){
         if(Data.Page_Order.get(Data.Page_Order.size()-1).equals(Data.Main_Page)){ Main_Page(my_map); }
@@ -188,6 +194,32 @@ public class My_Layout extends RelativeLayout {
         data_view_Bearing.setText(text);
     }
 
+    public void Select_Mode(String mode){
+        if(Data.Select_mode){
+            Data.Select_mode = false;
+            btnDrivingMode.setVisibility(View.VISIBLE);
+            btnBicyclingMode.setVisibility(View.VISIBLE);
+            btnWalkingMode.setVisibility(View.VISIBLE);
+        }
+        else{
+            Data.Select_mode = true;
+            if(mode.equals(Data.Driving)){
+                Data.Mode = Data.Driving;
+                btnBicyclingMode.setVisibility(View.GONE);
+                btnWalkingMode.setVisibility(View.GONE);
+            }
+            if(mode.equals(Data.Bicycling)){
+                Data.Mode = Data.Bicycling;
+                btnDrivingMode.setVisibility(View.GONE);
+                btnWalkingMode.setVisibility(View.GONE);
+            }
+            if(mode.equals(Data.Walking)){
+                Data.Mode = Data.Walking;
+                btnDrivingMode.setVisibility(View.GONE);
+                btnBicyclingMode.setVisibility(View.GONE);
+            }
+        }
+    }
 
     public void Toast(String text){
         new Handler(Looper.getMainLooper()).post(new Runnable() {

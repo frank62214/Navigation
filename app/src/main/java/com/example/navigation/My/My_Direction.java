@@ -35,7 +35,7 @@ public class My_Direction {
         String destination = Data.Destination.latitude + "," + Data.Destination.longitude;
         System.out.println(origin);
         System.out.println(destination);
-        String mode = "Driving";
+        String mode = Data.Mode;
         url = Direction_url_1 + destination + Direction_url_2 + mode + Direction_url_3 + origin;
         url = url + Direction_url_4 + key;
     }
@@ -43,7 +43,7 @@ public class My_Direction {
         //int ans = 0;
         String origin      = start.latitude+ "," + start.longitude;
         String destination = end.latitude + "," + end.longitude;
-        String mode = "Driving";
+        String mode = Data.Mode;
         url = Direction_url_1 + destination + Direction_url_2 + mode + Direction_url_3 + origin;
         url = url + Direction_url_4 + key;
 

@@ -46,14 +46,10 @@ public class My_Event {
                             //my_map.set_Direction_Camera();
                             my_map.Draw_Direction(data);
                         }
-
                         @Override
-                        public void onDisReady(int dis) {
-                        }
-
+                        public void onDisReady(int dis) {}
                         @Override
-                        public void onStartLocationReady(LatLng start, LatLng end) {
-                        }
+                        public void onStartLocationReady(LatLng start, LatLng end) {}
                     });
                 }
             }
@@ -86,6 +82,27 @@ public class My_Event {
                 //Toast.makeText(my_layout.getContext(), "搜尋目的地", Toast.LENGTH_SHORT).show();
                 Data.Page_Order.add(Data.Search_Page);
                 my_layout.Search_Page();
+            }
+        });
+        my_layout.btnDrivingMode.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                my_layout.Select_Mode(Data.Driving);
+                System.out.println(Data.Mode);
+            }
+        });
+        my_layout.btnBicyclingMode.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                my_layout.Select_Mode(Data.Bicycling);
+                System.out.println(Data.Mode);
+            }
+        });
+        my_layout.btnWalkingMode.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                my_layout.Select_Mode(Data.Walking);
+                System.out.println(Data.Mode);
             }
         });
     }

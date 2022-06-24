@@ -36,6 +36,49 @@
             android:layout_marginEnd="10dp"
             android:layout_marginBottom="10dp"
             android:orientation="vertical">
+        <LinearLayout
+            android:id="@+id/llMode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="right|center_vertical">
+            <ImageButton
+                android:id="@+id/btnDrivingMode"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:background="@drawable/btn_round"
+                app:srcCompat="@drawable/ic_car_mode"
+                tools:ignore="ContentDescription,InvalidId"
+                android:layout_gravity="right|center_vertical"/>
+            <ImageButton
+                android:id="@+id/btnBicyclingMode"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:background="@drawable/btn_round"
+                app:srcCompat="@drawable/ic_bike_mode"
+                tools:ignore="ContentDescription,InvalidId"
+                android:layout_gravity="right|center_vertical"
+                android:visibility="gone"/>
+            <ImageButton
+                android:id="@+id/btnWalkingMode"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:background="@drawable/btn_round"
+                app:srcCompat="@drawable/ic_walk_mode"
+                tools:ignore="ContentDescription,InvalidId"
+                android:layout_gravity="right|center_vertical"
+                android:visibility="gone"/>
+        </LinearLayout>
+
             <ImageButton
                 android:id="@+id/btnDirections"
                 android:layout_width="50dp"
@@ -45,7 +88,8 @@
                 android:layout_marginRight="5dp"
                 android:background="@drawable/btn_round"
                 app:srcCompat="@drawable/ic_directions"
-                tools:ignore="ContentDescription,InvalidId" />
+                tools:ignore="ContentDescription,InvalidId"
+                android:layout_gravity="right|center_vertical"/>
             <ImageButton
                 android:id="@+id/btnNavigation"
                 android:layout_width="50dp"
@@ -55,7 +99,8 @@
                 android:layout_marginRight="5dp"
                 android:background="@drawable/btn_round"
                 app:srcCompat="@drawable/ic_navigation"
-                tools:ignore="ContentDescription,InvalidId" />
+                tools:ignore="ContentDescription,InvalidId"
+                android:layout_gravity="right|center_vertical"/>
             <ImageButton
                 android:id="@+id/btnFocusUser"
                 android:layout_width="50dp"
@@ -65,7 +110,8 @@
                 android:layout_marginRight="5dp"
                 android:background="@drawable/btn_round"
                 app:srcCompat="@drawable/ic_focus"
-                tools:ignore="ContentDescription,InvalidId" />
+                tools:ignore="ContentDescription,InvalidId"
+                android:layout_gravity="right|center_vertical"/>
 
         </LinearLayout>
         <ImageView

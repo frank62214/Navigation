@@ -26,6 +26,13 @@ public class Data {
     public static ArrayList<String> Road        = new ArrayList<String>();
     public static ArrayList<String> Road_Detail = new ArrayList<String>();
 
+    //Mode data
+    public static String Mode = "Driving";
+    public static boolean Select_mode = true;
+    public static String Driving   = "Driving";
+    public static String Bicycling = "Bicycling";
+    public static String Walking   = "Walking";
+
     //Navigation data
     public static boolean Navigation_Status = false;
     public static LatLng Navigation_Location;
