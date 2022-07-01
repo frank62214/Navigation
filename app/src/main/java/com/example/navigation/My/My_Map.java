@@ -82,17 +82,17 @@ public class My_Map {
         }
     }
     public void moveCamera(LatLng point){
-        if(point!=null) {
-            if (Data.Init_Camera) { initCamera(point); }
-            //System.out.println(cameraPosition.target);
-            cameraPosition = new CameraPosition.Builder()
-                    .target(point)
-                    .zoom(mMap.getCameraPosition().zoom)
-                    .bearing(mMap.getCameraPosition().bearing)
-                    .tilt(mMap.getCameraPosition().tilt)
-                    .build();
-            mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-        }
+        if(point==null) { return; }
+        if(!Data.Lock_User) { return; }
+        if (Data.Init_Camera) { initCamera(point); }
+        //System.out.println(cameraPosition.target);
+        cameraPosition = new CameraPosition.Builder()
+                .target(point)
+                .zoom(mMap.getCameraPosition().zoom)
+                .bearing(mMap.getCameraPosition().bearing)
+                .tilt(mMap.getCameraPosition().tilt)
+                .build();
+        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
     }
     public void moveCamera(LatLng point, float bearing){
         if(point!=null) {
@@ -241,19 +241,30 @@ public class My_Map {
         if(Navigation_MK!=null){ Navigation_MK.remove(); }
     }
     public float Cal_Bearing(LatLng Start, LatLng End){
+        System.out.println("Start: "+ Start);
+        System.out.println("End: "+ End);
         double degress = Math.PI / 180.0;
+        System.out.println("Degress: " + degress);
         double phi1 = Start.latitude * degress;
+        System.out.println("phi1: " + phi1);
         double phi2 = End.latitude * degress;
+        System.out.println("phi2: " + phi2);
         double lam1 = Start.longitude * degress;
+        System.out.println("lam1: " + lam1);
         double lam2 = End.longitude * degress;
+        System.out.println("lam2: " + lam2);
 
         double y = Math.sin(lam2 - lam1) * Math.cos(phi2);
+        System.out.println("y: " + y);
         double x = Math.cos(phi1) * Math.sin(phi2) - Math.sin(phi1) * Math.cos(phi2) * Math.cos(lam2 - lam1);
+        System.out.println("x: " + x);
         float bearing = (float)(((Math.atan2(y, x) * 180) / Math.PI) + 360) % 360;
-        System.out.println(bearing);
+        System.out.println("bearing1: " + bearing);
+        //System.out.println(bearing);
         if (bearing < 0) {
             bearing = bearing + 360;
         }
+        System.out.println("bearing2: " + bearing);
         return bearing;
     }
     public LatLng Cal_LatLng(LatLng Start, double bearing, double distance){

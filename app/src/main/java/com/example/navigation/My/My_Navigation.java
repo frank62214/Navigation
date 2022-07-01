@@ -72,8 +72,8 @@ public class My_Navigation implements Runnable{
                 my_layout.Set_Turn_Pic(Road_Detail);
                 my_layout.setNowPosition(Data.now_position.toString());
                 my_layout.setNextRoadDistance("距離:" + Double.toString(distance));
-                my_layout.setLastDistance("上次距離:" + Double.toString(last_distance));
-                my_layout.setNow_Bearing(Float.toString(Data.now_bearing));
+//                my_layout.setLastDistance("上次距離:" + Double.toString(last_distance));
+//                my_layout.setNow_Bearing(Float.toString(Data.now_bearing));
             }
         });
     }

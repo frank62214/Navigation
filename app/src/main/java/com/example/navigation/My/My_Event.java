@@ -1,19 +1,16 @@
 package com.example.navigation.My;
 
-import android.app.AlertDialog;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Build;
-import android.os.Trace;
-import android.view.KeyEvent;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.View;
-import android.widget.TextView;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 
-import com.example.navigation.MainActivity;
-import com.google.android.gms.maps.GoogleMap;
+import com.example.navigation.R;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
@@ -58,7 +55,24 @@ public class My_Event {
             @Override
             public void onClick(View view) {
                 Toast.makeText(my_layout.getContext(), "現在位置", Toast.LENGTH_SHORT).show();
+                System.out.println(Data.now_position);
                 my_map.moveCamera(Data.now_position);
+            }
+        });
+        my_layout.btnFocusUser.setOnLongClickListener(new View.OnLongClickListener(){
+            @Override
+            public boolean onLongClick(View view) {
+                if(Data.Lock_User){
+                    Toast.makeText(my_layout.getContext(), "解除鎖定使用者位置", Toast.LENGTH_SHORT).show();
+                    Data.Lock_User = false;
+                    my_layout.btnFocusUser.setBackgroundResource(R.drawable.btn_round);
+                }
+                else{
+                    Toast.makeText(my_layout.getContext(), "鎖定使用者位置", Toast.LENGTH_SHORT).show();
+                    Data.Lock_User = true;
+                    my_layout.btnFocusUser.setBackgroundResource(R.drawable.btn_round_pressed);
+                }
+                return false;
             }
         });
         my_layout.btnNavigation.setOnClickListener(new View.OnClickListener() {
@@ -105,6 +119,65 @@ public class My_Event {
                 System.out.println(Data.Mode);
             }
         });
-    }
+        my_layout.btnViewSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                my_layout.Remove_Result();
+                Data.Page_Order.add(Data.Search_Page);
+                close_keyboard(view);
+                my_layout.SearchProgressBar.setVisibility(View.VISIBLE);
+                String destination = my_layout.et_search.getText().toString();
+                System.out.println(destination);
+                //Toast.makeText(my_layout.getContext(), "搜尋目的地", Toast.LENGTH_SHORT).show();
+                My_Search my_search = new My_Search();
+                my_search.SearchDestination(destination);
+                my_search.SearchData(new My_Search.onDataReadyCallback() {
+                    @Override
+                    public void onDataNameReady(ArrayList<String> data, ArrayList<LatLng> location) {
+                        new Handler(Looper.getMainLooper()).post(new Runnable() {
+                            public void run() {
+                                my_layout.Set_Search_Place_Result(data);
+                                my_layout.SearchProgressBar.setVisibility(View.GONE);
+                                Set_Search_Button_Event(my_layout.Search_Button_Group, location);
+                            }
+                        });
+                    }
 
+                });
+            }
+        });
+    }
+    private void Set_Search_Button_Event(ArrayList<Button> group, ArrayList<LatLng> location){
+        for(int i=0; i<group.size();i++){
+            Button button = (Button) group.get(i);
+            button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    int id = view.getId();
+                    my_layout.Toast(location.get(id).toString());
+                    Data.Destination = location.get(id);
+                    my_map.Add_Destination_Mark(location.get(id));
+                    Toast.makeText(my_layout.getContext(), "規劃路線", Toast.LENGTH_SHORT).show();
+                    My_Direction my_direction = new My_Direction();
+                    my_direction.searchDirection();
+                    my_direction.SearchData(new My_Direction.onDataReadyCallback() {
+                        @Override
+                        public void onDataReady(ArrayList<LatLng> data) {
+                            my_layout.Direction_Page(my_map);
+                            my_map.Draw_Direction(data);
+                        }
+                        @Override
+                        public void onDisReady(int dis) {}
+                        @Override
+                        public void onStartLocationReady(LatLng start, LatLng end) {}
+                    });
+                }
+            });
+        }
+    }
+    public void close_keyboard(View view){
+        InputMethodManager inputMethodManager = (InputMethodManager)view.getContext().getSystemService(view.getContext().INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
 }

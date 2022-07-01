@@ -55,47 +55,20 @@
                     android:textSize="15dp"
                     android:textColor="@color/white" />
                 <TextView
+                    android:id="@+id/tv_Next_Dis"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="距離前方路口"
+                    android:textSize="15dp"
+                    android:textColor="@color/black" />
+                <TextView
                     android:id="@+id/tv_Now_Position"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="現在位置:"
                     android:textSize="10dp"
                     android:textColor="@color/black" />
-                <TextView
-                    android:id="@+id/tv_Next_Dis"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="距離:"
-                    android:textSize="10dp"
-                    android:textColor="@color/black" />
-                <TextView
-                    android:id="@+id/tv_Last_Dis"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="上次距離:"
-                    android:textSize="10dp"
-                    android:textColor="@color/black" />
-                <TextView
-                    android:id="@+id/tv_Now_Bearing"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="方向角:"
-                    android:textSize="10dp"
-                    android:textColor="@color/black" />
-                <TextView
-                    android:id="@+id/tv_Now_Location_Status"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="現在使用GPS定位"
-                    android:textSize="10dp"
-                    android:textColor="@color/black" />
-                <TextView
-                    android:id="@+id/tv_Now_Record_History"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="歷史行走位置未開啟"
-                    android:textSize="10dp"
-                    android:textColor="@color/black" />
+
             </LinearLayout>
         </LinearLayout>
 

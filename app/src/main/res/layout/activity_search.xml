@@ -18,6 +18,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="1.0">
 
+
         <LinearLayout
             android:id="@+id/llSearchBar"
             android:layout_width="match_parent"
@@ -94,10 +95,11 @@
         </ScrollView>
 
         <ProgressBar
-            android:id="@+id/progressBar"
+            android:id="@+id/SearchProgressBar"
+            style="?android:attr/progressBarStyle"
+            android:visibility="gone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:visibility="gone"
             android:layout_centerVertical="true"
             android:layout_centerHorizontal="true"
             />

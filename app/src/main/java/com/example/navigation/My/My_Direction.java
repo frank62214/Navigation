@@ -80,6 +80,8 @@ public class My_Direction {
                     LatLng start = direction.get(0);
                     LatLng end = direction.get(1);
                     callback.onStartLocationReady(start, end);
+                    get_Distance(web_text);
+                    callback.onDisReady(dis);
 //                //callback.onDataReady("New Data");
                 }
             };
@@ -184,6 +186,7 @@ public class My_Direction {
         my_json.get_json(routes, legs, "legs");
         my_json.get_json(legs, steps, "steps");
         my_json.get_json(steps, distance, "distance");
+        System.out.println("Direction Dis: " + distance);
         my_json.get_json(distance, value, "value");
         dis = Integer.parseInt(value.get(0));
     }
@@ -283,8 +286,8 @@ public class My_Direction {
             }
             road_detail.add(merge);
         }
-        Data.Road        = road;
-        Data.Road_Detail = road_detail;
+        Data.Road        = delete_english(delete_more(road));
+        Data.Road_Detail = delete_english(delete_more(road_detail));
     }
     public void Store_Step(ArrayList<String> lat, ArrayList<String> lng){
         if(Data.Steps!=null){ Data.Steps.removeAll(Data.Steps); }
@@ -296,6 +299,54 @@ public class My_Direction {
             ans.add(tmp);
         }
         Data.Steps = ans;
+    }
+    private ArrayList<String> delete_more(ArrayList<String> list){
+        ArrayList<String> ans = new ArrayList<String>();
+        for(int i=0; i<list.size(); i++) {
+            String text = list.get(i);
+            text = text.replace("/<wbr/>", "");
+            text = text.replace("<", "");
+            text = text.replace(">", "");
+            text = text.replace("=", "");
+            text = text.replace("-", "");
+            text = text.replace(":", "");
+            text = text.replace(".", "");
+            text = text.replace("\"", "");
+            text = text.replace("(", "");
+            text = text.replace(")", "");
+            text = text.replace("/", "");
+
+            ans.add(text);
+        }
+        return ans;
+    }
+
+    private ArrayList<String> delete_english(ArrayList<String> list){
+        ArrayList<String> ans = new ArrayList<String >();
+        for(int i=0; i<list.size();i++) {
+            //ans = text.replace("2", "");
+            String text = list.get(i);
+            text = text.replace(" ", "");
+            //ans = ans.replace(direction, direction+" ");
+//            for (int j = 0; j < 10; j++) {
+//                //System.out.println(i);
+//                String test = String.valueOf(j);
+//                text = text.replace(test, "");
+//            }
+            //System.out.println(ans);
+            for (int j = 0; j < 26; j++) {
+                int num = j + 65; //A
+                String test = Character.toString((char) num);
+                text = text.replace(test, "");
+            }
+            for (int j = 0; j < 26; j++) {
+                int num = j + 97; //a
+                String test = Character.toString((char) num);
+                text = text.replace(test, "");
+            }
+            ans.add(text);
+        }
+        return ans;
     }
     public static void Polyline_decoder(ArrayList<String> list, ArrayList<LatLng> Poly_List) {
         //get all the polylines point

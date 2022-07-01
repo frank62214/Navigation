@@ -7,16 +7,23 @@ import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.view.menu.ActionMenuItemView;
+
 import com.example.navigation.MainActivity;
 import com.example.navigation.R;
+
+import java.util.ArrayList;
 
 public class My_Layout extends RelativeLayout {
 
@@ -27,6 +34,8 @@ public class My_Layout extends RelativeLayout {
     ImageButton btnDrivingMode;
     ImageButton btnBicyclingMode;
     ImageButton btnWalkingMode;
+    ImageButton btnViewSearch;
+
 
     //activity_navigation
     LinearLayout llNext_Turn;
@@ -36,8 +45,8 @@ public class My_Layout extends RelativeLayout {
     TextView tv_Next_Road_Detail;
     TextView tv_Now_Position;
     TextView tv_Next_Dis;
-    TextView tv_Last_Dis;
-    TextView tv_Now_Bearing;
+    //TextView tv_Last_Dis;
+    //TextView tv_Now_Bearing;
 
     //activity_data_view
     LinearLayout lldata_view;
@@ -47,6 +56,12 @@ public class My_Layout extends RelativeLayout {
     //activity_search
     RelativeLayout rlSearch;
     EditText et_search;
+    ScrollView sv_search_result;
+    LinearLayout llsearch_result;
+    ProgressBar SearchProgressBar;
+
+    public ArrayList<Button> Search_Button_Group = new ArrayList<Button>();
+
 
     public My_Layout(Context context) {
         super(context);
@@ -80,6 +95,7 @@ public class My_Layout extends RelativeLayout {
         btnDirections = (ImageButton) layout_view.findViewById(R.id.btnDirections);
         btnFocusUser  = (ImageButton) layout_view.findViewById(R.id.btnFocusUser);
         btnNavigation = (ImageButton) layout_view.findViewById(R.id.btnNavigation);
+
         //取得activity_navigation的元件
         llNext_Turn   = (LinearLayout) navigation_view.findViewById(R.id.llNext_Turn);
         llUserArrow   = (LinearLayout) navigation_view.findViewById(R.id.llUserArrow);
@@ -88,8 +104,8 @@ public class My_Layout extends RelativeLayout {
         tv_Next_Road_Detail = (TextView) llNext_Turn.findViewById(R.id.tv_Next_Road_Detail);
         tv_Now_Position     = (TextView) llNext_Turn.findViewById(R.id.tv_Now_Position);
         tv_Next_Dis         = (TextView) llNext_Turn.findViewById(R.id.tv_Next_Dis);
-        tv_Last_Dis         = (TextView) llNext_Turn.findViewById(R.id.tv_Last_Dis);
-        tv_Now_Bearing      = (TextView) llNext_Turn.findViewById(R.id.tv_Now_Bearing);
+        //tv_Last_Dis         = (TextView) llNext_Turn.findViewById(R.id.tv_Last_Dis);
+        //tv_Now_Bearing      = (TextView) llNext_Turn.findViewById(R.id.tv_Now_Bearing);
         //取得activity_data_view
         lldata_view = (LinearLayout) data_view.findViewById(R.id.lldata_view);
         data_view_Now_Page = (TextView) lldata_view.findViewById(R.id.data_view_Now_Page);
@@ -97,6 +113,10 @@ public class My_Layout extends RelativeLayout {
         //取得Search Layout的元件
         rlSearch = (RelativeLayout) search_view.findViewById(R.id.rlSearch);
         et_search = (EditText) rlSearch.findViewById(R.id.et_search);
+        btnViewSearch = (ImageButton) rlSearch.findViewById(R.id.btnViewSearch);
+        sv_search_result = (ScrollView) rlSearch.findViewById(R.id.sv_search_result);
+        llsearch_result = (LinearLayout) rlSearch.findViewById(R.id.llsearch_result);
+        SearchProgressBar = (ProgressBar) rlSearch.findViewById(R.id.SearchProgressBar);
         //取得mode選擇
         btnDrivingMode   = (ImageButton) layout_view.findViewById(R.id.btnDrivingMode);
         btnBicyclingMode = (ImageButton) layout_view.findViewById(R.id.btnBicyclingMode);
@@ -105,10 +125,7 @@ public class My_Layout extends RelativeLayout {
     public void Select_Page(My_Map my_map){
         if(Data.Page_Order.get(Data.Page_Order.size()-1).equals(Data.Main_Page)){ Main_Page(my_map); }
         if(Data.Page_Order.get(Data.Page_Order.size()-1).equals(Data.Search_Page)){ Search_Page(); }
-        if(Data.Page_Order.get(Data.Page_Order.size()-1).equals(Data.Direction_Page)){
-
-            Direction_Page(my_map);
-        }
+        if(Data.Page_Order.get(Data.Page_Order.size()-1).equals(Data.Direction_Page)){ Direction_Page(my_map); }
 //        if(Data.Page_Order.get(Data.Page_Order.size()-1).equals(Data.Navigation_Page)){ Navigation_Page(my_map); }
     }
     public void Main_Page(My_Map my_map){
@@ -118,10 +135,17 @@ public class My_Layout extends RelativeLayout {
         my_map.Remove_Direction();
         my_map.Remove_Destination();
         btnNavigation.setVisibility(View.GONE);
+        sv_search_result.setVisibility(View.GONE);
+
+        //關閉元件
+        btnViewSearch.setEnabled(false);
 
         //顯示元件
         my_map.setMyLocationEnabled(true);
         btnDirections.setVisibility(View.VISIBLE);
+
+        //刪除元件
+        Remove_Result();
 
         //移動相機
         my_map.moveCamera(Data.now_position, 15,  0);
@@ -129,7 +153,12 @@ public class My_Layout extends RelativeLayout {
     public void Search_Page(){
         data_view_Now_Page.setText("現在頁面: " + Data.Search_Page);
         rlSearch.setBackgroundColor(getResources().getColor(R.color.white));
+        btnViewSearch.setEnabled(true);
+
+        //顯示元件
+        sv_search_result.setVisibility(View.VISIBLE);
     }
+
     public void Direction_Page(My_Map my_map){
         new Handler(Looper.getMainLooper()).post(new Runnable() {
             public void run() {
@@ -138,6 +167,8 @@ public class My_Layout extends RelativeLayout {
                 btnDirections.setVisibility(View.GONE);
                 my_map.Remove_Navigation_MK();
                 llNext_Turn.setVisibility(View.GONE);
+                rlSearch.setBackgroundColor(getResources().getColor(R.color.transparent));
+                sv_search_result.setVisibility(View.GONE);
 
                 //顯示元件
                 rlSearch.setVisibility(View.VISIBLE);
@@ -181,12 +212,12 @@ public class My_Layout extends RelativeLayout {
         tv_Now_Position.setText(text);
     }
     public void setNextRoadDistance(String text) {
-        tv_Next_Dis.setText(text);
+        tv_Next_Dis.setText("距離前方路口" + text + "公尺");
     }
-    public void setLastDistance(String text){  tv_Last_Dis.setText(text);}
-    public void setNow_Bearing(String text){
-        tv_Now_Bearing.setText(text);
-    }
+//    public void setLastDistance(String text){  tv_Last_Dis.setText("距離前方路口" + text);}
+//    public void setNow_Bearing(String text){
+//        tv_Now_Bearing.setText(text);
+//    }
     //public void setDataViewNowPosition(String text){
     //    data_view_Now_Position.setText(text);
     //}
@@ -220,6 +251,25 @@ public class My_Layout extends RelativeLayout {
             }
         }
     }
+    public void Set_Search_Place_Result(ArrayList<String> data){
+        if(data.size()!=0) {
+            for (int i = 0; i < data.size(); i++) {
+                Button bt = new Button(getContext());
+                bt.setText(data.get(i));
+                bt.setTextColor(getResources().getColor(R.color.black));
+                bt.setBackgroundColor(getResources().getColor(R.color.white));
+                bt.setHeight(dp2px(50));
+                bt.setTextSize(20);
+                bt.setId(i);
+                //ll.addView(bt);
+                llsearch_result.addView(bt);
+                Search_Button_Group.add(bt);
+            }
+        }
+        else{
+            Toast("查無資料，請重新搜尋");
+        }
+    }
 
     public void Toast(String text){
         new Handler(Looper.getMainLooper()).post(new Runnable() {
@@ -228,5 +278,12 @@ public class My_Layout extends RelativeLayout {
             }
         });
 
+    }
+    private int dp2px(float dpValue) {
+        final float scale = getResources().getDisplayMetrics().density;
+        return (int) (dpValue * scale + 0.5f);
+    }
+    public void Remove_Result(){
+        llsearch_result.removeAllViews();
     }
 }

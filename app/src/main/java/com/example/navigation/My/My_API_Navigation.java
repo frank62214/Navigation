@@ -50,6 +50,7 @@ public class My_API_Navigation implements Runnable{
             public void onStartLocationReady(LatLng start, LatLng end) {
                 //get bearing
                 float bearing = my_map.Cal_Bearing(start, end);
+                my_layout.Toast(Float.toString(bearing));
                 my_map.set_Navigation_Camera(start, bearing);
             }
             @Override
@@ -70,6 +71,7 @@ public class My_API_Navigation implements Runnable{
                 my_layout.Set_Turn_Pic(Data.Road_Detail.get(select));
                 my_layout.setNowPosition(Data.now_position.toString());
                 my_layout.setNextRoadDistance(Integer.toString(distance));
+                System.out.println("distance: " + distance);
             }
         });
     }

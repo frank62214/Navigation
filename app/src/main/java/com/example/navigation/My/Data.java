@@ -15,6 +15,7 @@ public class Data {
     final public static String Search_Page = "Search";
     final public static String Direction_Page = "Direction";
     final public static String Navigation_Page = "Navigation";
+    public static boolean Lock_User = false;
 
     //location data
     public static LatLng now_position;
