@@ -80,10 +80,30 @@ public class My_Map {
             Data.Init_Camera = false;
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(point, 15));
         }
+        if(Data.Lock_User){
+            cameraPosition = new CameraPosition.Builder()
+                    .target(point)
+                    .zoom(mMap.getCameraPosition().zoom)
+                    .bearing(mMap.getCameraPosition().bearing)
+                    .tilt(mMap.getCameraPosition().tilt)
+                    .build();
+            mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+        }
+    }
+    public void initCarCamera(LatLng point){
+        if(point==null) return;
+        Navigation_MK.setPosition(Cal_LatLng(point, reverse(Data.now_bearing), 0.005));
+        cameraPosition = new CameraPosition.Builder()
+                .target(Cal_LatLng(point,Data.now_bearing, 0.055))
+                .zoom(20)
+                .bearing(Data.now_bearing)
+                .tilt(65)
+                .build();
+        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
     }
     public void moveCamera(LatLng point){
         if(point==null) { return; }
-        if(!Data.Lock_User) { return; }
+        //if(!Data.Lock_User) { return; }
         if (Data.Init_Camera) { initCamera(point); }
         //System.out.println(cameraPosition.target);
         cameraPosition = new CameraPosition.Builder()
@@ -112,6 +132,17 @@ public class My_Map {
                     .zoom(zoom)
                     .bearing(bearing)
                     .tilt(mMap.getCameraPosition().tilt)
+                    .build();
+            mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+        }
+    }
+    public void moveCamera(LatLng point, float zoom, float bearing, float tilt){
+        if(point!=null) {
+            cameraPosition = new CameraPosition.Builder()
+                    .target(point)
+                    .zoom(zoom)
+                    .bearing(bearing)
+                    .tilt(tilt)
                     .build();
             mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
         }

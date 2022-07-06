@@ -93,7 +93,7 @@ public class MainActivity extends AppCompatActivity implements
 
                 Data.now_position = point;
                 my_map.initCamera(Data.now_position);
-                my_map.moveCamera(Data.now_position);
+                //my_map.moveCamera(Data.now_position);
                 Toast.makeText(MainActivity.this, "更新位置", Toast.LENGTH_SHORT).show();
             }
         };

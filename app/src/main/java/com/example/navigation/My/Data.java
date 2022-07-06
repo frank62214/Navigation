@@ -15,10 +15,12 @@ public class Data {
     final public static String Search_Page = "Search";
     final public static String Direction_Page = "Direction";
     final public static String Navigation_Page = "Navigation";
+    final public static String CarMode_Page = "CarMode";
     public static boolean Lock_User = false;
 
     //location data
     public static LatLng now_position;
+    public static LatLng cal_position;
     public static float now_bearing;
     public static LatLng Destination;
 
@@ -37,4 +39,7 @@ public class Data {
     //Navigation data
     public static boolean Navigation_Status = false;
     public static LatLng Navigation_Location;
+
+    //CarMode data
+    public static boolean CarMode_Status = false;
 }

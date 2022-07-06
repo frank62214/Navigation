@@ -31,10 +31,12 @@ public class My_Layout extends RelativeLayout {
     ImageButton btnDirections;
     ImageButton btnFocusUser;
     ImageButton btnNavigation;
+    LinearLayout llMode;
     ImageButton btnDrivingMode;
     ImageButton btnBicyclingMode;
     ImageButton btnWalkingMode;
     ImageButton btnViewSearch;
+    ImageButton btnCarMode;
 
 
     //activity_navigation
@@ -95,6 +97,7 @@ public class My_Layout extends RelativeLayout {
         btnDirections = (ImageButton) layout_view.findViewById(R.id.btnDirections);
         btnFocusUser  = (ImageButton) layout_view.findViewById(R.id.btnFocusUser);
         btnNavigation = (ImageButton) layout_view.findViewById(R.id.btnNavigation);
+        btnCarMode    = (ImageButton) layout_view.findViewById(R.id.btnCarMode);
 
         //取得activity_navigation的元件
         llNext_Turn   = (LinearLayout) navigation_view.findViewById(R.id.llNext_Turn);
@@ -118,6 +121,7 @@ public class My_Layout extends RelativeLayout {
         llsearch_result = (LinearLayout) rlSearch.findViewById(R.id.llsearch_result);
         SearchProgressBar = (ProgressBar) rlSearch.findViewById(R.id.SearchProgressBar);
         //取得mode選擇
+        llMode           = (LinearLayout) layout_view.findViewById(R.id.llMode);
         btnDrivingMode   = (ImageButton) layout_view.findViewById(R.id.btnDrivingMode);
         btnBicyclingMode = (ImageButton) layout_view.findViewById(R.id.btnBicyclingMode);
         btnWalkingMode   = (ImageButton) layout_view.findViewById(R.id.btnWalkingMode);
@@ -136,19 +140,27 @@ public class My_Layout extends RelativeLayout {
         my_map.Remove_Destination();
         btnNavigation.setVisibility(View.GONE);
         sv_search_result.setVisibility(View.GONE);
+        llNext_Turn.setVisibility(View.GONE);
 
         //關閉元件
         btnViewSearch.setEnabled(false);
 
         //顯示元件
+        rlSearch.setVisibility(View.VISIBLE);
         my_map.setMyLocationEnabled(true);
+        llMode.setVisibility(View.VISIBLE);
         btnDirections.setVisibility(View.VISIBLE);
 
         //刪除元件
         Remove_Result();
+        my_map.Remove_Navigation_MK();
+        Data.Destination = null;
 
         //移動相機
         my_map.moveCamera(Data.now_position, 15,  0);
+
+        //狀態解除
+        Data.CarMode_Status = false;
     }
     public void Search_Page(){
         data_view_Now_Page.setText("現在頁面: " + Data.Search_Page);
@@ -189,6 +201,24 @@ public class My_Layout extends RelativeLayout {
                 btnNavigation.setVisibility(View.GONE);
                 llNext_Turn.setVisibility(View.VISIBLE);
                 my_map.setMyLocationEnabled(false);
+//                Data.Navigation_Status = true;
+//                System.out.println(Data.Navigation_Status);
+                //llUserArrow.setVisibility(View.VISIBLE);
+
+            }
+        });
+    }
+    public void CarMode_Page(){
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            public void run() {
+                data_view_Now_Page.setText("現在頁面: " + Data.CarMode_Page);
+                //隱藏元件
+                llMode.setVisibility(View.GONE);
+                rlSearch.setVisibility(View.GONE);
+                btnNavigation.setVisibility(View.GONE);
+                btnDirections.setVisibility(View.GONE);
+
+                llNext_Turn.setVisibility(View.VISIBLE);
 //                Data.Navigation_Status = true;
 //                System.out.println(Data.Navigation_Status);
                 //llUserArrow.setVisibility(View.VISIBLE);

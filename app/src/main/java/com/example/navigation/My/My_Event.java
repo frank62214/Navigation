@@ -28,11 +28,11 @@ public class My_Event {
         my_layout.btnDirections.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Data.Page_Order.add(Data.Direction_Page);
                 if (Data.Destination == null) {
                     Toast.makeText(my_layout.getContext(), "請先選擇終點", Toast.LENGTH_SHORT).show();
                     return;
                 } else {
+                    Data.Page_Order.add(Data.Direction_Page);
                     Toast.makeText(my_layout.getContext(), "規劃路線", Toast.LENGTH_SHORT).show();
                     My_Direction my_direction = new My_Direction();
                     my_direction.searchDirection();
@@ -144,6 +144,20 @@ public class My_Event {
                     }
 
                 });
+            }
+        });
+        my_layout.btnCarMode.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.M)
+            @Override
+            public void onClick(View view) {
+                Data.Page_Order.add(Data.CarMode_Page);
+                my_layout.CarMode_Page();
+                my_map.setMyLocationEnabled(false);
+                My_Sensor my_sensor = new My_Sensor(my_layout.getContext());
+                my_sensor.registerListener();
+                My_CarMode my_carMode = new My_CarMode(my_layout, my_map);
+                Thread t = new Thread(my_carMode);
+                t.start();
             }
         });
     }

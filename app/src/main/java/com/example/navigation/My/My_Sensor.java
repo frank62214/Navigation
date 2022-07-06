@@ -152,7 +152,7 @@ public class My_Sensor extends AppCompatActivity implements SensorEventListener 
         mSensorManager.getOrientation(R, value);
 
         value[0] = (float) Math.toDegrees(value[0]);
-        int b= 0;
+        float b = 0;
         //System.out.println(value[0]);
         if(value[0]<0) {
             b = Math.round(360 + value[0]);
@@ -160,11 +160,13 @@ public class My_Sensor extends AppCompatActivity implements SensorEventListener 
         }
         else{
             b = Math.round(value[0]);
+            //System.out.println(b);
         }
         //System.out.println(value[0]);
         //bearing = value[0];
         String bearing_s = "Bearing=" + value[0];
         //Data.now_bearing = value[0];
+        //System.out.println(bearing_s);
         Data.now_bearing = b;
 //        String values = "X-axis=" + String.valueOf(sensorEvent.values[0]) + "\n" +
 //                         "Y-axis=" + String.valueOf(sensorEvent.values[1]) + "\n" +

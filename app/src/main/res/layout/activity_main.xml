@@ -42,6 +42,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:layout_gravity="right|center_vertical">
+
             <ImageButton
                 android:id="@+id/btnDrivingMode"
                 android:layout_width="50dp"
@@ -78,7 +79,17 @@
                 android:layout_gravity="right|center_vertical"
                 android:visibility="gone"/>
         </LinearLayout>
-
+            <ImageButton
+                android:id="@+id/btnCarMode"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:background="@drawable/btn_round"
+                app:srcCompat="@drawable/ic_near_me"
+                tools:ignore="ContentDescription,InvalidId"
+                android:layout_gravity="right|center_vertical"/>
             <ImageButton
                 android:id="@+id/btnDirections"
                 android:layout_width="50dp"
