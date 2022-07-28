@@ -90,9 +90,10 @@ public class My_Map {
             mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
         }
     }
-    public void initCarCamera(LatLng point){
+    public void initCarCamera(LatLng point, float bearing){
         if(point==null) return;
         Navigation_MK.setPosition(Cal_LatLng(point, reverse(Data.now_bearing), 0.005));
+
         cameraPosition = new CameraPosition.Builder()
                 .target(Cal_LatLng(point,Data.now_bearing, 0.055))
                 .zoom(20)
@@ -272,30 +273,30 @@ public class My_Map {
         if(Navigation_MK!=null){ Navigation_MK.remove(); }
     }
     public float Cal_Bearing(LatLng Start, LatLng End){
-        System.out.println("Start: "+ Start);
-        System.out.println("End: "+ End);
+        //System.out.println("Start: "+ Start);
+        //System.out.println("End: "+ End);
         double degress = Math.PI / 180.0;
-        System.out.println("Degress: " + degress);
+        //System.out.println("Degress: " + degress);
         double phi1 = Start.latitude * degress;
-        System.out.println("phi1: " + phi1);
+        //System.out.println("phi1: " + phi1);
         double phi2 = End.latitude * degress;
-        System.out.println("phi2: " + phi2);
+        //System.out.println("phi2: " + phi2);
         double lam1 = Start.longitude * degress;
-        System.out.println("lam1: " + lam1);
+        //System.out.println("lam1: " + lam1);
         double lam2 = End.longitude * degress;
-        System.out.println("lam2: " + lam2);
+        //System.out.println("lam2: " + lam2);
 
         double y = Math.sin(lam2 - lam1) * Math.cos(phi2);
-        System.out.println("y: " + y);
+        //System.out.println("y: " + y);
         double x = Math.cos(phi1) * Math.sin(phi2) - Math.sin(phi1) * Math.cos(phi2) * Math.cos(lam2 - lam1);
-        System.out.println("x: " + x);
+        //System.out.println("x: " + x);
         float bearing = (float)(((Math.atan2(y, x) * 180) / Math.PI) + 360) % 360;
-        System.out.println("bearing1: " + bearing);
+        //System.out.println("bearing1: " + bearing);
         //System.out.println(bearing);
         if (bearing < 0) {
             bearing = bearing + 360;
         }
-        System.out.println("bearing2: " + bearing);
+        //System.out.println("bearing2: " + bearing);
         return bearing;
     }
     public LatLng Cal_LatLng(LatLng Start, double bearing, double distance){

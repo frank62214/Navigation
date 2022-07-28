@@ -100,6 +100,7 @@ public class MainActivity extends AppCompatActivity implements
         mLocationMgr = (LocationManager) getSystemService(LOCATION_SERVICE);
         //mLocationMgr.
     }
+    //Googel 地圖讀取好的時候執行
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
         mMap = googleMap;

@@ -1,5 +1,6 @@
 package com.example.navigation.My;
 
+import com.example.navigation.R;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.io.BufferedReader;
@@ -34,7 +35,7 @@ public class My_Direction {
         String origin      = Data.now_position.latitude + "," + Data.now_position.longitude;
         String destination = Data.Destination.latitude + "," + Data.Destination.longitude;
         System.out.println(origin);
-        System.out.println(destination);
+        //System.out.println(destination);
         String mode = Data.Mode;
         url = Direction_url_1 + destination + Direction_url_2 + mode + Direction_url_3 + origin;
         url = url + Direction_url_4 + key;
@@ -186,7 +187,7 @@ public class My_Direction {
         my_json.get_json(routes, legs, "legs");
         my_json.get_json(legs, steps, "steps");
         my_json.get_json(steps, distance, "distance");
-        System.out.println("Direction Dis: " + distance);
+        //System.out.println("Direction Dis: " + distance);
         my_json.get_json(distance, value, "value");
         dis = Integer.parseInt(value.get(0));
     }

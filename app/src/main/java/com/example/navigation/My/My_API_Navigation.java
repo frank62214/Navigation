@@ -12,6 +12,7 @@ import java.util.ArrayList;
 public class My_API_Navigation implements Runnable{
     private My_Layout my_layout;
     private My_Map my_map;
+    private LatLng last_position;
     private int distance;
 
 
@@ -23,7 +24,7 @@ public class My_API_Navigation implements Runnable{
     @Override
     public void run() {
         my_map.initUserMK();
-        System.out.println(Data.Navigation_Status);
+        //System.out.println(Data.Navigation_Status);
         Data.Navigation_Status = true;
         while (Data.Steps.size()>0) {
             if(Data.Navigation_Status) {
@@ -51,7 +52,14 @@ public class My_API_Navigation implements Runnable{
                 //get bearing
                 float bearing = my_map.Cal_Bearing(start, end);
                 my_layout.Toast(Float.toString(bearing));
-                my_map.set_Navigation_Camera(start, bearing);
+                if(last_position==null){last_position=start;}
+                if(cal_distance(last_position, start)<15){
+                    last_position = start;
+                    my_map.set_Navigation_Camera(start, bearing);
+                }
+                else {
+                    my_map.set_Navigation_Camera(last_position, bearing);
+                }
             }
             @Override
             public void onDisReady(int dis) {
@@ -81,5 +89,19 @@ public class My_API_Navigation implements Runnable{
                 my_map.set_Direction_Camera();
             }
         });
+    }
+    private double cal_distance(LatLng Start, LatLng End){
+        double EARTH_RADIUS = 6378137.0;
+        //double gps2m(double lat_a, double lng_a, double lat_b, double lng_b) {
+        double radLat1 = (Start.latitude * Math.PI / 180.0);
+        double radLat2 = (End.latitude * Math.PI / 180.0);
+        double a = radLat1 - radLat2;
+        double b = (Start.longitude - End.longitude) * Math.PI / 180.0;
+        double s = 2 * Math.asin(Math.sqrt(Math.pow(Math.sin(a / 2), 2) +
+                Math.cos(radLat1) * Math.cos(radLat2)
+                        * Math.pow(Math.sin(b / 2), 2)));
+        s = s * EARTH_RADIUS;
+        s = Math.round(s * 10000) / 10000;
+        return s;
     }
 }

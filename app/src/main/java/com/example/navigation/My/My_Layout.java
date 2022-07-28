@@ -163,6 +163,7 @@ public class My_Layout extends RelativeLayout {
         Data.CarMode_Status = false;
     }
     public void Search_Page(){
+        Data.Page_Order.add(Data.Search_Page);
         data_view_Now_Page.setText("現在頁面: " + Data.Search_Page);
         rlSearch.setBackgroundColor(getResources().getColor(R.color.white));
         btnViewSearch.setEnabled(true);
@@ -172,6 +173,7 @@ public class My_Layout extends RelativeLayout {
     }
 
     public void Direction_Page(My_Map my_map){
+        Data.Page_Order.add(Data.Direction_Page);
         new Handler(Looper.getMainLooper()).post(new Runnable() {
             public void run() {
                 data_view_Now_Page.setText("現在頁面: " + Data.Direction_Page);
@@ -181,6 +183,8 @@ public class My_Layout extends RelativeLayout {
                 llNext_Turn.setVisibility(View.GONE);
                 rlSearch.setBackgroundColor(getResources().getColor(R.color.transparent));
                 sv_search_result.setVisibility(View.GONE);
+                btnCarMode.setVisibility(View.VISIBLE);
+                Data.Navigation_Status = false;
 
                 //顯示元件
                 rlSearch.setVisibility(View.VISIBLE);
@@ -193,6 +197,7 @@ public class My_Layout extends RelativeLayout {
         });
     }
     public void Navigation_Page(My_Map my_map){
+        Data.Page_Order.add(Data.Navigation_Page);
         new Handler(Looper.getMainLooper()).post(new Runnable() {
             public void run() {
                 data_view_Now_Page.setText("現在頁面: " + Data.Navigation_Page);
@@ -200,6 +205,7 @@ public class My_Layout extends RelativeLayout {
                 rlSearch.setVisibility(View.GONE);
                 btnNavigation.setVisibility(View.GONE);
                 llNext_Turn.setVisibility(View.VISIBLE);
+                btnCarMode.setVisibility(View.GONE);
                 my_map.setMyLocationEnabled(false);
 //                Data.Navigation_Status = true;
 //                System.out.println(Data.Navigation_Status);
@@ -209,6 +215,7 @@ public class My_Layout extends RelativeLayout {
         });
     }
     public void CarMode_Page(){
+        Data.Page_Order.add(Data.CarMode_Page);
         new Handler(Looper.getMainLooper()).post(new Runnable() {
             public void run() {
                 data_view_Now_Page.setText("現在頁面: " + Data.CarMode_Page);

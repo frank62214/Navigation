@@ -32,7 +32,7 @@ public class My_Event {
                     Toast.makeText(my_layout.getContext(), "請先選擇終點", Toast.LENGTH_SHORT).show();
                     return;
                 } else {
-                    Data.Page_Order.add(Data.Direction_Page);
+                    //Data.Page_Order.add(Data.Direction_Page);
                     Toast.makeText(my_layout.getContext(), "規劃路線", Toast.LENGTH_SHORT).show();
                     My_Direction my_direction = new My_Direction();
                     my_direction.searchDirection();
@@ -81,7 +81,6 @@ public class My_Event {
             public void onClick(View view) {
                 Toast.makeText(my_layout.getContext(), "開始導航", Toast.LENGTH_SHORT).show();
                 my_layout.Navigation_Page(my_map);
-                Data.Page_Order.add(Data.Navigation_Page);
 //                My_Navigation my_navigation = new My_Navigation(my_layout, my_map);
 //                Thread t = new Thread(my_navigation);
 //                t.start();
@@ -94,7 +93,7 @@ public class My_Event {
             @Override
             public void onClick(View view) {
                 //Toast.makeText(my_layout.getContext(), "搜尋目的地", Toast.LENGTH_SHORT).show();
-                Data.Page_Order.add(Data.Search_Page);
+//                Data.Page_Order.add(Data.Search_Page);
                 my_layout.Search_Page();
             }
         });
@@ -123,7 +122,7 @@ public class My_Event {
             @Override
             public void onClick(View view) {
                 my_layout.Remove_Result();
-                Data.Page_Order.add(Data.Search_Page);
+                //Data.Page_Order.add(Data.Search_Page);
                 close_keyboard(view);
                 my_layout.SearchProgressBar.setVisibility(View.VISIBLE);
                 String destination = my_layout.et_search.getText().toString();
@@ -150,7 +149,7 @@ public class My_Event {
             @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
             public void onClick(View view) {
-                Data.Page_Order.add(Data.CarMode_Page);
+                //Data.Page_Order.add(Data.CarMode_Page);
                 my_layout.CarMode_Page();
                 my_map.setMyLocationEnabled(false);
                 My_Sensor my_sensor = new My_Sensor(my_layout.getContext());
