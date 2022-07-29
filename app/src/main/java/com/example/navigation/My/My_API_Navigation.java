@@ -14,6 +14,8 @@ public class My_API_Navigation implements Runnable{
     private My_Map my_map;
     private LatLng last_position;
     private int distance;
+    private double toDestinationDis = 0;
+    private String toDestinationDis_s = "";
 
 
     public My_API_Navigation(My_Layout layout, My_Map map){
@@ -26,13 +28,15 @@ public class My_API_Navigation implements Runnable{
         my_map.initUserMK();
         //System.out.println(Data.Navigation_Status);
         Data.Navigation_Status = true;
+        toDestinationDis = cal_distance(Data.now_position, Data.Destination);
         while (Data.Steps.size()>0) {
-            if(Data.Navigation_Status) {
+            if(Data.Navigation_Status && toDestinationDis>10) {
                 draw_Direction();
-                set_Navigation_Text();
+                //set_Navigation_Text();
                 SystemClock.sleep(1000);
             }
             else{
+                Data.Navigation_Status = false;
                 set_Direction_Camera();
                 return;
             }
@@ -60,6 +64,7 @@ public class My_API_Navigation implements Runnable{
                 else {
                     my_map.set_Navigation_Camera(last_position, bearing);
                 }
+                set_Navigation_Text();
             }
             @Override
             public void onDisReady(int dis) {
@@ -79,6 +84,7 @@ public class My_API_Navigation implements Runnable{
                 my_layout.Set_Turn_Pic(Data.Road_Detail.get(select));
                 my_layout.setNowPosition(Data.now_position.toString());
                 my_layout.setNextRoadDistance(Integer.toString(distance));
+                my_layout.setDisToDestination(Double.toString(cal_distance(last_position, Data.Destination)));
                 System.out.println("distance: " + distance);
             }
         });

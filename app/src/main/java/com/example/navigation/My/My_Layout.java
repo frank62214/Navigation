@@ -47,6 +47,7 @@ public class My_Layout extends RelativeLayout {
     TextView tv_Next_Road_Detail;
     TextView tv_Now_Position;
     TextView tv_Next_Dis;
+    TextView tv_to_Destination_dis;
     //TextView tv_Last_Dis;
     //TextView tv_Now_Bearing;
 
@@ -102,11 +103,12 @@ public class My_Layout extends RelativeLayout {
         //取得activity_navigation的元件
         llNext_Turn   = (LinearLayout) navigation_view.findViewById(R.id.llNext_Turn);
         llUserArrow   = (LinearLayout) navigation_view.findViewById(R.id.llUserArrow);
-        ic_Next_Turn        = (ImageView) llNext_Turn.findViewById(R.id.ic_Next_Turn);
-        tv_Next_Road        = (TextView) llNext_Turn.findViewById(R.id.tv_Next_Road);
-        tv_Next_Road_Detail = (TextView) llNext_Turn.findViewById(R.id.tv_Next_Road_Detail);
-        tv_Now_Position     = (TextView) llNext_Turn.findViewById(R.id.tv_Now_Position);
-        tv_Next_Dis         = (TextView) llNext_Turn.findViewById(R.id.tv_Next_Dis);
+        ic_Next_Turn          = (ImageView) llNext_Turn.findViewById(R.id.ic_Next_Turn);
+        tv_Next_Road          = (TextView) llNext_Turn.findViewById(R.id.tv_Next_Road);
+        tv_Next_Road_Detail   = (TextView) llNext_Turn.findViewById(R.id.tv_Next_Road_Detail);
+        tv_Now_Position       = (TextView) llNext_Turn.findViewById(R.id.tv_Now_Position);
+        tv_Next_Dis           = (TextView) llNext_Turn.findViewById(R.id.tv_Next_Dis);
+        tv_to_Destination_dis = (TextView) llNext_Turn.findViewById(R.id.tv_to_Destination_dis);
         //tv_Last_Dis         = (TextView) llNext_Turn.findViewById(R.id.tv_Last_Dis);
         //tv_Now_Bearing      = (TextView) llNext_Turn.findViewById(R.id.tv_Now_Bearing);
         //取得activity_data_view
@@ -163,7 +165,7 @@ public class My_Layout extends RelativeLayout {
         Data.CarMode_Status = false;
     }
     public void Search_Page(){
-        Data.Page_Order.add(Data.Search_Page);
+        if(Data.Page_Order.get(Data.Page_Order.size()-1)!=Data.Search_Page)   Data.Page_Order.add(Data.Search_Page);
         data_view_Now_Page.setText("現在頁面: " + Data.Search_Page);
         rlSearch.setBackgroundColor(getResources().getColor(R.color.white));
         btnViewSearch.setEnabled(true);
@@ -173,7 +175,8 @@ public class My_Layout extends RelativeLayout {
     }
 
     public void Direction_Page(My_Map my_map){
-        Data.Page_Order.add(Data.Direction_Page);
+        if(Data.Page_Order.get(Data.Page_Order.size()-1)!=Data.Direction_Page)   Data.Page_Order.add(Data.Direction_Page);
+        //Data.Page_Order.add(Data.Direction_Page);
         new Handler(Looper.getMainLooper()).post(new Runnable() {
             public void run() {
                 data_view_Now_Page.setText("現在頁面: " + Data.Direction_Page);
@@ -197,7 +200,8 @@ public class My_Layout extends RelativeLayout {
         });
     }
     public void Navigation_Page(My_Map my_map){
-        Data.Page_Order.add(Data.Navigation_Page);
+        if(Data.Page_Order.get(Data.Page_Order.size()-1)!=Data.Navigation_Page)   Data.Page_Order.add(Data.Navigation_Page);
+        //Data.Page_Order.add(Data.Navigation_Page);
         new Handler(Looper.getMainLooper()).post(new Runnable() {
             public void run() {
                 data_view_Now_Page.setText("現在頁面: " + Data.Navigation_Page);
@@ -251,6 +255,7 @@ public class My_Layout extends RelativeLayout {
     public void setNextRoadDistance(String text) {
         tv_Next_Dis.setText("距離前方路口" + text + "公尺");
     }
+    public void setDisToDestination(String text) {tv_to_Destination_dis.setText("距離目的地還有" + text + "公尺");}
 //    public void setLastDistance(String text){  tv_Last_Dis.setText("距離前方路口" + text);}
 //    public void setNow_Bearing(String text){
 //        tv_Now_Bearing.setText(text);

@@ -268,11 +268,15 @@ public class MainActivity extends AppCompatActivity implements
     }
     @Override
     public void onBackPressed(){
+        //System.out.println("onBackPressed");
+        System.out.print("page change : " + Data.Page_Order);
+        System.out.print("->");
         if(Data.Page_Order.size()==1){
             goBackToDesktop();
         }
         else{
             Data.Page_Order.remove(Data.Page_Order.size()-1);
+            System.out.println(Data.Page_Order);
             my_layout.Select_Page(my_map);
         }
 

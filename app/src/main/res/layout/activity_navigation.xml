@@ -68,6 +68,13 @@
                     android:text="現在位置:"
                     android:textSize="10dp"
                     android:textColor="@color/black" />
+                <TextView
+                    android:id="@+id/tv_to_Destination_dis"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="距離終點位置:"
+                    android:textSize="10dp"
+                    android:textColor="@color/black"/>
 
             </LinearLayout>
         </LinearLayout>
