@@ -34,7 +34,7 @@ public class My_Direction {
     public void searchDirection(){
         String origin      = Data.now_position.latitude + "," + Data.now_position.longitude;
         String destination = Data.Destination.latitude + "," + Data.Destination.longitude;
-        System.out.println(origin);
+        //System.out.println(origin);
         //System.out.println(destination);
         String mode = Data.Mode;
         url = Direction_url_1 + destination + Direction_url_2 + mode + Direction_url_3 + origin;

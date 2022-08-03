@@ -184,7 +184,7 @@ public class My_Map {
                         new LatLng(N, E)  // NE bounds
                 );
                 mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(DestinationBounds, 300));
-                System.out.println(mMap.getCameraPosition().zoom);
+                //System.out.println(mMap.getCameraPosition().zoom);
             }
         });
     }

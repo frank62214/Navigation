@@ -84,9 +84,13 @@ public class My_Event {
 //                My_Navigation my_navigation = new My_Navigation(my_layout, my_map);
 //                Thread t = new Thread(my_navigation);
 //                t.start();
-                My_API_Navigation my_api_navigation = new My_API_Navigation(my_layout, my_map);
-                Thread t = new Thread(my_api_navigation);
-                t.start();
+
+                //2022.08.03 測試紀錄
+                //My_API_Navigation my_api_navigation = new My_API_Navigation(my_layout, my_map);
+                //Thread t = new Thread(my_api_navigation);
+                //t.start();
+//
+
             }
         });
         my_layout.et_search.setOnClickListener(new View.OnClickListener() {
@@ -101,21 +105,21 @@ public class My_Event {
             @Override
             public void onClick(View view) {
                 my_layout.Select_Mode(Data.Driving);
-                System.out.println(Data.Mode);
+                //System.out.println(Data.Mode);
             }
         });
         my_layout.btnBicyclingMode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 my_layout.Select_Mode(Data.Bicycling);
-                System.out.println(Data.Mode);
+                //System.out.println(Data.Mode);
             }
         });
         my_layout.btnWalkingMode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 my_layout.Select_Mode(Data.Walking);
-                System.out.println(Data.Mode);
+                //System.out.println(Data.Mode);
             }
         });
         my_layout.btnViewSearch.setOnClickListener(new View.OnClickListener() {
@@ -126,7 +130,7 @@ public class My_Event {
                 close_keyboard(view);
                 my_layout.SearchProgressBar.setVisibility(View.VISIBLE);
                 String destination = my_layout.et_search.getText().toString();
-                System.out.println(destination);
+                //System.out.println(destination);
                 //Toast.makeText(my_layout.getContext(), "搜尋目的地", Toast.LENGTH_SHORT).show();
                 My_Search my_search = new My_Search();
                 my_search.SearchDestination(destination);

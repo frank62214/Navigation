@@ -31,9 +31,10 @@ public class My_API_Navigation implements Runnable{
         toDestinationDis = cal_distance(Data.now_position, Data.Destination);
         while (Data.Steps.size()>0) {
             if(Data.Navigation_Status && toDestinationDis>10) {
-                draw_Direction();
-                //set_Navigation_Text();
-                SystemClock.sleep(1000);
+                if(!check_drift()) {
+                    draw_Direction();
+                    SystemClock.sleep(1000);
+                }
             }
             else{
                 Data.Navigation_Status = false;
@@ -55,15 +56,21 @@ public class My_API_Navigation implements Runnable{
             public void onStartLocationReady(LatLng start, LatLng end) {
                 //get bearing
                 float bearing = my_map.Cal_Bearing(start, end);
-                my_layout.Toast(Float.toString(bearing));
-                if(last_position==null){last_position=start;}
-                if(cal_distance(last_position, start)<15){
-                    last_position = start;
-                    my_map.set_Navigation_Camera(start, bearing);
-                }
-                else {
-                    my_map.set_Navigation_Camera(last_position, bearing);
-                }
+                //if(last_position==null){last_position=Data.now_position;}
+                //my_layout.Toast("飄移距離:" + Double.toString(cal_distance(last_position, start)));
+                //if(cal_distance(last_position, start)<50){
+//                if(!check_drift()){
+//                    //my_layout.Toast("更新距離:");
+//                    //last_position = start;
+//                    my_map.set_Navigation_Camera(start, bearing);
+//                }
+//                else {
+//                    my_map.set_Navigation_Camera(last_position, bearing);
+//                }
+
+                //---------------------------------------
+                my_map.set_Navigation_Camera(start, bearing);
+                //---------------------------------------
                 set_Navigation_Text();
             }
             @Override
@@ -85,14 +92,16 @@ public class My_API_Navigation implements Runnable{
                 my_layout.setNowPosition(Data.now_position.toString());
                 my_layout.setNextRoadDistance(Integer.toString(distance));
                 my_layout.setDisToDestination(Double.toString(cal_distance(last_position, Data.Destination)));
-                System.out.println("distance: " + distance);
+                //System.out.println("distance: " + distance);
             }
         });
     }
     public void set_Direction_Camera(){
         new Handler(Looper.getMainLooper()).post(new Runnable() {
             public void run() {
-                my_map.set_Direction_Camera();
+
+                //my_map.set_Direction_Camera();
+                my_layout.Direction_Page(my_map);
             }
         });
     }
@@ -109,5 +118,15 @@ public class My_API_Navigation implements Runnable{
         s = s * EARTH_RADIUS;
         s = Math.round(s * 10000) / 10000;
         return s;
+    }
+    private boolean check_drift(){
+        boolean drift = false;
+        if(last_position==null){last_position=Data.now_position;}
+        last_position = Data.now_position;
+        if(cal_distance(Data.now_position, last_position)>10){
+            drift = true;
+            my_layout.Toast("飄移觸發");
+        }
+        return drift;
     }
 }

@@ -78,7 +78,7 @@ public class My_CarMode implements Runnable{
         double y = Math.sin(lam2 - lam1) * Math.cos(phi2);
         double x = Math.cos(phi1) * Math.sin(phi2) - Math.sin(phi1) * Math.cos(phi2) * Math.cos(lam2 - lam1);
         float bearing = (float)(((Math.atan2(y, x) * 180) / Math.PI) + 360) % 360;
-        System.out.println(bearing);
+        //System.out.println(bearing);
         if (bearing < 0) {
             bearing = bearing + 360;
         }

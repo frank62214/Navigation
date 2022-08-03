@@ -15,13 +15,16 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Looper;
+import android.os.SystemClock;
 import android.widget.Toast;
 
 import com.example.navigation.My.Data;
 import com.example.navigation.My.My_Event;
 import com.example.navigation.My.My_Layout;
 import com.example.navigation.My.My_Map;
+import com.example.navigation.My.My_New_Navigation;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -59,6 +62,11 @@ public class MainActivity extends AppCompatActivity implements
     private My_Layout my_layout;
     private My_Map my_map;
     private My_Event my_event;
+    private My_New_Navigation my_new_navigation;
+
+
+    //模擬GPS刷新
+    private final Handler handler = new Handler();
 
     @RequiresApi(api = Build.VERSION_CODES.S)
     @Override
@@ -67,6 +75,7 @@ public class MainActivity extends AppCompatActivity implements
         //setContentView(R.layout.activity_main);
         my_layout = new My_Layout(this);
         setContentView(my_layout);
+
 
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
@@ -85,25 +94,66 @@ public class MainActivity extends AppCompatActivity implements
         mLocationCallback = new LocationCallback() {
             @Override
             public void onLocationResult(LocationResult locationResult) {
-                if (locationResult == null)
-                    return;
+                //首次進入APP有機會試null 所以先不刷新地圖
+                if (locationResult == null) return;
 
+                //取得經緯度
                 Location location = locationResult.getLastLocation();
                 LatLng point = new LatLng(location.getLatitude(), location.getLongitude());
 
+                //存入Data
                 Data.now_position = point;
+                //刷新相機
                 my_map.initCamera(Data.now_position);
+
                 //my_map.moveCamera(Data.now_position);
                 Toast.makeText(MainActivity.this, "更新位置", Toast.LENGTH_SHORT).show();
+
+
+
+                //導航的Function
+                Navigation();
             }
         };
         mLocationMgr = (LocationManager) getSystemService(LOCATION_SERVICE);
-        //mLocationMgr.
+
+    }
+    //模擬GPS刷新--------------------------------------------
+    final Runnable runnable = new Runnable() {
+        public void run() {
+            // TODO Auto-generated method stub
+            // 需要背景作的事
+            while(true) {
+                Navigation();
+                SystemClock.sleep(1000);
+            }
+        }
+    };
+    //------------------------------------------------------
+    public void Navigation(){
+        if(Data.Navigation_Status) {
+            if(my_new_navigation.get_initMK()) {
+                my_new_navigation.set_initMK(false);
+                my_new_navigation.initUserMK();
+            }
+            else {
+                my_new_navigation.Navigation();
+            }
+        }
+        else{
+            my_new_navigation.set_initMK(true);
+        }
     }
     //Googel 地圖讀取好的時候執行
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
         mMap = googleMap;
+        my_new_navigation = new My_New_Navigation(this, mMap);
+        //-------------------------------------------------
+        //模擬GPS刷新
+        Thread t = new Thread(runnable);
+        t.start();
+        //-------------------------------------------------
         my_map = new My_Map(this, mMap);
         my_map.init();
         my_event = new My_Event(my_layout, my_map);
@@ -197,8 +247,7 @@ public class MainActivity extends AppCompatActivity implements
             }
 
             // 啟動定位功能
-            mFusedLocationClient.requestLocationUpdates(
-                    locationRequest, mLocationCallback, Looper.myLooper());
+            mFusedLocationClient.requestLocationUpdates(locationRequest, mLocationCallback, Looper.myLooper());
         } else {
             // 停止定位功能
             mFusedLocationClient.removeLocationUpdates(mLocationCallback);

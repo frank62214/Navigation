@@ -44,7 +44,7 @@ public class My_Navigation implements Runnable{
                 }
             }
             if(last_distance >= distance){
-                System.out.println(last_distance);
+                //System.out.println(last_distance);
                 last_distance = distance;
                 re_direction.removeAll(re_direction);
             }

@@ -172,13 +172,19 @@ public class My_Layout extends RelativeLayout {
 
         //顯示元件
         sv_search_result.setVisibility(View.VISIBLE);
+        btnCarMode.setVisibility(View.VISIBLE);
+        llMode.setVisibility(View.VISIBLE);
     }
 
     public void Direction_Page(My_Map my_map){
+        //返回路徑頁面取消GPS刷新
+        Data.Navigation_Status = false;
+
         if(Data.Page_Order.get(Data.Page_Order.size()-1)!=Data.Direction_Page)   Data.Page_Order.add(Data.Direction_Page);
         //Data.Page_Order.add(Data.Direction_Page);
         new Handler(Looper.getMainLooper()).post(new Runnable() {
             public void run() {
+                my_map.set_Direction_Camera();
                 data_view_Now_Page.setText("現在頁面: " + Data.Direction_Page);
                 //隱藏元件
                 btnDirections.setVisibility(View.GONE);
@@ -186,8 +192,9 @@ public class My_Layout extends RelativeLayout {
                 llNext_Turn.setVisibility(View.GONE);
                 rlSearch.setBackgroundColor(getResources().getColor(R.color.transparent));
                 sv_search_result.setVisibility(View.GONE);
-                btnCarMode.setVisibility(View.VISIBLE);
-                Data.Navigation_Status = false;
+
+                btnCarMode.setVisibility(View.GONE);
+                llMode.setVisibility(View.GONE);
 
                 //顯示元件
                 rlSearch.setVisibility(View.VISIBLE);
@@ -200,6 +207,10 @@ public class My_Layout extends RelativeLayout {
         });
     }
     public void Navigation_Page(My_Map my_map){
+        //設定GPS刷新之後是否進入導航模式
+        Data.Navigation_Status = true;
+
+
         if(Data.Page_Order.get(Data.Page_Order.size()-1)!=Data.Navigation_Page)   Data.Page_Order.add(Data.Navigation_Page);
         //Data.Page_Order.add(Data.Navigation_Page);
         new Handler(Looper.getMainLooper()).post(new Runnable() {
@@ -209,7 +220,6 @@ public class My_Layout extends RelativeLayout {
                 rlSearch.setVisibility(View.GONE);
                 btnNavigation.setVisibility(View.GONE);
                 llNext_Turn.setVisibility(View.VISIBLE);
-                btnCarMode.setVisibility(View.GONE);
                 my_map.setMyLocationEnabled(false);
 //                Data.Navigation_Status = true;
 //                System.out.println(Data.Navigation_Status);
