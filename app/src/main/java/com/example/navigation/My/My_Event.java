@@ -25,6 +25,24 @@ public class My_Event {
     }
 
     public void setEvent() {
+        my_layout.btnRecord.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(Data.Record_Status) {
+                    Data.Record_Status = false;
+                    my_layout.btnRecord.setBackgroundResource(R.drawable.rec_button_press_up);
+                    my_layout.Toast("關閉歷史位置");
+                    //my_map.Remove_Record_Route();
+                    my_map.Remove_Record_Marker();
+                }else{
+                    Data.Record_Status = true;
+                    my_layout.btnRecord.setBackgroundResource(R.drawable.rec_button_press_down);
+                    my_layout.Toast("顯示歷史位置");
+                    //my_map.Draw_Record_Route();
+                    my_map.Draw_Record_Marker();
+                }
+            }
+        });
         my_layout.btnDirections.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -34,20 +52,20 @@ public class My_Event {
                 } else {
                     //Data.Page_Order.add(Data.Direction_Page);
                     Toast.makeText(my_layout.getContext(), "規劃路線", Toast.LENGTH_SHORT).show();
-                    My_Direction my_direction = new My_Direction();
-                    my_direction.searchDirection();
-                    my_direction.SearchData(new My_Direction.onDataReadyCallback() {
-                        @Override
-                        public void onDataReady(ArrayList<LatLng> data) {
-                            my_layout.Direction_Page(my_map);
-                            //my_map.set_Direction_Camera();
-                            my_map.Draw_Direction(data);
-                        }
-                        @Override
-                        public void onDisReady(int dis) {}
-                        @Override
-                        public void onStartLocationReady(LatLng start, LatLng end) {}
-                    });
+//                    My_Direction my_direction = new My_Direction();
+//                    my_direction.searchDirection();
+//                    my_direction.SearchData(new My_Direction.onDataReadyCallback() {
+//                        @Override
+//                        public void onDataReady(ArrayList<LatLng> data) {
+//                            my_layout.Direction_Page(my_map);
+//                            //my_map.set_Direction_Camera();
+//                            my_map.Draw_Direction(data);
+//                        }
+//                        @Override
+//                        public void onDisReady(int dis) {}
+//                        @Override
+//                        public void onStartLocationReady(LatLng start, LatLng end) {}
+//                    });
                 }
             }
         });

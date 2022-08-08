@@ -32,7 +32,7 @@ public class My_API_Navigation implements Runnable{
         while (Data.Steps.size()>0) {
             if(Data.Navigation_Status && toDestinationDis>10) {
                 if(!check_drift()) {
-                    draw_Direction();
+                    //draw_Direction();
                     SystemClock.sleep(1000);
                 }
             }

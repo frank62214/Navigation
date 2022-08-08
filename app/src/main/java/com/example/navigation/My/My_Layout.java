@@ -37,6 +37,7 @@ public class My_Layout extends RelativeLayout {
     ImageButton btnWalkingMode;
     ImageButton btnViewSearch;
     ImageButton btnCarMode;
+    ImageButton btnRecord;
 
 
     //activity_navigation
@@ -53,6 +54,9 @@ public class My_Layout extends RelativeLayout {
 
     //activity_data_view
     LinearLayout lldata_view;
+    TextView data_view_Now_API_Speed;
+    TextView data_view_Now_GPS_Speed;
+    TextView data_view_Now_Sensor;
     TextView data_view_Now_Page;
     TextView data_view_Bearing;
 
@@ -99,6 +103,7 @@ public class My_Layout extends RelativeLayout {
         btnFocusUser  = (ImageButton) layout_view.findViewById(R.id.btnFocusUser);
         btnNavigation = (ImageButton) layout_view.findViewById(R.id.btnNavigation);
         btnCarMode    = (ImageButton) layout_view.findViewById(R.id.btnCarMode);
+        btnRecord     = (ImageButton) layout_view.findViewById(R.id.btnRecord);
 
         //取得activity_navigation的元件
         llNext_Turn   = (LinearLayout) navigation_view.findViewById(R.id.llNext_Turn);
@@ -113,6 +118,9 @@ public class My_Layout extends RelativeLayout {
         //tv_Now_Bearing      = (TextView) llNext_Turn.findViewById(R.id.tv_Now_Bearing);
         //取得activity_data_view
         lldata_view = (LinearLayout) data_view.findViewById(R.id.lldata_view);
+        data_view_Now_API_Speed = (TextView) lldata_view.findViewById(R.id.data_view_Now_API_Speed);
+        data_view_Now_GPS_Speed = (TextView) lldata_view.findViewById(R.id.data_view_Now_GPS_Speed);
+        data_view_Now_Sensor = (TextView) lldata_view.findViewById(R.id.data_view_Now_Sensor);
         data_view_Now_Page = (TextView) lldata_view.findViewById(R.id.data_view_Now_Page);
         data_view_Bearing      = (TextView) lldata_view.findViewById(R.id.data_view_Bearing);
         //取得Search Layout的元件
@@ -203,6 +211,8 @@ public class My_Layout extends RelativeLayout {
                 Data.Navigation_Status = false;
                 //移動相機
                 my_map.set_Direction_Camera();
+                //打開會出事
+                //my_map.Draw_Direction(Data.Steps);
             }
         });
     }
@@ -266,6 +276,9 @@ public class My_Layout extends RelativeLayout {
         tv_Next_Dis.setText("距離前方路口" + text + "公尺");
     }
     public void setDisToDestination(String text) {tv_to_Destination_dis.setText("距離目的地還有" + text + "公尺");}
+    public void setdataviewNowAPISpeed(String text){ data_view_Now_API_Speed.setText("目前API速度:" + text);}
+    public void setdataviewNowGPSSpeed(String text){ data_view_Now_GPS_Speed.setText("目前API速度:" + text);}
+    public void setdataviewNowSensor(String text){ data_view_Now_Sensor.setText("Sensor數值:" + text);}
 //    public void setLastDistance(String text){  tv_Last_Dis.setText("距離前方路口" + text);}
 //    public void setNow_Bearing(String text){
 //        tv_Now_Bearing.setText(text);

@@ -27,7 +27,27 @@
             android:background="@color/white"
             android:orientation="vertical"
             android:layout_above="@+id/viewnone">
-
+            <TextView
+                android:id="@+id/data_view_Now_API_Speed"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="現在API速度:"
+                android:textColor="@color/black"
+                android:textSize="10dp" />
+                <TextView
+                    android:id="@+id/data_view_Now_GPS_Speed"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="現在GPS速度:"
+                    android:textColor="@color/black"
+                    android:textSize="10dp" />
+            <TextView
+                android:id="@+id/data_view_Now_Sensor"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="現在速度:"
+                android:textColor="@color/black"
+                android:textSize="10dp" />
                 <TextView
                     android:id="@+id/data_view_Now_Page"
                     android:layout_width="wrap_content"

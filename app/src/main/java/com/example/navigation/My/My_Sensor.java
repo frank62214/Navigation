@@ -22,6 +22,7 @@ public class My_Sensor extends AppCompatActivity implements SensorEventListener 
     private Sensor mMagnetometer;
     private Sensor vectorSensor;
     private Sensor orientation;
+    private Sensor Speedsensor;
 
     float[] accelerometerValues = new float[3];
     float[] magneticValues = new float[3];
@@ -46,24 +47,29 @@ public class My_Sensor extends AppCompatActivity implements SensorEventListener 
     public My_Sensor(Context cont){
         context = cont;
         mSensorManager = (SensorManager)context.getSystemService(Context.SENSOR_SERVICE);
-        mAccelerometers = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        //mAccelerometers = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         //mGyroscope = mSensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
-        mMagnetometer = mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
+        //mMagnetometer = mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
         //vectorSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR);
-        orientation  = mSensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION);
+        //orientation  = mSensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION);
+        Speedsensor = mSensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
     }
     public void registerListener(){
-        mSensorManager.registerListener(this, mAccelerometers, SensorManager.SENSOR_DELAY_NORMAL);
+        System.out.println("Register Listener");
+        //mSensorManager.registerListener(this, mAccelerometers, SensorManager.SENSOR_DELAY_NORMAL);
         //mSensorManager.registerListener(this, mGyroscope, SensorManager.SENSOR_DELAY_NORMAL);
-        mSensorManager.registerListener(this, mMagnetometer, SensorManager.SENSOR_DELAY_NORMAL);
+        //mSensorManager.registerListener(this, mMagnetometer, SensorManager.SENSOR_DELAY_NORMAL);
         //mSensorManager.registerListener(this, vectorSensor, SensorManager.SENSOR_DELAY_NORMAL);
-        mSensorManager.registerListener(this, orientation, SensorManager.SENSOR_DELAY_NORMAL);
+        //mSensorManager.registerListener(this, orientation, SensorManager.SENSOR_DELAY_NORMAL);
+        mSensorManager.registerListener(this, Speedsensor, SensorManager.SENSOR_DELAY_NORMAL);
     }
     public void unregisterListener(){
         mSensorManager.unregisterListener(this);
     }
     @Override
     public void onSensorChanged(SensorEvent sensorEvent) {
+        System.out.println("Sensor Change");
+        //linear acceleration = acceleration - acceleration due to gravity;
         //bearing = sensorEvent.values[0]-42;
 //        bearing = sensorEvent.values[0];
 //        Data.now_bearing = bearing;
@@ -74,25 +80,25 @@ public class My_Sensor extends AppCompatActivity implements SensorEventListener 
 //            bear = ans + 360;
 //        }
 //        Data.now_bearing = (float) bear;
-        String values = "X-axis=" + String.valueOf(sensorEvent.values[0]) + "\n" +
-                "Y-axis=" + String.valueOf(sensorEvent.values[1]) + "\n" +
-                "Z-axis=" + String.valueOf(sensorEvent.values[2]) + "\n";
+//        String values = "X-axis=" + String.valueOf(sensorEvent.values[0]) + "\n" +
+//                "Y-axis=" + String.valueOf(sensorEvent.values[1]) + "\n" +
+//                "Z-axis=" + String.valueOf(sensorEvent.values[2]) + "\n";
 
 
-        if (sensorEvent.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
-//            accelerometerValues[0] = sensorEvent.values[0];
-//            accelerometerValues[1] = sensorEvent.values[1];
-//            accelerometerValues[2] = sensorEvent.values[2];
-            accelerometerValues = sensorEvent.values;
-            //System.out.println(accelerometerValues[0]);
-        }
-        if (sensorEvent.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD) {
-//            magneticValues[0] = sensorEvent.values[0];
-//            magneticValues[1] = sensorEvent.values[1];
-//            magneticValues[2] = sensorEvent.values[2];
-            magneticValues = sensorEvent.values;
-            calculate();
-        }
+//        if (sensorEvent.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+////            accelerometerValues[0] = sensorEvent.values[0];
+////            accelerometerValues[1] = sensorEvent.values[1];
+////            accelerometerValues[2] = sensorEvent.values[2];
+//            accelerometerValues = sensorEvent.values;
+//            //System.out.println(accelerometerValues[0]);
+//        }
+//        if (sensorEvent.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD) {
+////            magneticValues[0] = sensorEvent.values[0];
+////            magneticValues[1] = sensorEvent.values[1];
+////            magneticValues[2] = sensorEvent.values[2];
+//            magneticValues = sensorEvent.values;
+//            calculate();
+//        }
 //        final float alpha = 0.97f;
 //
 //        synchronized (this) {

@@ -11,6 +11,10 @@ import android.Manifest;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Build;
@@ -20,11 +24,13 @@ import android.os.Looper;
 import android.os.SystemClock;
 import android.widget.Toast;
 
+import com.example.navigation.My.Cal_Method;
 import com.example.navigation.My.Data;
 import com.example.navigation.My.My_Event;
 import com.example.navigation.My.My_Layout;
 import com.example.navigation.My.My_Map;
 import com.example.navigation.My.My_New_Navigation;
+import com.example.navigation.My.My_Sensor;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -42,11 +48,14 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnSuccessListener;
 
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class MainActivity extends AppCompatActivity implements
         OnMapReadyCallback,
         GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener {
+        GoogleApiClient.OnConnectionFailedListener,
+        SensorEventListener{
 
     // 定義這個權限要求的編號
     private final int REQUEST_PERMISSION_FOR_ACCESS_FINE_LOCATION = 100;
@@ -63,6 +72,15 @@ public class MainActivity extends AppCompatActivity implements
     private My_Map my_map;
     private My_Event my_event;
     private My_New_Navigation my_new_navigation;
+    private My_Sensor my_sensor;
+
+    private SensorManager sm;
+    private int Linear_Acceleration_Count = 0;
+    private ArrayList<Float> Speed_Count = new ArrayList<Float>();
+    private float Speed = 0;
+
+    private LatLng last_position;
+
 
 
     //模擬GPS刷新
@@ -76,6 +94,9 @@ public class MainActivity extends AppCompatActivity implements
         my_layout = new My_Layout(this);
         setContentView(my_layout);
 
+        sm = (SensorManager) getSystemService(this.SENSOR_SERVICE);
+
+        //timer = new Timer();
 
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
@@ -100,6 +121,7 @@ public class MainActivity extends AppCompatActivity implements
                 //取得經緯度
                 Location location = locationResult.getLastLocation();
                 LatLng point = new LatLng(location.getLatitude(), location.getLongitude());
+                System.out.println(point);
 
                 //存入Data
                 Data.now_position = point;
@@ -109,8 +131,11 @@ public class MainActivity extends AppCompatActivity implements
                 //my_map.moveCamera(Data.now_position);
                 Toast.makeText(MainActivity.this, "更新位置", Toast.LENGTH_SHORT).show();
 
+                //Data.GPS_Record.add(point);
 
 
+
+                //Cal_Speed();
                 //導航的Function
                 Navigation();
             }
@@ -118,13 +143,56 @@ public class MainActivity extends AppCompatActivity implements
         mLocationMgr = (LocationManager) getSystemService(LOCATION_SERVICE);
 
     }
+
     //模擬GPS刷新--------------------------------------------
     final Runnable runnable = new Runnable() {
         public void run() {
             // TODO Auto-generated method stub
             // 需要背景作的事
             while(true) {
+
                 Navigation();
+//                double dis = 0;
+//                if(last_position==null){
+//                    last_position = Data.now_position;
+//                }
+//                else{
+//                    dis = Cal_Method.Cal_Distance(Data.now_position, last_position);
+//                }
+//                int kmh = (int)dis*60*60/1000;
+//                new Handler(Looper.getMainLooper()).post(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            my_layout.setdataviewNowSpeed(Integer.toString(kmh));
+//                        }
+//                    });
+//                if(Speed_Count.size()>0){
+//                    float sum = 0;
+//                    for(int i=0; i<Speed_Count.size();i++) {
+//                        sum += Speed_Count.get(i);
+//                    }
+//                    float avg = sum / Speed_Count.size();
+//                    new Handler(Looper.getMainLooper()).post(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            //float kmh =
+//                            int kmh = (int)Speed*60*60/1000;
+//                            //my_layout.setdataviewNowSpeed(Double.toString(Speed));
+//                            my_layout.setdataviewNowSpeed(Integer.toString(kmh));
+//                        }
+//                    });
+//                }
+//                Speed_Count.removeAll(Speed_Count);
+
+//                new Handler(Looper.getMainLooper()).post(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            //float kmh =
+//                            int kmh = (int)Speed*60*60/1000;
+//                            my_layout.setdataviewNowSpeed(Integer.toString(kmh));
+//                        }
+//                    });
+//
                 SystemClock.sleep(1000);
             }
         }
@@ -133,6 +201,7 @@ public class MainActivity extends AppCompatActivity implements
     public void Navigation(){
         if(Data.Navigation_Status) {
             if(my_new_navigation.get_initMK()) {
+                //my_map.Remove_Direction();
                 my_new_navigation.set_initMK(false);
                 my_new_navigation.initUserMK();
             }
@@ -140,26 +209,34 @@ public class MainActivity extends AppCompatActivity implements
                 my_new_navigation.Navigation();
             }
         }
-        else{
-            my_new_navigation.set_initMK(true);
-        }
+//        else{
+//            my_new_navigation.set_initMK(true);
+//            my_new_navigation.Remove_Navigation_MK();
+//            my_new_navigation.Final_Remove_Direction();
+//            //my_sensor.unregisterListener();
+//        }
     }
     //Googel 地圖讀取好的時候執行
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
         mMap = googleMap;
-        my_new_navigation = new My_New_Navigation(this, mMap);
-        //-------------------------------------------------
-        //模擬GPS刷新
-        Thread t = new Thread(runnable);
-        t.start();
-        //-------------------------------------------------
+
         my_map = new My_Map(this, mMap);
         my_map.init();
         my_event = new My_Event(my_layout, my_map);
         my_event.setEvent();
         Data.Page_Order.add(Data.Main_Page);
         my_layout.Select_Page(my_map);
+        //-------------------------------------------------
+        my_new_navigation = new My_New_Navigation(this, mMap, my_layout, my_map);
+        //my_sensor = new My_Sensor(this);
+        //my_sensor.registerListener();
+        //-------------------------------------------------
+        //模擬GPS刷新
+        Thread t = new Thread(runnable);
+        t.start();
+        //-------------------------------------------------
     }
 
     private void enableLocation(boolean on) {
@@ -256,6 +333,12 @@ public class MainActivity extends AppCompatActivity implements
         }
     }
     @Override
+    protected void onResume() {
+        super.onResume();
+        sm.registerListener((SensorEventListener) this, sm.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION), SensorManager.SENSOR_DELAY_NORMAL);
+    }
+
+    @Override
     protected void onStart() {
         super.onStart();
         // 啟動 Google API。
@@ -345,5 +428,44 @@ public class MainActivity extends AppCompatActivity implements
         });
         AlertDialog dialog = builder.create();
         dialog.show();
+    }
+
+    @Override
+    public void onSensorChanged(SensorEvent sensorEvent) {
+        int sensorType = sensorEvent.sensor.getType();
+        switch (sensorType) {
+            case Sensor.TYPE_LINEAR_ACCELERATION:
+                float x = sensorEvent.values[0];
+                float y = sensorEvent.values[1];
+                float z = sensorEvent.values[2];
+
+//                if(Linear_Acceleration_Count<5) {
+//                    Speed = Speed + y;
+//                    Linear_Acceleration_Count++;
+//                }
+//                else{
+//                    Speed = Speed / 5;
+//                    Linear_Acceleration_Count = 0;
+//                }
+
+                my_layout.setdataviewNowSensor(Float.toString(y));
+                //Speed_Count.add(y);
+                //System.out.println("x= " + Float.toString(x));
+                //System.out.println("y= " + Float.toString(y));
+                //System.out.println("z= " + Float.toString(z));
+//                if(Linear_Acceleration_Count >10) {
+//                    new Handler(Looper.getMainLooper()).post(new Runnable() {
+//                        public void run() {
+//                            my_layout.setdataviewNowSensor(Float.toString(y));
+//                            Linear_Acceleration_Count = 0;
+//                        }
+//                    });
+//                }
+        }
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int i) {
+
     }
 }

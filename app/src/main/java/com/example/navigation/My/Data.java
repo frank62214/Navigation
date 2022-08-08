@@ -25,9 +25,10 @@ public class Data {
     public static LatLng Destination;
 
     //Direction data
-    public static ArrayList<LatLng> Steps       = new ArrayList<LatLng>();
-    public static ArrayList<String> Road        = new ArrayList<String>();
-    public static ArrayList<String> Road_Detail = new ArrayList<String>();
+    public static ArrayList<LatLng> Steps         = new ArrayList<LatLng>();
+    public static ArrayList<LatLng> Decoder_Steps = new ArrayList<LatLng>();
+    public static ArrayList<String> Road          = new ArrayList<String>();
+    public static ArrayList<String> Road_Detail   = new ArrayList<String>();
 
     //Mode data
     public static String Mode = "Driving";
@@ -38,7 +39,9 @@ public class Data {
 
     //Navigation data
     public static boolean Navigation_Status = false;
-    public static LatLng Navigation_Location;
+    public static boolean Record_Status = false;
+    public static ArrayList<LatLng> API_Record = new ArrayList<LatLng>();
+    public static ArrayList<LatLng> GPS_Record = new ArrayList<LatLng>();
 
     //CarMode data
     public static boolean CarMode_Status = false;

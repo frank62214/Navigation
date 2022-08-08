@@ -40,8 +40,14 @@ public class My_Map {
     private MarkerOptions destination_mark = new MarkerOptions();
     private Marker destination;
     private MarkerOptions Navigation_MK_Opt = new MarkerOptions();
+    private MarkerOptions GPS_Opt = new MarkerOptions();
+    private MarkerOptions API_Opt = new MarkerOptions();
     private Marker Navigation_MK;
     private Polyline Direction;
+    private Polyline Record_Route;
+
+    private ArrayList<Marker> rec_gps = new ArrayList<Marker>();
+    private ArrayList<Marker> rec_api = new ArrayList<Marker>();
 
     private LocationCallback locationCallback;
 
@@ -193,15 +199,60 @@ public class My_Map {
             public void run() {
                 Remove_Direction();
                 PolylineOptions polylineOptions = new PolylineOptions();
+
+                //mMap.addMarker(Navigation_test);
                 for(int i=0; i< Points.size();i++){
-                    //System.out.println(Points.get(i));
                     polylineOptions.add(Points.get(i));
+                    //Navigation_test.position(Points.get(i));
+                    //mMap.addMarker(Navigation_test);
                 }
                 polylineOptions.color(context.getResources().getColor(R.color.route_color));
                 polylineOptions.width(20f);
                 Direction = mMap.addPolyline(polylineOptions);
             }
         });
+    }
+    public void Draw_Record_Route(){
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            public void run() {
+                Remove_Record_Route();
+                PolylineOptions polylineOptions = new PolylineOptions();
+                for(int i=0; i< Data.API_Record.size();i++){
+                    //System.out.println(Points.get(i));
+                    polylineOptions.add(Data.API_Record.get(i));
+                }
+                polylineOptions.color(context.getResources().getColor(R.color.record_route_color));
+                polylineOptions.width(20f);
+                Record_Route = mMap.addPolyline(polylineOptions);
+            }
+        });
+    }
+    public void Draw_Record_Marker(){
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            public void run() {
+                for(int i=0 ; i<Data.GPS_Record.size(); i++){
+                    GPS_Opt.position(Data.GPS_Record.get(i));
+                    GPS_Opt.icon(BitmapFromVector(R.drawable.rec_gps));
+                    rec_gps.add(mMap.addMarker(GPS_Opt));
+                }
+                for(int i=0 ; i<Data.API_Record.size(); i++){
+                    API_Opt.position(Data.API_Record.get(i));
+                    API_Opt.icon(BitmapFromVector(R.drawable.rec_api));
+                    rec_api.add(mMap.addMarker(API_Opt));
+                }
+            }
+        });
+    }
+    public void Remove_Record_Marker(){
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            public void run() {
+                for(int i=0; i<rec_gps.size();i++){
+                    rec_gps.get(i).remove();
+                }
+                for(int i=0; i<rec_api.size();i++){
+                    rec_api.get(i).remove();
+                }
+            }});
     }
     public void initUserMK(){
         new Handler(Looper.getMainLooper()).post(new Runnable() {
@@ -259,9 +310,16 @@ public class My_Map {
         return s;
     }
     public void Remove_Direction(){
+        //禁止使用Thread 會導致畫面畫不出來
         //System.out.println(Direction.getPoints().size());
-        if(Direction!=null) {
+        if (Direction != null) {
             Direction.remove();
+        }
+
+    }
+    public void Remove_Record_Route(){
+        if(Record_Route!=null){
+            Record_Route.remove();
         }
     }
     public void Remove_Destination(){

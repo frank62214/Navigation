@@ -23,6 +23,7 @@
 
     <!--Maps-->
     <color name="route_color">#000080</color>
+    <color name="record_route_color">#8F8D8C</color>
 
     <!-- Instruction Icons -->
     <color name="dirMain">#3C3C3C</color>

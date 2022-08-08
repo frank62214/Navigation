@@ -39,6 +39,7 @@ public class My_Direction {
         String mode = Data.Mode;
         url = Direction_url_1 + destination + Direction_url_2 + mode + Direction_url_3 + origin;
         url = url + Direction_url_4 + key;
+        direction.removeAll(direction);
     }
     public void setDistanceUrl(LatLng start, LatLng end){
         //int ans = 0;
@@ -201,7 +202,7 @@ public class My_Direction {
         my_json.get_json(routes, polyline_overview, "overview_polyline");
         my_json.get_json(polyline_overview, points, "points");
         Polyline_decoder(points, direction);
-
+        Polyline_decoder(points, Data.Decoder_Steps);
         //取得Direction 細節
         ArrayList<String> legs = new ArrayList<String>();
         ArrayList<String> steps = new ArrayList<String>();
@@ -237,6 +238,7 @@ public class My_Direction {
         my_json.get_json(routes, polyline_overview, "overview_polyline");
         my_json.get_json(polyline_overview, points, "points");
         Polyline_decoder(points, direction);
+        Polyline_decoder(points, Data.Decoder_Steps);
 
         //取得Direction 細節
         ArrayList<String> legs = new ArrayList<String>();

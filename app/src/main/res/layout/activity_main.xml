@@ -36,12 +36,23 @@
             android:layout_marginEnd="10dp"
             android:layout_marginBottom="10dp"
             android:orientation="vertical">
+            <ImageButton
+                android:id="@+id/btnRecord"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:background="@drawable/rec_button_press_up"
+                tools:ignore="ContentDescription,InvalidId"
+                android:layout_gravity="right|center_vertical"/>
         <LinearLayout
             android:id="@+id/llMode"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_gravity="right|center_vertical">
+            android:layout_gravity="right|center_vertical"
+            android:layout_marginTop="5dp">
 
             <ImageButton
                 android:id="@+id/btnDrivingMode"
@@ -79,6 +90,7 @@
                 android:layout_gravity="right|center_vertical"
                 android:visibility="gone"/>
         </LinearLayout>
+
             <ImageButton
                 android:id="@+id/btnCarMode"
                 android:layout_width="50dp"
