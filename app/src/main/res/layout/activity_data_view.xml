@@ -28,19 +28,68 @@
             android:orientation="vertical"
             android:layout_above="@+id/viewnone">
             <TextView
-                android:id="@+id/data_view_Now_API_Speed"
+                android:id="@+id/data_view_Cal_Position"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="現在API速度:"
+                android:text="計算的經緯度"
+                android:textColor="@color/black"
+                android:textSize="10dp" />
+            <TextView
+                android:id="@+id/data_view_Record_Timer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="錄影時間"
+                android:textColor="@color/black"
+                android:textSize="10dp" />
+            <TextView
+                android:id="@+id/data_view_Refresh_API_dis"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="API更新距離"
+                android:textColor="@color/black"
+                android:textSize="10dp" />
+            <TextView
+                android:id="@+id/data_view_Refresh_GPS_dis"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="GPS更新距離"
+                android:textColor="@color/black"
+                android:textSize="10dp" />
+            <TextView
+                android:id="@+id/data_view_Now_API_Pass_Time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="目前API秒速:"
+                android:textColor="@color/black"
+                android:textSize="10dp" />
+            <TextView
+                android:id="@+id/data_view_Now_API_Speed_ms"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="目前API秒速:"
+                android:textColor="@color/black"
+                android:textSize="10dp" />
+            <TextView
+                android:id="@+id/data_view_Now_API_Speed_kmh"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="目前API時速:"
                 android:textColor="@color/black"
                 android:textSize="10dp" />
                 <TextView
-                    android:id="@+id/data_view_Now_GPS_Speed"
+                    android:id="@+id/data_view_Now_GPS_Speed_ms"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="現在GPS速度:"
+                    android:text="目前GPS秒速:"
                     android:textColor="@color/black"
                     android:textSize="10dp" />
+            <TextView
+                android:id="@+id/data_view_Now_GPS_Speed_kmh"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="目前GPS時速:"
+                android:textColor="@color/black"
+                android:textSize="10dp" />
             <TextView
                 android:id="@+id/data_view_Now_Sensor"
                 android:layout_width="wrap_content"

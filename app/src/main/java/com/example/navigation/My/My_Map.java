@@ -42,12 +42,14 @@ public class My_Map {
     private MarkerOptions Navigation_MK_Opt = new MarkerOptions();
     private MarkerOptions GPS_Opt = new MarkerOptions();
     private MarkerOptions API_Opt = new MarkerOptions();
+    private MarkerOptions Cal_Opt = new MarkerOptions();
     private Marker Navigation_MK;
     private Polyline Direction;
     private Polyline Record_Route;
 
     private ArrayList<Marker> rec_gps = new ArrayList<Marker>();
     private ArrayList<Marker> rec_api = new ArrayList<Marker>();
+    private ArrayList<Marker> rec_cal = new ArrayList<Marker>();
 
     private LocationCallback locationCallback;
 
@@ -233,12 +235,20 @@ public class My_Map {
                 for(int i=0 ; i<Data.GPS_Record.size(); i++){
                     GPS_Opt.position(Data.GPS_Record.get(i));
                     GPS_Opt.icon(BitmapFromVector(R.drawable.rec_gps));
+                    GPS_Opt.title("GPS:" + Integer.toString(i));
                     rec_gps.add(mMap.addMarker(GPS_Opt));
                 }
                 for(int i=0 ; i<Data.API_Record.size(); i++){
                     API_Opt.position(Data.API_Record.get(i));
                     API_Opt.icon(BitmapFromVector(R.drawable.rec_api));
+                    API_Opt.title("API:" + Integer.toString(i));
                     rec_api.add(mMap.addMarker(API_Opt));
+                }
+                for(int i=0 ; i<Data.Cal_Record.size(); i++){
+                    Cal_Opt.position(Data.Cal_Record.get(i));
+                    Cal_Opt.icon(BitmapFromVector(R.drawable.rec_cal));
+                    Cal_Opt.title("Cal:" + Integer.toString(i));
+                    rec_cal.add(mMap.addMarker(Cal_Opt));
                 }
             }
         });
@@ -251,6 +261,9 @@ public class My_Map {
                 }
                 for(int i=0; i<rec_api.size();i++){
                     rec_api.get(i).remove();
+                }
+                for(int i=0; i<rec_cal.size();i++){
+                    rec_cal.get(i).remove();
                 }
             }});
     }

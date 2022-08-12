@@ -1,5 +1,9 @@
 package com.example.navigation.My;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+
+import com.example.navigation.R;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.io.BufferedReader;
@@ -49,18 +53,23 @@ public class My_Snap_Road {
         }
     }
     private void get_Location(String text){
-        My_Json my_json = new My_Json();
-        ArrayList<String> snappedPoints = new ArrayList<String>();
-        ArrayList<String> location      = new ArrayList<String>();
-        ArrayList<String> latitude      = new ArrayList<String>();
-        ArrayList<String> longitude     = new ArrayList<String>();
-        my_json.get_json(text, snappedPoints,"snappedPoints");
-        my_json.get_json(snappedPoints, location, "location");
-        my_json.get_json(location, latitude, "latitude");
-        my_json.get_json(location, longitude, "longitude");
-        cal_position = new LatLng(Double.parseDouble(latitude.get(0)), Double.parseDouble(longitude.get(0)));
-        //my_json.show(latitude);
-        //my_json.show(longitude);
+        try {
+            My_Json my_json = new My_Json();
+            ArrayList<String> snappedPoints = new ArrayList<String>();
+            ArrayList<String> location = new ArrayList<String>();
+            ArrayList<String> latitude = new ArrayList<String>();
+            ArrayList<String> longitude = new ArrayList<String>();
+            my_json.get_json(text, snappedPoints, "snappedPoints");
+            my_json.get_json(snappedPoints, location, "location");
+            my_json.get_json(location, latitude, "latitude");
+            my_json.get_json(location, longitude, "longitude");
+            cal_position = new LatLng(Double.parseDouble(latitude.get(0)), Double.parseDouble(longitude.get(0)));
+            //my_json.show(latitude);
+            //my_json.show(longitude);
+        }
+        catch(Exception e){
+            System.out.println(e.toString());
+        }
     }
     private String run_content(String api_url){
         String text = "";
@@ -121,7 +130,7 @@ public class My_Snap_Road {
         return text;
     }
 
-    interface onDataReadyCallback{
+    public interface onDataReadyCallback{
         void onDataReady(LatLng data);
     }
 }

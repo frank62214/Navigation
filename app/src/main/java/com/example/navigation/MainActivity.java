@@ -11,6 +11,7 @@ import android.Manifest;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -19,9 +20,15 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.SystemClock;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.navigation.My.Cal_Method;
@@ -31,6 +38,7 @@ import com.example.navigation.My.My_Layout;
 import com.example.navigation.My.My_Map;
 import com.example.navigation.My.My_New_Navigation;
 import com.example.navigation.My.My_Sensor;
+import com.example.navigation.My.My_Snap_Road;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -43,11 +51,18 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.UiSettings;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnSuccessListener;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Objects;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -79,9 +94,28 @@ public class MainActivity extends AppCompatActivity implements
     private ArrayList<Float> Speed_Count = new ArrayList<Float>();
     private float Speed = 0;
 
-    private LatLng last_position;
+    private LatLng last_GPS_position;
+    private boolean init_API_position = true;
+    private LatLng now_API_position;
+    private LatLng last_API_position;
+    private LatLng cal_position = new LatLng(0,0);
 
+    boolean init_time = true;
+    long start_time = 0;
+    long end_time = 0;
+    long API_start_time = 0;
+    long API_end_time = 0;
+    long API_pass_time = 0;
+    long pass_time = 0;
+    double GPS_dis = 0;
+    double API_dis = 0;
+    double GPS_ms  = 0;
+    double GPS_kmh = 0;
+    double API_kmh = 0;
+    double API_ms  = 0;
+    int ms = 0;
 
+    My_Snap_Road my_snap_road;
 
     //模擬GPS刷新
     private final Handler handler = new Handler();
@@ -96,7 +130,7 @@ public class MainActivity extends AppCompatActivity implements
 
         sm = (SensorManager) getSystemService(this.SENSOR_SERVICE);
 
-        //timer = new Timer();
+        my_snap_road = new My_Snap_Road();
 
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
@@ -131,13 +165,14 @@ public class MainActivity extends AppCompatActivity implements
                 //my_map.moveCamera(Data.now_position);
                 Toast.makeText(MainActivity.this, "更新位置", Toast.LENGTH_SHORT).show();
 
-                //Data.GPS_Record.add(point);
+
 
 
 
                 //Cal_Speed();
                 //導航的Function
-                Navigation();
+                Data.GPS_Status = true;
+                Navigation(Data.now_position, "GPS");
             }
         };
         mLocationMgr = (LocationManager) getSystemService(LOCATION_SERVICE);
@@ -150,71 +185,170 @@ public class MainActivity extends AppCompatActivity implements
             // TODO Auto-generated method stub
             // 需要背景作的事
             while(true) {
-
-                Navigation();
-//                double dis = 0;
-//                if(last_position==null){
-//                    last_position = Data.now_position;
-//                }
-//                else{
-//                    dis = Cal_Method.Cal_Distance(Data.now_position, last_position);
-//                }
-//                int kmh = (int)dis*60*60/1000;
-//                new Handler(Looper.getMainLooper()).post(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            my_layout.setdataviewNowSpeed(Integer.toString(kmh));
-//                        }
-//                    });
-//                if(Speed_Count.size()>0){
-//                    float sum = 0;
-//                    for(int i=0; i<Speed_Count.size();i++) {
-//                        sum += Speed_Count.get(i);
-//                    }
-//                    float avg = sum / Speed_Count.size();
-//                    new Handler(Looper.getMainLooper()).post(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            //float kmh =
-//                            int kmh = (int)Speed*60*60/1000;
-//                            //my_layout.setdataviewNowSpeed(Double.toString(Speed));
-//                            my_layout.setdataviewNowSpeed(Integer.toString(kmh));
-//                        }
-//                    });
-//                }
-//                Speed_Count.removeAll(Speed_Count);
-
-//                new Handler(Looper.getMainLooper()).post(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            //float kmh =
-//                            int kmh = (int)Speed*60*60/1000;
-//                            my_layout.setdataviewNowSpeed(Integer.toString(kmh));
-//                        }
-//                    });
-//
+                if(!Data.GPS_Status) {
+                    if(Data.now_position!=null) {
+                        Navigation(Data.now_position, "Thread");
+                    }
+                }
+                else{
+                    Data.GPS_Status = false;
+                }
                 SystemClock.sleep(1000);
             }
         }
     };
     //------------------------------------------------------
-    public void Navigation(){
-        if(Data.Navigation_Status) {
-            if(my_new_navigation.get_initMK()) {
-                //my_map.Remove_Direction();
-                my_new_navigation.set_initMK(false);
-                my_new_navigation.initUserMK();
+    public void Navigation(LatLng point, String type){
+        try {
+            GPS_kmh = 0;
+            API_kmh = 0;
+            API_ms = 0;
+            //紀錄時間
+            //初始化
+            if (init_time) {
+                start_time = System.currentTimeMillis();
+                end_time = System.currentTimeMillis();
+                last_GPS_position = point;
+                init_time = false;
             }
+            //計算更新時間
             else {
-                my_new_navigation.Navigation();
+                end_time = System.currentTimeMillis();
+                pass_time = end_time - start_time;
+                GPS_dis = Cal_Method.Cal_Distance(last_GPS_position, point);
+                //更新前一個點與時間
+                start_time = end_time;
+                last_GPS_position = point;
+                GPS_ms = (GPS_dis / pass_time) * 1000;
+                GPS_kmh = (((GPS_dis / pass_time) * 1000) * 3600) / 1000;
+            }
+
+            //紀錄GPS定位
+            Data.GPS_Record.add(point);
+            //紀錄API定位
+            if (type.equals("GPS") && Data.SnapRoad_Status) {
+                my_snap_road.setSnapRoadUrl();
+                my_snap_road.SearchLocation(new My_Snap_Road.onDataReadyCallback() {
+                    @Override
+                    public void onDataReady(LatLng data) {
+                        Data.API_Record.add(data);
+
+                        //計算API距離與時速
+                        if (init_API_position) {
+                            init_API_position = false;
+                            last_API_position = data;
+                            API_start_time = System.currentTimeMillis();
+                        } else {
+                            now_API_position = data;
+                            API_dis = Cal_Method.Cal_Distance(last_API_position, now_API_position);
+                            API_end_time = System.currentTimeMillis();
+                            API_pass_time = API_end_time - API_start_time;
+                            last_API_position = now_API_position;
+                            API_ms = (API_dis / API_pass_time) * 1000;
+                            API_kmh = (((API_dis / API_pass_time) * 1000) * 3600) / 1000;
+                            API_start_time = System.currentTimeMillis();
+                            //--------------------------------------------------------
+                            //利用時速推估經緯度(時速->距離->經緯度)
+                            if (API_ms != 0) {
+                                //double cal_dis = API_ms;
+                                //double cal_dis = Cal_Method.Cal_Distance(last_API_position, now_API_position);
+                                double cal_dis = API_ms / 1000 * API_pass_time;
+                                float bear = Cal_Method.Cal_Bearing(last_API_position, now_API_position);
+                                cal_position = Cal_Method.Cal_LatLng(now_API_position, bear, cal_dis);
+                                Data.Cal_Record.add(cal_position);
+                                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        my_layout.setdataviewNowAPISpeedms(API_ms + "ms");
+                                        my_layout.setdataviewNowAPISpeedkmh(API_kmh + "km/h");
+                                        Save_Position("Cal" , Data.Cal_Record , API_pass_time);
+                                        Save_Position("GPS" , Data.GPS_Record, pass_time);
+                                        Save_Position("API" , Data.API_Record, API_pass_time);
+                                    }
+                                });
+                            }
+                            //--------------------------------------------------------
+                        }
+                    }
+                });
+            }
+            //--------------------------------------------------------
+            //顯示資訊
+            new Handler(Looper.getMainLooper()).post(new Runnable() {
+                @Override
+                public void run() {
+                    my_layout.Set_GPS_Status(type);
+                    my_layout.setdataviewRecordTimer("更新間格時間:" + pass_time + "ms");
+                    my_layout.setdataviewNowAPIPassTime(API_pass_time + "ms");
+                    my_layout.setdataviewRefreshGPSdis(GPS_dis + "m");
+                    my_layout.setdataviewRefreshAPIdis(API_dis + "m");
+//                    my_layout.setdataviewNowAPISpeedms(API_ms + "ms");
+//                    my_layout.setdataviewNowAPISpeedkmh(API_kmh + "km/h");
+                    my_layout.setdataviewNowGPSSpeedms(GPS_ms + "ms");
+                    my_layout.setdataviewNowGPSSpeedkmh(GPS_kmh + "km/h");
+                    my_layout.setdataviewCalPosition(cal_position.toString());
+
+
+                }
+            });
+
+
+            if (Data.Navigation_Status) {
+                if (my_new_navigation.get_initMK()) {
+                    my_new_navigation.set_initMK(false);
+                    my_new_navigation.initUserMK();
+                } else {
+                    my_new_navigation.Navigation();
+                }
+            } else {
+                my_new_navigation.set_initMK(true);
+                my_new_navigation.Remove_Navigation_MK();
+                my_new_navigation.Final_Remove_Direction();
+            }
+            if (Data.GPS_Record.size() > 1000) {
+                Data.GPS_Record.removeAll(Data.GPS_Record);
+                Data.API_Record.removeAll(Data.API_Record);
+                Data.Cal_Record.removeAll(Data.Cal_Record);
             }
         }
-//        else{
-//            my_new_navigation.set_initMK(true);
-//            my_new_navigation.Remove_Navigation_MK();
-//            my_new_navigation.Final_Remove_Direction();
-//            //my_sensor.unregisterListener();
-//        }
+        catch (Exception e){
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage(e.toString()).setTitle("Error").setIcon(R.drawable.warning);
+            builder.setPositiveButton("確定", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    dialogInterface.dismiss();
+                }
+            });
+            builder.show();
+        }
+    }
+    public void Save_Position(String type, ArrayList<LatLng> data, long time){
+        String filename = type + ".txt";
+        // 存放檔案位置在 內部空間/Download/
+        File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+        File file = new File(path, filename);
+        try
+        {
+            // 第二個參數為是否 append
+            // 若為 true，則新加入的文字會接續寫在文字檔的最後
+            FileOutputStream Output = new FileOutputStream(file, false);
+
+            String dateformat = "yyyyMMdd kk:mm:ss";
+            SimpleDateFormat df = new SimpleDateFormat(dateformat);
+            df.applyPattern(dateformat);
+            String string =  df.format(new Date()) + " : " + type + "\n";
+            //String string =  df.format(new Date()) + " : " + data.get(0)  + "\n";
+            for(int i=0; i<data.size() ;i++){
+                string = string + time+ " : " + data.get(i) + "\n";
+            }
+            Output.write(string.getBytes());
+            Output.close();
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
     }
     //Googel 地圖讀取好的時候執行
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -354,13 +488,13 @@ public class MainActivity extends AppCompatActivity implements
     protected void onStop() {
         super.onStop();
         // 停用 Google API
-        Toast.makeText(MainActivity.this, "停用Google API", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(MainActivity.this, "停用Google API", Toast.LENGTH_SHORT).show();
         mGoogleApiClient.disconnect();
     }
     @Override
     public void onConnected(@Nullable Bundle bundle) {
         // Google API 連線成功時會執行這個方法
-        Toast.makeText(MainActivity.this, "Google API 連線成功", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(MainActivity.this, "Google API 連線成功", Toast.LENGTH_SHORT).show();
         // 啟動定位
         enableLocation(true);
     }
@@ -370,19 +504,19 @@ public class MainActivity extends AppCompatActivity implements
         // 程式呼叫disconnect()時不會執行這個方法
         switch (i) {
             case CAUSE_NETWORK_LOST:
-                Toast.makeText(MainActivity.this, "網路斷線，無法定位",
-                        Toast.LENGTH_LONG).show();
+                //Toast.makeText(MainActivity.this, "網路斷線，無法定位",
+                //        Toast.LENGTH_LONG).show();
                 break;
             case CAUSE_SERVICE_DISCONNECTED:
-                Toast.makeText(MainActivity.this, "Google API 異常，無法定位",
-                        Toast.LENGTH_LONG).show();
+                //Toast.makeText(MainActivity.this, "Google API 異常，無法定位",
+                //        Toast.LENGTH_LONG).show();
                 break;
         }
     }
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
         // 和 Google API 連線失敗時會執行這個方法
-        Toast.makeText(MainActivity.this, "Google API 連線失敗", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(MainActivity.this, "Google API 連線失敗", Toast.LENGTH_SHORT).show();
     }
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {

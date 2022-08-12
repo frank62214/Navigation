@@ -39,10 +39,16 @@ public class Data {
 
     //Navigation data
     public static boolean Navigation_Status = false;
-    public static boolean Record_Status = false;
+    public static boolean GPS_Status = false;
     public static ArrayList<LatLng> API_Record = new ArrayList<LatLng>();
     public static ArrayList<LatLng> GPS_Record = new ArrayList<LatLng>();
+    public static ArrayList<LatLng> Cal_Record = new ArrayList<LatLng>();
 
     //CarMode data
     public static boolean CarMode_Status = false;
+
+    //Record
+    public static boolean SnapRoad_Status = false;
+    public static boolean Record_Timer_Status = false;
+    public static boolean History_Status = false;
 }

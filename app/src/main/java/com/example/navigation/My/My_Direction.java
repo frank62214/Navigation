@@ -40,6 +40,7 @@ public class My_Direction {
         url = Direction_url_1 + destination + Direction_url_2 + mode + Direction_url_3 + origin;
         url = url + Direction_url_4 + key;
         direction.removeAll(direction);
+        //if(Data.Decoder_Steps!=null){Data.Decoder_Steps.removeAll(Data.Decoder_Steps);}
     }
     public void setDistanceUrl(LatLng start, LatLng end){
         //int ans = 0;
@@ -176,97 +177,114 @@ public class My_Direction {
         return text;
     }
     private void get_Distance(String text){
-        My_Json my_json = new My_Json();
+        try {
+            My_Json my_json = new My_Json();
 
-        //取得距離
-        ArrayList<String> routes   = new ArrayList<String>();
-        ArrayList<String> legs     = new ArrayList<String>();
-        ArrayList<String> steps    = new ArrayList<String>();
-        ArrayList<String> distance = new ArrayList<String>();
-        ArrayList<String> value    = new ArrayList<String >();
-        my_json.get_json(text, routes, "routes");
-        my_json.get_json(routes, legs, "legs");
-        my_json.get_json(legs, steps, "steps");
-        my_json.get_json(steps, distance, "distance");
-        //System.out.println("Direction Dis: " + distance);
-        my_json.get_json(distance, value, "value");
-        dis = Integer.parseInt(value.get(0));
+            //取得距離
+            ArrayList<String> routes = new ArrayList<String>();
+            ArrayList<String> legs = new ArrayList<String>();
+            ArrayList<String> steps = new ArrayList<String>();
+            ArrayList<String> distance = new ArrayList<String>();
+            ArrayList<String> value = new ArrayList<String>();
+            my_json.get_json(text, routes, "routes");
+            my_json.get_json(routes, legs, "legs");
+            my_json.get_json(legs, steps, "steps");
+            my_json.get_json(steps, distance, "distance");
+            //System.out.println("Direction Dis: " + distance);
+            my_json.get_json(distance, value, "value");
+            dis = Integer.parseInt(value.get(0));
+        }
+        catch(Exception e){
+            System.out.println(e.toString());
+        }
     }
     private void get_Direction(String text){
-        My_Json my_json = new My_Json();
-        //取得OverView PolyLine
-        ArrayList<String> routes = new ArrayList<String>();
-        ArrayList<String> polyline_overview = new ArrayList<String>();
-        ArrayList<String> points = new ArrayList<String>();
-        my_json.get_json(text, routes, "routes");
-        my_json.get_json(routes, polyline_overview, "overview_polyline");
-        my_json.get_json(polyline_overview, points, "points");
-        Polyline_decoder(points, direction);
-        Polyline_decoder(points, Data.Decoder_Steps);
-        //取得Direction 細節
-        ArrayList<String> legs = new ArrayList<String>();
-        ArrayList<String> steps = new ArrayList<String>();
-        ArrayList<String> end_location_s = new ArrayList<String>();
-        ArrayList<String> html_instrustions     = new ArrayList<String>();
-        ArrayList<String> html_instrustions_tmp = new ArrayList<String>();
-        ArrayList<String> maneuver = new ArrayList<String>();
-        ArrayList<String> lat = new ArrayList<String>();
-        ArrayList<String> lng = new ArrayList<String>();
-        //get every point
-        my_json.get_json(routes, legs, "legs");
-        my_json.get_json(legs, steps, "steps");
-        my_json.get_json(steps, end_location_s, "end_location");
-        my_json.get_json(steps, html_instrustions_tmp, "html_instructions");
-        //取得Lat Lng
-        //my_json.get_json(Start_location_s, lat, "lat");
-        my_json.get_json(end_location_s, lat, "lat");
-        my_json.get_json(end_location_s, lng, "lng");
+        try {
+            My_Json my_json = new My_Json();
+            //取得OverView PolyLine
+            ArrayList<String> routes = new ArrayList<String>();
+            ArrayList<String> polyline_overview = new ArrayList<String>();
+            ArrayList<String> points = new ArrayList<String>();
+            my_json.get_json(text, routes, "routes");
+            my_json.get_json(routes, polyline_overview, "overview_polyline");
+            my_json.get_json(polyline_overview, points, "points");
+            Polyline_decoder(points, direction);
+
+            Polyline_decoder(points, Data.Decoder_Steps);
+            //取得Direction 細節
+            ArrayList<String> legs = new ArrayList<String>();
+            ArrayList<String> steps = new ArrayList<String>();
+            ArrayList<String> end_location_s = new ArrayList<String>();
+            ArrayList<String> html_instrustions = new ArrayList<String>();
+            ArrayList<String> html_instrustions_tmp = new ArrayList<String>();
+            ArrayList<String> maneuver = new ArrayList<String>();
+            ArrayList<String> lat = new ArrayList<String>();
+            ArrayList<String> lng = new ArrayList<String>();
+            //get every point
+            my_json.get_json(routes, legs, "legs");
+            my_json.get_json(legs, steps, "steps");
+            my_json.get_json(steps, end_location_s, "end_location");
+            my_json.get_json(steps, html_instrustions_tmp, "html_instructions");
+            //取得Lat Lng
+            //my_json.get_json(Start_location_s, lat, "lat");
+            my_json.get_json(end_location_s, lat, "lat");
+            my_json.get_json(end_location_s, lng, "lng");
 
 
-        Store_Step(lat, lng);
-        Store_Road(html_instrustions_tmp);
-        //my_json.show(html_instrustions_tmp);
+            Store_Step(lat, lng);
+            Store_Road(html_instrustions_tmp);
+            //my_json.show(html_instrustions_tmp);
+        }
+        catch (Exception e){
+            System.out.println(e.toString());
+        }
 
     }
     public void get_Navigation(String text){
-        My_Json my_json = new My_Json();
-        //取得OverView PolyLine
-        ArrayList<String> routes = new ArrayList<String>();
-        ArrayList<String> polyline_overview = new ArrayList<String>();
-        ArrayList<String> points = new ArrayList<String>();
-        my_json.get_json(text, routes, "routes");
-        my_json.get_json(routes, polyline_overview, "overview_polyline");
-        my_json.get_json(polyline_overview, points, "points");
-        Polyline_decoder(points, direction);
-        Polyline_decoder(points, Data.Decoder_Steps);
+        try {
+            My_Json my_json = new My_Json();
+            //取得OverView PolyLine
+            ArrayList<String> routes = new ArrayList<String>();
+            ArrayList<String> polyline_overview = new ArrayList<String>();
+            ArrayList<String> points = new ArrayList<String>();
+            my_json.get_json(text, routes, "routes");
+            my_json.get_json(routes, polyline_overview, "overview_polyline");
+            my_json.get_json(polyline_overview, points, "points");
+            Polyline_decoder(points, direction);
+            Data.Decoder_Steps = direction;
+            //Polyline_decoder(points, Data.Decoder_Steps);
 
-        //取得Direction 細節
-        ArrayList<String> legs = new ArrayList<String>();
-        ArrayList<String> steps = new ArrayList<String>();
-        ArrayList<String> end_location_s = new ArrayList<String>();
-        ArrayList<String> start_location_s = new ArrayList<String>();
-        ArrayList<String> html_instrustions     = new ArrayList<String> ();
-        ArrayList<String> html_instrustions_tmp = new ArrayList<String>();
-        ArrayList<String> lat = new ArrayList<String>();
-        ArrayList<String> lng = new ArrayList<String>();
-        //get every point
-        my_json.get_json(routes, legs, "legs");
-        my_json.get_json(legs, steps, "steps");
-        my_json.get_json(steps, start_location_s, "start_location");
-        my_json.get_json(steps, end_location_s, "end_location");
-        my_json.get_json(steps, html_instrustions_tmp, "html_instructions");
-        //取得Lat Lng
-        //my_json.get_json(Start_location_s, lat, "lat");
-        //my_json.get_json(end_location_s, lat, "lat");
-        //my_json.get_json(end_location_s, lng, "lng");
-        //取得Lat Lng
-        //my_json.get_json(Start_location_s, lat, "lat");
-        my_json.get_json(start_location_s, lat, "lat");
-        my_json.get_json(start_location_s, lng, "lng");
+            //取得Direction 細節
+            ArrayList<String> legs = new ArrayList<String>();
+            ArrayList<String> steps = new ArrayList<String>();
+            ArrayList<String> end_location_s = new ArrayList<String>();
+            ArrayList<String> start_location_s = new ArrayList<String>();
+            ArrayList<String> html_instrustions = new ArrayList<String>();
+            ArrayList<String> html_instrustions_tmp = new ArrayList<String>();
+            ArrayList<String> lat = new ArrayList<String>();
+            ArrayList<String> lng = new ArrayList<String>();
+            //get every point
+            my_json.get_json(routes, legs, "legs");
+            my_json.get_json(legs, steps, "steps");
+            my_json.get_json(steps, start_location_s, "start_location");
+            my_json.get_json(steps, end_location_s, "end_location");
+            my_json.get_json(steps, html_instrustions_tmp, "html_instructions");
+            //取得Lat Lng
+            //my_json.get_json(Start_location_s, lat, "lat");
+            //my_json.get_json(end_location_s, lat, "lat");
+            //my_json.get_json(end_location_s, lng, "lng");
+            //取得Lat Lng
+            //my_json.get_json(Start_location_s, lat, "lat");
+            my_json.get_json(start_location_s, lat, "lat");
+            my_json.get_json(start_location_s, lng, "lng");
 
 
-        Store_Step(lat, lng);
-        Store_Road(html_instrustions_tmp);
+            Store_Step(lat, lng);
+            Store_Road(html_instrustions_tmp);
+        }
+        catch (Exception e){
+            System.out.println(e.toString());
+        }
     }
     public void Store_Road(ArrayList<String> text){
         if(Data.Road!=null){ Data.Road.removeAll(Data.Road); }

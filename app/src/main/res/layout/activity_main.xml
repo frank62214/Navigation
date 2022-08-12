@@ -37,6 +37,49 @@
             android:layout_marginBottom="10dp"
             android:orientation="vertical">
             <ImageButton
+                android:id="@+id/btnGPS"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginBottom="5dp"
+                android:background="@drawable/btn_round"
+                app:srcCompat="@drawable/ic_satellite"
+                tools:ignore="ContentDescription,InvalidId"
+                android:visibility="gone"/>
+            <ImageButton
+                android:id="@+id/btnTrash"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginBottom="5dp"
+                android:background="@drawable/btn_round"
+                app:srcCompat="@drawable/ic_trash"
+                tools:ignore="ContentDescription,InvalidId" />
+            <ImageButton
+                android:id="@+id/btnSnapRoadSwitch"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginBottom="5dp"
+                android:background="@drawable/btn_round"
+                app:srcCompat="@drawable/ic_add_road"
+                tools:ignore="ContentDescription,InvalidId" />
+            <ImageButton
+                android:id="@+id/btnHistory"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginBottom="5dp"
+                android:background="@drawable/btn_round"
+                app:srcCompat="@drawable/ic_history"
+                tools:ignore="ContentDescription,InvalidId"/>
+            <ImageButton
                 android:id="@+id/btnRecord"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
@@ -101,7 +144,8 @@
                 android:background="@drawable/btn_round"
                 app:srcCompat="@drawable/ic_near_me"
                 tools:ignore="ContentDescription,InvalidId"
-                android:layout_gravity="right|center_vertical"/>
+                android:layout_gravity="right|center_vertical"
+                android:visibility="gone"/>
             <ImageButton
                 android:id="@+id/btnDirections"
                 android:layout_width="50dp"
