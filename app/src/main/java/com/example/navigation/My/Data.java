@@ -17,6 +17,7 @@ public class Data {
     final public static String Navigation_Page = "Navigation";
     final public static String CarMode_Page = "CarMode";
     public static boolean Lock_User = false;
+    public static boolean lldata_view_visible = true;
 
     //location data
     public static LatLng now_position;

@@ -45,6 +45,7 @@ public class My_Layout extends RelativeLayout {
     ImageButton btnGPS;
     ImageButton btnSnapRoadSwitch;
     ImageButton btnTrash;
+    ImageButton btnWindow;
 
     //activity_navigation
     LinearLayout llNext_Turn;
@@ -55,6 +56,7 @@ public class My_Layout extends RelativeLayout {
     TextView tv_Now_Position;
     TextView tv_Next_Dis;
     TextView tv_to_Destination_dis;
+    TextView tv_Navigation_Speed;
     //TextView tv_Last_Dis;
     //TextView tv_Now_Bearing;
 
@@ -64,7 +66,14 @@ public class My_Layout extends RelativeLayout {
     TextView data_view_Now_API_Speed_kmh;
     TextView data_view_Now_GPS_Speed_ms;
     TextView data_view_Now_GPS_Speed_kmh;
-    TextView data_view_Now_Sensor;
+    TextView data_view_Now_Sensor_Speed_tm;
+    TextView data_view_Now_Sensor_Speed_m;
+    TextView data_view_Now_Sensor_Speed_ms;
+    TextView data_view_Now_Sensor_Speed_kmh;
+    TextView data_view_Now_Sensor_x;
+    TextView data_view_Now_Sensor_y;
+    TextView data_view_Now_Sensor_z;
+    TextView data_view_Now_Sensor_pass_time;
     TextView data_view_Now_Page;
     TextView data_view_Bearing;
     TextView data_view_Record_Timer;
@@ -121,6 +130,7 @@ public class My_Layout extends RelativeLayout {
         btnGPS        = (ImageButton) layout_view.findViewById(R.id.btnGPS);
         btnSnapRoadSwitch = (ImageButton) layout_view.findViewById(R.id.btnSnapRoadSwitch);
         btnTrash      = (ImageButton) layout_view.findViewById(R.id.btnTrash);
+        btnWindow     = (ImageButton) layout_view.findViewById(R.id.btnWindow);
 
         //取得activity_navigation的元件
         llNext_Turn   = (LinearLayout) navigation_view.findViewById(R.id.llNext_Turn);
@@ -131,6 +141,7 @@ public class My_Layout extends RelativeLayout {
         tv_Now_Position       = (TextView) llNext_Turn.findViewById(R.id.tv_Now_Position);
         tv_Next_Dis           = (TextView) llNext_Turn.findViewById(R.id.tv_Next_Dis);
         tv_to_Destination_dis = (TextView) llNext_Turn.findViewById(R.id.tv_to_Destination_dis);
+        tv_Navigation_Speed   = (TextView) llNext_Turn.findViewById(R.id.tv_Navigation_Speed);
         //tv_Last_Dis         = (TextView) llNext_Turn.findViewById(R.id.tv_Last_Dis);
         //tv_Now_Bearing      = (TextView) llNext_Turn.findViewById(R.id.tv_Now_Bearing);
         //取得activity_data_view
@@ -139,7 +150,14 @@ public class My_Layout extends RelativeLayout {
         data_view_Now_API_Speed_kmh = (TextView) lldata_view.findViewById(R.id.data_view_Now_API_Speed_kmh);
         data_view_Now_GPS_Speed_ms = (TextView) lldata_view.findViewById(R.id.data_view_Now_GPS_Speed_ms);
         data_view_Now_GPS_Speed_kmh = (TextView) lldata_view.findViewById(R.id.data_view_Now_GPS_Speed_kmh);
-        data_view_Now_Sensor = (TextView) lldata_view.findViewById(R.id.data_view_Now_Sensor);
+        data_view_Now_Sensor_Speed_tm = (TextView) lldata_view.findViewById(R.id.data_view_Now_Sensor_Speed_tm);
+        data_view_Now_Sensor_Speed_m = (TextView) lldata_view.findViewById(R.id.data_view_Now_Sensor_Speed_m);
+        data_view_Now_Sensor_Speed_ms = (TextView) lldata_view.findViewById(R.id.data_view_Now_Sensor_Speed_ms);
+        data_view_Now_Sensor_Speed_kmh = (TextView) lldata_view.findViewById(R.id.data_view_Now_Sensor_Speed_kmh);
+        data_view_Now_Sensor_x = (TextView) lldata_view.findViewById(R.id.data_view_Now_Sensor_x);
+        data_view_Now_Sensor_y = (TextView) lldata_view.findViewById(R.id.data_view_Now_Sensor_y);
+        data_view_Now_Sensor_z = (TextView) lldata_view.findViewById(R.id.data_view_Now_Sensor_z);
+        data_view_Now_Sensor_pass_time = (TextView) lldata_view.findViewById(R.id.data_view_Now_Sensor_pass_time);
         data_view_Now_Page = (TextView) lldata_view.findViewById(R.id.data_view_Now_Page);
         data_view_Bearing      = (TextView) lldata_view.findViewById(R.id.data_view_Bearing);
         data_view_Record_Timer = (TextView) lldata_view.findViewById(R.id.data_view_Record_Timer);
@@ -319,12 +337,22 @@ public class My_Layout extends RelativeLayout {
     public void setdataviewNowAPISpeedkmh(String text){ data_view_Now_API_Speed_kmh.setText("目前API時速:" + text);}
     public void setdataviewNowGPSSpeedms(String text){ data_view_Now_GPS_Speed_ms.setText("目前GPS秒速:" + text);}
     public void setdataviewNowGPSSpeedkmh(String text){ data_view_Now_GPS_Speed_kmh.setText("目前GPS時速:" + text);}
-    public void setdataviewNowSensor(String text){ data_view_Now_Sensor.setText("Sensor數值:" + text);}
+    public void setdataviewNowSensorSpeedm(String text){ data_view_Now_Sensor_Speed_m.setText("目前Sensor距離:"+text);}
+    public void setdataviewNowSensorSpeedtm(String text) { data_view_Now_Sensor_Speed_tm.setText("目前Sensor總距離:" + text);}
+    public void setdataviewNowSensorSpeedms(String text) { data_view_Now_Sensor_Speed_ms.setText("目前Sensor秒速" + text);}
+    public void setdataviewNowSensorSpeedkmh(String text) { data_view_Now_Sensor_Speed_kmh.setText("目前Sensor時速" + text);}
+    public void setdataviewNowSensorx(String text){ data_view_Now_Sensor_x.setText("Sensor X數值:" + text);}
+    public void setdataviewNowSensory(String text){ data_view_Now_Sensor_y.setText("Sensor Y數值:" + text);}
+    public void setdataviewNowSensorz(String text){ data_view_Now_Sensor_z.setText("Sensor Z數值:" + text);}
+    public void setdataviewNowSensorpasstime(String text) {data_view_Now_Sensor_pass_time.setText("感測器經過時間:" + text); }
     public void setdataviewRecordTimer(String text){ data_view_Record_Timer.setText(text);}
     public void setdataviewRefreshGPSdis(String text){data_view_Refresh_GPS_dis.setText("GPS更新距離:"+text);}
     public void setdataviewRefreshAPIdis(String text){data_view_Refresh_API_dis.setText("API更新距離"+ text);}
     public void setdataviewCalPosition(String text){data_view_Cal_Position.setText("計算經緯度:"+text);}
     public void setdataviewNowAPIPassTime(String text){data_view_Now_API_Pass_Time.setText("API經過時間:" + text);}
+    //-----------------------------------------------------------------------------------------------------------------------
+    //Navigation Data
+    public void settvNavigationSpeed(String text){ tv_Navigation_Speed.setText("現在速度:" + text); }
 //    public void setLastDistance(String text){  tv_Last_Dis.setText("距離前方路口" + text);}
 //    public void setNow_Bearing(String text){
 //        tv_Now_Bearing.setText(text);

@@ -75,6 +75,7 @@ public class My_Map {
                 }
             }
         });
+
     }
 
     public void setMyLocationEnabled(boolean select) {
@@ -198,12 +199,12 @@ public class My_Map {
     }
     public void Draw_Direction(ArrayList<LatLng> Points){
         new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
             public void run() {
                 Remove_Direction();
                 PolylineOptions polylineOptions = new PolylineOptions();
-
-                //mMap.addMarker(Navigation_test);
-                for(int i=0; i< Points.size();i++){
+                //mMap.addMarker(Navigation_test)
+                for (int i = 0; i < Points.size(); i++) {
                     polylineOptions.add(Points.get(i));
                     //Navigation_test.position(Points.get(i));
                     //mMap.addMarker(Navigation_test);
@@ -213,6 +214,66 @@ public class My_Map {
                 Direction = mMap.addPolyline(polylineOptions);
             }
         });
+    }
+    public Polyline Draw_PolyLine(LatLng Start, LatLng End){
+        PolylineOptions polylineOptions = new PolylineOptions();
+        //mMap.addMarker(Navigation_test)
+        polylineOptions.add(Start);
+        polylineOptions.add(End);
+//        for(int i=1; i< Points.size();i++){
+//            polylineOptions.add(Points.get(i));
+//            //Navigation_test.position(Points.get(i));
+//            //mMap.addMarker(Navigation_test);
+//        }
+        polylineOptions.color(context.getResources().getColor(R.color.route_color));
+        polylineOptions.width(20f);
+        Polyline navigation = mMap.addPolyline(polylineOptions);
+        return navigation;
+    }
+    public Polyline Draw_PolyLine(ArrayList<LatLng> Points){
+        PolylineOptions polylineOptions = new PolylineOptions();
+        //mMap.addMarker(Navigation_test)
+        //polylineOptions.add(point);
+        for(int i=1; i< Points.size();i++){
+            polylineOptions.add(Points.get(i));
+            //Navigation_test.position(Points.get(i));
+            //mMap.addMarker(Navigation_test);
+        }
+        polylineOptions.color(context.getResources().getColor(R.color.route_color));
+        polylineOptions.width(20f);
+        Polyline navigation = mMap.addPolyline(polylineOptions);
+        return navigation;
+    }
+    public Polyline Draw_PolyLine(LatLng point, ArrayList<LatLng> Points, int step){
+        PolylineOptions polylineOptions = new PolylineOptions();
+        //mMap.addMarker(Navigation_test)
+        polylineOptions.add(point);
+        for(int i=step; i< Points.size();i++){
+            polylineOptions.add(Points.get(i));
+            //Navigation_test.position(Points.get(i));
+            //mMap.addMarker(Navigation_test);
+        }
+        polylineOptions.color(context.getResources().getColor(R.color.route_color));
+        polylineOptions.width(20f);
+        Polyline navigation = mMap.addPolyline(polylineOptions);
+        return navigation;
+    }
+    public Polyline Draw_PolyLine(LatLng point, ArrayList<LatLng> Points){
+        PolylineOptions polylineOptions = new PolylineOptions();
+        //mMap.addMarker(Navigation_test)
+        polylineOptions.add(point);
+        for(int i=1; i< Points.size();i++){
+            polylineOptions.add(Points.get(i));
+            //Navigation_test.position(Points.get(i));
+            //mMap.addMarker(Navigation_test);
+        }
+        polylineOptions.color(context.getResources().getColor(R.color.route_color));
+        polylineOptions.width(20f);
+        Polyline navigation = mMap.addPolyline(polylineOptions);
+        return navigation;
+    }
+    public void Remove_PolyLine(Polyline polyline){
+        if(polyline != null) polyline.remove();
     }
     public void Draw_Record_Route(){
         new Handler(Looper.getMainLooper()).post(new Runnable() {
@@ -343,6 +404,9 @@ public class My_Map {
     public void Remove_Navigation_MK(){
         if(Navigation_MK!=null){ Navigation_MK.remove(); }
     }
+    public void Remove_Marker(Marker marker){
+        marker.remove();
+    }
     public float Cal_Bearing(LatLng Start, LatLng End){
         //System.out.println("Start: "+ Start);
         //System.out.println("End: "+ End);
@@ -414,5 +478,8 @@ public class My_Map {
 
         // after generating our bitmap we are returning our bitmap.
         return BitmapDescriptorFactory.fromBitmap(bitmap);
+    }
+    public Marker Add_Marker(MarkerOptions MKopt){
+        return mMap.addMarker(MKopt);
     }
 }

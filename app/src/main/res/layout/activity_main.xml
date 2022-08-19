@@ -49,6 +49,17 @@
                 tools:ignore="ContentDescription,InvalidId"
                 android:visibility="gone"/>
             <ImageButton
+                android:id="@+id/btnWindow"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginBottom="5dp"
+                android:background="@drawable/btn_round"
+                app:srcCompat="@drawable/ic_window"
+                tools:ignore="ContentDescription,InvalidId" />
+            <ImageButton
                 android:id="@+id/btnTrash"
                 android:layout_width="50dp"
                 android:layout_height="50dp"

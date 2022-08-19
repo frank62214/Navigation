@@ -32,6 +32,19 @@ public class My_Event {
 
     public void setEvent() {
         timer = new Timer();
+        my_layout.btnWindow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(Data.lldata_view_visible) {
+                    Data.lldata_view_visible = false;
+                    my_layout.lldata_view.setVisibility(View.GONE);
+                }
+                else{
+                    Data.lldata_view_visible = true;
+                    my_layout.lldata_view.setVisibility(View.VISIBLE);
+                }
+            }
+        });
         my_layout.btnTrash.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -247,7 +260,8 @@ public class My_Event {
                         public void onDataReady(ArrayList<LatLng> data) {
                             my_layout.Direction_Page(my_map);
                             //my_map.Draw_Direction(data);
-                            my_map.Draw_Direction(Data.Decoder_Steps);
+                            Draw_Direction(data);
+                            //my_map.Draw_Direction(Data.Decoder_Steps);
                         }
                         @Override
                         public void onDisReady(int dis) {}
@@ -298,5 +312,10 @@ public class My_Event {
     {
         return String.format("%02d",hours) + " : " + String.format("%02d",minutes) + " : " + String.format("%02d",seconds);
     }
-
+    private void Draw_Direction(ArrayList<LatLng> decoder_Steps){
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            public void run() {
+                my_map.Draw_Direction(decoder_Steps);
+            }});
+    }
 }

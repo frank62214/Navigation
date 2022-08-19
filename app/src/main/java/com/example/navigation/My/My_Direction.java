@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import javax.net.ssl.HttpsURLConnection;
 
 public class My_Direction {
-    private String key = "AIzaSyBm6kC5U0Y_k3lfmggPRurC0C3o3wiUlA0";
+    private String key = "AIzaSyD24I4V9f9ojF9xOe_Oil4upRIoYPGLyeI";
 
     private ArrayList<LatLng> direction = new ArrayList<LatLng>();
 
@@ -39,7 +39,18 @@ public class My_Direction {
         String mode = Data.Mode;
         url = Direction_url_1 + destination + Direction_url_2 + mode + Direction_url_3 + origin;
         url = url + Direction_url_4 + key;
-        direction.removeAll(direction);
+        direction.remove(direction);
+        //if(Data.Decoder_Steps!=null){Data.Decoder_Steps.removeAll(Data.Decoder_Steps);}
+    }
+    public void searchDirection(LatLng point){
+        String origin      = point.latitude + "," + point.longitude;
+        String destination = Data.Destination.latitude + "," + Data.Destination.longitude;
+        //System.out.println(origin);
+        //System.out.println(destination);
+        String mode = Data.Mode;
+        url = Direction_url_1 + destination + Direction_url_2 + mode + Direction_url_3 + origin;
+        url = url + Direction_url_4 + key;
+        direction.remove(direction);
         //if(Data.Decoder_Steps!=null){Data.Decoder_Steps.removeAll(Data.Decoder_Steps);}
     }
     public void setDistanceUrl(LatLng start, LatLng end){
@@ -70,6 +81,22 @@ public class My_Direction {
         catch(Exception e) {
             e.printStackTrace();
             //callback.onDataReady();
+        }
+    }
+    public void SearchNavigationData(final onNavigationDataReadyCallBack callBack){
+        try{
+            Runnable runnable = new Runnable() {
+                @Override
+                public void run() {
+                    String web_text = run_content(url);
+                    callBack.onDataReady(web_text);
+                }
+            };
+            //runnable.run();
+            Thread t1 = new Thread(runnable);
+            t1.start();
+        }catch (Exception e){
+            Cal_Method.Catch_Error_Log("SearchNavigationDataNew", e.toString());
         }
     }
     public void SearchNavigationData(final onDataReadyCallback callback){
@@ -251,7 +278,9 @@ public class My_Direction {
             my_json.get_json(routes, polyline_overview, "overview_polyline");
             my_json.get_json(polyline_overview, points, "points");
             Polyline_decoder(points, direction);
-            Data.Decoder_Steps = direction;
+            System.out.println(direction.size());
+
+            //Data.Decoder_Steps = direction;
             //Polyline_decoder(points, Data.Decoder_Steps);
 
             //取得Direction 細節
@@ -411,6 +440,9 @@ public class My_Direction {
         void onDataReady(ArrayList<LatLng> data);
         void onDisReady(int dis);
         void onStartLocationReady(LatLng start, LatLng end);
+    }
+    interface onNavigationDataReadyCallBack{
+        void onDataReady(String text);
     }
 
 }

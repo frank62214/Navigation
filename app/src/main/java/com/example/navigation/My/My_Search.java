@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import javax.net.ssl.HttpsURLConnection;
 
 public class My_Search {
-    private String key = "AIzaSyBm6kC5U0Y_k3lfmggPRurC0C3o3wiUlA0";
+    private String key = "AIzaSyD24I4V9f9ojF9xOe_Oil4upRIoYPGLyeI";
 
     private String Search_url_1 = "https://maps.googleapis.com/maps/api/place/textsearch/json?location=";   //+lat
     private String Search_url_2 = ",";                                                                      //+lng

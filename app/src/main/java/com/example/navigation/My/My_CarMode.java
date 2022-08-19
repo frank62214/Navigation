@@ -109,11 +109,11 @@ public class My_CarMode implements Runnable{
                     }
                     Navigation_MK_Start = data.get(0);
                     Navigation_MK_End = data.get(1);
-                    if (!Cal_Method.Cal_Check_Drift()) {
-                        Last_Bearing = Now_Bearing;
-                        distance = (int) Cal_Method.Cal_Distance(Navigation_MK_Start, Navigation_MK_End);
-                        //NavigationCamera();
-                    }
+//                    if (!Cal_Method.Cal_Check_Drift()) {
+//                        Last_Bearing = Now_Bearing;
+//                        distance = (int) Cal_Method.Cal_Distance(Navigation_MK_Start, Navigation_MK_End);
+//                        //NavigationCamera();
+//                    }
                 }
 
                 @Override

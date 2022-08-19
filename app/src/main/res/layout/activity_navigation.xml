@@ -75,6 +75,13 @@
                     android:text="距離終點位置:"
                     android:textSize="10dp"
                     android:textColor="@color/black"/>
+                <TextView
+                    android:id="@+id/tv_Navigation_Speed"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="現在速度:"
+                    android:textSize="10dp"
+                    android:textColor="@color/black"/>
 
             </LinearLayout>
         </LinearLayout>

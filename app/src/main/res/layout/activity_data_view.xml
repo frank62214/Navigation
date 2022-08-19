@@ -91,10 +91,59 @@
                 android:textColor="@color/black"
                 android:textSize="10dp" />
             <TextView
-                android:id="@+id/data_view_Now_Sensor"
+                android:id="@+id/data_view_Now_Sensor_Speed_tm"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="現在速度:"
+                android:text="目前Sensora總距離:"
+                android:textColor="@color/black"
+                android:textSize="10dp" />
+            <TextView
+                android:id="@+id/data_view_Now_Sensor_Speed_m"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="目前Sensora距離:"
+                android:textColor="@color/black"
+                android:textSize="10dp" />
+            <TextView
+                android:id="@+id/data_view_Now_Sensor_Speed_ms"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="目前Sensora秒速:"
+                android:textColor="@color/black"
+                android:textSize="10dp" />
+            <TextView
+                android:id="@+id/data_view_Now_Sensor_Speed_kmh"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="目前Sensor時速:"
+                android:textColor="@color/black"
+                android:textSize="10dp" />
+            <TextView
+                android:id="@+id/data_view_Now_Sensor_x"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="現在x軸:"
+                android:textColor="@color/black"
+                android:textSize="10dp" />
+            <TextView
+                android:id="@+id/data_view_Now_Sensor_y"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="現在y軸:"
+                android:textColor="@color/black"
+                android:textSize="10dp" />
+            <TextView
+                android:id="@+id/data_view_Now_Sensor_z"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="現在z軸:"
+                android:textColor="@color/black"
+                android:textSize="10dp" />
+            <TextView
+                android:id="@+id/data_view_Now_Sensor_pass_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="現在感測器時間:"
                 android:textColor="@color/black"
                 android:textSize="10dp" />
                 <TextView
