@@ -308,7 +308,7 @@ public class MainActivity extends AppCompatActivity implements
 
                     //測試用變數test_dis會不斷加總5
                     //my_new_navigation.Navigation(select_position, GPS_dis);
-                    my_new_navigation.Navigation(select_position, 5.0);
+                    my_new_navigation.Navigation(select_position, 5);
                     //test_dis+=5;
 
                     //my_new_navigation.Navigation(select_position, GPS_dis);

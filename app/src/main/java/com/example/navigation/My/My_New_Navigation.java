@@ -107,7 +107,8 @@ public class My_New_Navigation {
 //            Navigation_test2(navigation_now_position, dis);
 //
 //       }
-        if(initData || too_far > 3) {
+        //if(initData || too_far > 3) {
+        if(initData) {
             if(too_far!=0){
                 Toast("重新規劃路線");
                 too_far = 0;
@@ -197,7 +198,7 @@ public class My_New_Navigation {
                 Road_Detail = My_Json.Get_Navigation_Road_Detail(text);
                 straight_line_point = Divide_Straight(PolylineOverView.get(0), PolylineOverView.get(1));
                 Now_Bearing = Cal_Method.Cal_Bearing(PolylineOverView.get(0), PolylineOverView.get(1));
-                Draw_Direction(PolylineOverView);
+                //Draw_Direction(PolylineOverView);
                 init_Dis = Cal_Method.Cal_Distance(now_position, PolylineOverView.get(1));
                 //刷新參數
                 navigation_now_position = now_position;     //將相機位置改掉
@@ -286,11 +287,14 @@ public class My_New_Navigation {
 //                Call_API(now_position);
 //            }
             if(straight_line_point!=null){
-                if(straight_line_point.size()==0 && navigation_now_position!=null){
+                if(straight_line_point.size()==0){
                     //Call_API(navigation_now_position);
                     straight_line_point = Divide_Straight(PolylineOverView.get(count_step), PolylineOverView.get(count_step+1));
-                    Now_Bearing = Cal_Method.Cal_Bearing(PolylineOverView.get(0), PolylineOverView.get(1));
-
+                    Now_Bearing = Cal_Method.Cal_Bearing(PolylineOverView.get(count_step), PolylineOverView.get(count_step+1));
+                    navigation_now_position = straight_line_point.get(0);
+                    //Draw_Direction(navigation_now_position, PolylineOverView, count_step+1);
+                }
+                if(redundant_dis!=0){
                     dis += redundant_dis;
                     redundant_dis = 0;
                 }
@@ -316,24 +320,40 @@ public class My_New_Navigation {
                     too_far++;
                 }
             }
+            if(Cal_Method.Cal_Distance(navigation_now_position, Data.Destination)<10){
+                Data.Navigation_Status = false;
+                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                builder.setMessage("抵達目的地").setTitle("完成");
+                builder.setPositiveButton("確定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                });
+                builder.show();
+            }
 //        }catch (Exception e) {
 //            System.out.println("Navigation_test2");
 //            System.out.println(e.toString());
 //            Cal_Method.Catch_Error_Log("Navigation_test2", e.toString());
 //        }
     }
+
+    //畫面顯示
     public void show(LatLng point){
         new Handler(Looper.getMainLooper()).post(new Runnable() {
             public void run() {
-                add_marker(point);
-                change_camera(point);
-                change_MK(point);
-                Draw_First_Step(point, PolylineOverView.get(1));
+                //畫面顯示
+                add_marker(point);                                  //新增點
+                change_camera(point);                               //更改相機
+                change_MK(point);                                   //更改標記
+                //Draw_First_Step(point, PolylineOverView.get(1));  //畫圖
+                Draw_Direction(navigation_now_position, PolylineOverView, count_step+1);
             }});
     }
     public void add_marker(LatLng point){
         straight_Opt.position(point);
-        straight_Opt.icon(Cal_Method.BitmapFromVector(context, R.drawable.rec_gps));
+        straight_Opt.icon(Cal_Method.BitmapFromVector(context, R.drawable.history_point));
         straight_marker.add(my_map.Add_Marker(straight_Opt));
     }
     public void change_camera(LatLng point){
