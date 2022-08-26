@@ -298,39 +298,45 @@ public class My_New_Navigation {
                     dis += redundant_dis;
                     redundant_dis = 0;
                 }
-                if(straight_now_step <= straight_line_point.size()) {
-                    straight_now_step += dis;
+                //將目前位置加上位移的距離
+                straight_now_step += Math.round(dis);
+                //判斷目前位置小於，此段的總數
+                if(straight_now_step < straight_line_point.size()) {
+                    //取得位移後的經緯度
                     navigation_now_position = straight_line_point.get(straight_now_step);
-                    show(straight_line_point.get(straight_now_step));
+                    //顯示
+                    //show(straight_line_point.get(straight_now_step));
+                    show(navigation_now_position);
                 }
-                if(straight_now_step > straight_line_point.size()){
+                if(straight_now_step >= straight_line_point.size()){
                     //儲存多餘的距離(公尺)
-                    redundant_dis = straight_now_step -straight_line_point.size();
+                    redundant_dis = straight_now_step - straight_line_point.size();
                     //顯示最後一個點
                     navigation_now_position = straight_line_point.get(straight_line_point.size()-1);
-                    show(straight_line_point.get(straight_line_point.size()-1));
-                    //刷新
+                    //show(straight_line_point.get(straight_line_point.size()-1));
+                    show(navigation_now_position);
+                    //移動下一段距離
                     count_step+=1;
+                    //刷新
+                    //將目前顯示的步數移除
                     straight_now_step = 0;
+                    //將切割後的線段移除
                     straight_line_point.removeAll(straight_line_point);
-                    System.out.println(straight_line_point.size());
                 }
                 double now_dis = Cal_Method.Cal_Distance(now_position, PolylineOverView.get(count_step+1));
                 if(init_Dis < now_dis){
                     too_far++;
                 }
+            }else{
+                Alert("抵達目的地");
             }
-            if(Cal_Method.Cal_Distance(navigation_now_position, Data.Destination)<10){
-                Data.Navigation_Status = false;
-                AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                builder.setMessage("抵達目的地").setTitle("完成");
-                builder.setPositiveButton("確定", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        dialogInterface.dismiss();
-                    }
-                });
-                builder.show();
+
+            System.out.println("count:" + count_step);
+            System.out.println("size:" + PolylineOverView.size());
+            if(Cal_Method.Cal_Distance(navigation_now_position, Data.Destination)<10 ||
+               count_step >= PolylineOverView.size()-2 ){
+                //Data.Navigation_Status = false;
+                Alert("抵達目的地");
             }
 //        }catch (Exception e) {
 //            System.out.println("Navigation_test2");
@@ -351,6 +357,7 @@ public class My_New_Navigation {
                 Draw_Direction(navigation_now_position, PolylineOverView, count_step+1);
             }});
     }
+
     public void add_marker(LatLng point){
         straight_Opt.position(point);
         straight_Opt.icon(Cal_Method.BitmapFromVector(context, R.drawable.history_point));
@@ -546,7 +553,19 @@ public class My_New_Navigation {
             }
         });
     }
-
+    public void Alert(String text){
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setMessage(text).setTitle("完成");
+        builder.setPositiveButton("確定", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                //dialogInterface.dismiss();
+                my_map.moveCamera(Data.Destination);
+            }
+        });
+        builder.create().show();
+        //
+    }
     //Runnable 測試
     private final Runnable NavigationCamera = new Runnable() {
         public void run() {

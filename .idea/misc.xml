@@ -25,12 +25,13 @@
         <entry key="..\:/Android/Navigation/app/src/main/res/drawable/ic_near_me_disabled.xml" value="0.15989583333333332" />
         <entry key="..\:/Android/Navigation/app/src/main/res/drawable/ic_satellite.xml" value="0.1" />
         <entry key="..\:/Android/Navigation/app/src/main/res/drawable/ic_search.xml" value="0.20833333333333334" />
+        <entry key="..\:/Android/Navigation/app/src/main/res/drawable/ic_timeline.xml" value="0.1" />
         <entry key="..\:/Android/Navigation/app/src/main/res/drawable/ic_trash.xml" value="0.1" />
         <entry key="..\:/Android/Navigation/app/src/main/res/drawable/ic_walk_mode.xml" value="0.1625" />
         <entry key="..\:/Android/Navigation/app/src/main/res/drawable/ic_window.xml" value="0.1" />
         <entry key="..\:/Android/Navigation/app/src/main/res/drawable/mk_user_arrow.xml" value="0.17395833333333333" />
         <entry key="..\:/Android/Navigation/app/src/main/res/layout/activity_data_view.xml" value="0.20244565217391305" />
-        <entry key="..\:/Android/Navigation/app/src/main/res/layout/activity_main.xml" value="0.11474164133738601" />
+        <entry key="..\:/Android/Navigation/app/src/main/res/layout/activity_main.xml" value="0.22" />
         <entry key="..\:/Android/Navigation/app/src/main/res/layout/activity_navigation.xml" value="0.33" />
         <entry key="..\:/Android/Navigation/app/src/main/res/layout/activity_search.xml" value="0.1921875" />
       </map>

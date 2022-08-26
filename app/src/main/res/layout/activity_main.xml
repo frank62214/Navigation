@@ -47,6 +47,7 @@
                 android:background="@drawable/btn_round"
                 app:srcCompat="@drawable/ic_satellite"
                 tools:ignore="ContentDescription,InvalidId"
+                android:layout_gravity="right|center_vertical"
                 android:visibility="gone"/>
             <ImageButton
                 android:id="@+id/btnWindow"
@@ -58,6 +59,7 @@
                 android:layout_marginBottom="5dp"
                 android:background="@drawable/btn_round"
                 app:srcCompat="@drawable/ic_window"
+                android:layout_gravity="right|center_vertical"
                 tools:ignore="ContentDescription,InvalidId" />
             <ImageButton
                 android:id="@+id/btnTrash"
@@ -68,6 +70,7 @@
                 android:layout_marginBottom="5dp"
                 android:background="@drawable/btn_round"
                 app:srcCompat="@drawable/ic_trash"
+                android:layout_gravity="right|center_vertical"
                 tools:ignore="ContentDescription,InvalidId" />
             <ImageButton
                 android:id="@+id/btnSnapRoadSwitch"
@@ -78,9 +81,17 @@
                 android:layout_marginBottom="5dp"
                 android:background="@drawable/btn_round"
                 app:srcCompat="@drawable/ic_add_road"
+                android:layout_gravity="right|center_vertical"
                 tools:ignore="ContentDescription,InvalidId" />
+        <LinearLayout
+            android:id="@+id/ll"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="right|center_vertical"
+            android:layout_marginTop="5dp">
             <ImageButton
-                android:id="@+id/btnHistory"
+                android:id="@+id/btnHistoryLine"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
 
@@ -88,8 +99,22 @@
                 android:layout_marginRight="5dp"
                 android:layout_marginBottom="5dp"
                 android:background="@drawable/btn_round"
-                app:srcCompat="@drawable/ic_history"
-                tools:ignore="ContentDescription,InvalidId"/>
+                app:srcCompat="@drawable/ic_timeline"
+                tools:ignore="ContentDescription,InvalidId"
+                android:visibility="gone"/>
+                <ImageButton
+                    android:id="@+id/btnHistory"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginBottom="5dp"
+                    android:background="@drawable/btn_round"
+                    app:srcCompat="@drawable/ic_history"
+                    tools:ignore="ContentDescription,InvalidId"/>
+
+            </LinearLayout>
             <ImageButton
                 android:id="@+id/btnRecord"
                 android:layout_width="50dp"

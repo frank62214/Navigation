@@ -1,5 +1,6 @@
 package com.example.navigation.My;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.media.Image;
@@ -46,6 +47,7 @@ public class My_Layout extends RelativeLayout {
     ImageButton btnSnapRoadSwitch;
     ImageButton btnTrash;
     ImageButton btnWindow;
+    ImageButton btnHistoryLine;
 
     //activity_navigation
     LinearLayout llNext_Turn;
@@ -131,6 +133,7 @@ public class My_Layout extends RelativeLayout {
         btnSnapRoadSwitch = (ImageButton) layout_view.findViewById(R.id.btnSnapRoadSwitch);
         btnTrash      = (ImageButton) layout_view.findViewById(R.id.btnTrash);
         btnWindow     = (ImageButton) layout_view.findViewById(R.id.btnWindow);
+        btnHistoryLine = (ImageButton) layout_view.findViewById(R.id.btnHistoryLine);
 
         //取得activity_navigation的元件
         llNext_Turn   = (LinearLayout) navigation_view.findViewById(R.id.llNext_Turn);
@@ -315,9 +318,15 @@ public class My_Layout extends RelativeLayout {
         if(status.contains("GPS")){btnGPS.setVisibility(View.VISIBLE);}
         if(status.contains("Thread")){btnGPS.setVisibility(View.GONE);}
     }
+    @SuppressLint("UseCompatLoadingForDrawables")
     public void SetbtnHistory(boolean status){
         if(status){btnHistory.setBackground(getContext().getResources().getDrawable(R.drawable.btn_round_pressed));}
         else{btnHistory.setBackground(getContext().getResources().getDrawable(R.drawable.btn_round));}
+    }
+    @SuppressLint("UseCompatLoadingForDrawables")
+    public void SetbtnHistoryLine(boolean status){
+        if(status){btnHistoryLine.setBackground(getContext().getResources().getDrawable(R.drawable.btn_round_pressed));}
+        else{btnHistoryLine.setBackground(getContext().getResources().getDrawable(R.drawable.btn_round));}
     }
     //Set Text
     public void setNextRoadText(String text){
@@ -360,8 +369,9 @@ public class My_Layout extends RelativeLayout {
     //public void setDataViewNowPosition(String text){
     //    data_view_Now_Position.setText(text);
     //}
+    //測試用
     public void setDataViewBearing(String text){
-        data_view_Bearing.setText(text);
+        data_view_Bearing.setText("加速度計變化輛" + text);
     }
 
     public void Select_Mode(String mode){

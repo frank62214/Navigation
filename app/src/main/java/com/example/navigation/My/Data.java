@@ -52,4 +52,7 @@ public class Data {
     public static boolean SnapRoad_Status = false;
     public static boolean Record_Timer_Status = false;
     public static boolean History_Status = false;
+    public static boolean HistoryLine_Status = false;
+
+
 }

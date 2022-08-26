@@ -46,6 +46,9 @@ public class My_Map {
     private Marker Navigation_MK;
     private Polyline Direction;
     private Polyline Record_Route;
+    private Polyline GPS_Line;
+    private Polyline API_Line;
+    private Polyline Cal_Line;
 
     private ArrayList<Marker> rec_gps = new ArrayList<Marker>();
     private ArrayList<Marker> rec_api = new ArrayList<Marker>();
@@ -226,7 +229,7 @@ public class My_Map {
 //            //mMap.addMarker(Navigation_test);
 //        }
         polylineOptions.color(context.getResources().getColor(R.color.route_color));
-        polylineOptions.width(20f);
+        polylineOptions.width(30f);
         Polyline navigation = mMap.addPolyline(polylineOptions);
         return navigation;
     }
@@ -240,7 +243,7 @@ public class My_Map {
             //mMap.addMarker(Navigation_test);
         }
         polylineOptions.color(context.getResources().getColor(R.color.route_color));
-        polylineOptions.width(20f);
+        polylineOptions.width(30f);
         Polyline navigation = mMap.addPolyline(polylineOptions);
         return navigation;
     }
@@ -254,7 +257,7 @@ public class My_Map {
             //mMap.addMarker(Navigation_test);
         }
         polylineOptions.color(context.getResources().getColor(R.color.route_color));
-        polylineOptions.width(20f);
+        polylineOptions.width(30f);
         Polyline navigation = mMap.addPolyline(polylineOptions);
         return navigation;
     }
@@ -268,7 +271,7 @@ public class My_Map {
             //mMap.addMarker(Navigation_test);
         }
         polylineOptions.color(context.getResources().getColor(R.color.route_color));
-        polylineOptions.width(20f);
+        polylineOptions.width(30f);
         Polyline navigation = mMap.addPolyline(polylineOptions);
         return navigation;
     }
@@ -327,6 +330,48 @@ public class My_Map {
                     rec_cal.get(i).remove();
                 }
             }});
+    }
+    public void Draw_Record_Marker_PolyLine(){
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            public void run() {
+                //PolylineOptions polylineOptions = new PolylineOptions();
+                //                for(int i=0; i< Data.API_Record.size();i++){
+                //                    //System.out.println(Points.get(i));
+                //                    polylineOptions.add(Data.API_Record.get(i));
+                //                }
+                //                polylineOptions.color(context.getResources().getColor(R.color.record_route_color));
+                //                polylineOptions.width(20f);
+                //                Record_Route = mMap.addPolyline(polylineOptions);
+                PolylineOptions polylineOptions_GPS = new PolylineOptions();
+                PolylineOptions polylineOptions_API = new PolylineOptions();
+                PolylineOptions polylineOptions_Cal = new PolylineOptions();
+                for(int i=0 ; i<Data.GPS_Record.size(); i++){
+                    polylineOptions_GPS.add(Data.GPS_Record.get(i));
+                }
+                for(int i=0 ; i<Data.API_Record.size(); i++){
+                    polylineOptions_API.add(Data.API_Record.get(i));
+                }
+                for(int i=0 ; i<Data.Cal_Record.size(); i++){
+                    polylineOptions_Cal.add(Data.Cal_Record.get(i));
+                }
+                polylineOptions_GPS.color(context.getResources().getColor(R.color.record_route_color));
+                polylineOptions_GPS.width(20f);
+                polylineOptions_API.color(context.getResources().getColor(R.color.record_route_color));
+                polylineOptions_API.width(20f);
+                polylineOptions_Cal.color(context.getResources().getColor(R.color.record_route_color));
+                polylineOptions_Cal.width(20f);
+                GPS_Line = mMap.addPolyline(polylineOptions_GPS);
+                API_Line = mMap.addPolyline(polylineOptions_API);
+                Cal_Line = mMap.addPolyline(polylineOptions_Cal);
+            }
+        });
+    }
+    public void Remove_Record_Marker_PolyLine(){
+        //if(polyline != null) polyline.remove();
+        //if(GPS_Line!=null) GPS_Line.remove();
+        Remove_PolyLine(GPS_Line);
+        Remove_PolyLine(API_Line);
+        Remove_PolyLine(Cal_Line);
     }
     public void initUserMK(){
         new Handler(Looper.getMainLooper()).post(new Runnable() {

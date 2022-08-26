@@ -69,17 +69,34 @@ public class My_Event {
                 }
             }
         });
+        my_layout.btnHistoryLine.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(Data.HistoryLine_Status){
+                    Data.HistoryLine_Status = false;
+                    my_layout.SetbtnHistoryLine(false);
+                    my_map.Remove_Record_Marker_PolyLine();
+                }
+                else{
+                    Data.HistoryLine_Status = true;
+                    my_layout.SetbtnHistoryLine(true);
+                    my_map.Draw_Record_Marker_PolyLine();
+                }
+            }
+        });
         my_layout.btnHistory.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if(Data.History_Status) {
                     my_layout.SetbtnHistory(false);
                     Data.History_Status = false;
+                    my_layout.btnHistoryLine.setVisibility(View.GONE);
                     //my_layout.Toast("關閉歷史位置");
                     my_map.Remove_Record_Marker();
                 }else{
                     my_layout.SetbtnHistory(true);
                     Data.History_Status = true;
+                    my_layout.btnHistoryLine.setVisibility(View.VISIBLE);
                     //my_layout.Toast("顯示歷史位置");
                     my_map.Draw_Record_Marker();
                 }

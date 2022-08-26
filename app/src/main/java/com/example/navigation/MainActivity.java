@@ -9,6 +9,7 @@ import androidx.core.content.ContextCompat;
 
 import android.Manifest;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -91,6 +92,10 @@ public class MainActivity extends AppCompatActivity implements
     private My_Sensor my_sensor;
 
     private SensorManager sm;
+    Sensor magneticSensor;
+    Sensor accelerometerSensor;
+    Sensor SensorOrientation;
+    private float lastRotateDegree;
     private int Linear_Acceleration_Count = 0;
     private ArrayList<Float> Speed_Count = new ArrayList<Float>();
     private double Speed = 0;
@@ -118,7 +123,8 @@ public class MainActivity extends AppCompatActivity implements
     long pass_time = 0;
     long sensor_last_time = 0;
     long sensor_now_time = 0;
-    float sensor_pass_time = 0;
+    long sensor_pass_time = 0;
+    double sensor_pass_time_ms = 0;
     double GPS_dis = 0;
     double API_dis = 0;
     double GPS_ms  = 0;
@@ -127,11 +133,36 @@ public class MainActivity extends AppCompatActivity implements
     double API_ms  = 0;
     int ms = 0;
 
+    double sensor_x_sum = 0;
+    double sensor_y_sum = 0;
+    double sensor_z_sum = 0;
+
     int cal_count = 0;
 
     double test_dis=0.0;
 
     boolean sensor_init = true;
+
+
+    private Sensor aSensor=null;
+
+    private Sensor mSensor=null;
+
+    private final float FILTERING_VALAUE = 0.1f;
+    private float lowX,lowY,lowZ;
+
+    double DisX = 0;
+    double DisY = 0;
+    double DisZ = 0;
+
+    double accCurrentValue = 0;
+    double accPreviousValue = 0;
+
+    double sensor_speed = 0;
+
+    boolean init_Corrected_Value = true;
+    double Corrected_Value = 0;
+    int peak = 0;
 
     My_Snap_Road my_snap_road;
 
@@ -146,8 +177,10 @@ public class MainActivity extends AppCompatActivity implements
         my_layout = new My_Layout(this);
         setContentView(my_layout);
 
-        sm = (SensorManager) getSystemService(this.SENSOR_SERVICE);
-
+        sm = (SensorManager) getSystemService(SENSOR_SERVICE);
+        magneticSensor = sm.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
+        accelerometerSensor = sm.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        SensorOrientation = sm.getDefaultSensor(Sensor.TYPE_ORIENTATION);
         my_snap_road = new My_Snap_Road();
 
 
@@ -217,6 +250,7 @@ public class MainActivity extends AppCompatActivity implements
             GPS_kmh = 0;
             API_kmh = 0;
             API_ms = 0;
+            //API_dis = 0;
             //紀錄時間
             //初始化
             if (init_time) {
@@ -238,14 +272,14 @@ public class MainActivity extends AppCompatActivity implements
             }
 
             //紀錄GPS定位
-            Data.GPS_Record.add(point);
+            //Data.GPS_Record.add(point);
             //紀錄API定位
             if (type.equals("GPS") && Data.SnapRoad_Status) {
                 my_snap_road.setSnapRoadUrl();
                 my_snap_road.SearchLocation(new My_Snap_Road.onDataReadyCallback() {
                     @Override
                     public void onDataReady(LatLng data) {
-                        Data.API_Record.add(data);
+                        //Data.API_Record.add(data);
 
                         //計算API距離與時速
                         if (init_API_position) {
@@ -268,7 +302,10 @@ public class MainActivity extends AppCompatActivity implements
                                 double cal_dis = API_ms / 1000 * API_pass_time;
                                 float bear = Cal_Method.Cal_Bearing(last_API_position, now_API_position);
                                 cal_position = Cal_Method.Cal_LatLng(now_API_position, bear, cal_dis);
+                                Data.API_Record.add(data);
+                                Data.GPS_Record.add(point);
                                 Data.Cal_Record.add(cal_position);
+
                                 Save_patameter(Data.now_position, last_API_position, now_API_position, cal_position);
                                 Save_Position("Cal-Snap" , cal_position , API_pass_time);
                                 Save_Position("GPS-Snap" , Data.now_position, pass_time);
@@ -287,6 +324,7 @@ public class MainActivity extends AppCompatActivity implements
                                     last_cal_position = cal_position;
                                 }
                             }
+                            Chick_Navigation(select_position, API_dis);
                             last_API_position = now_API_position;
                             //--------------------------------------------------------
                         }
@@ -295,32 +333,40 @@ public class MainActivity extends AppCompatActivity implements
             }
             else{
                 select_position = Data.now_position;
+                Chick_Navigation(select_position, GPS_dis);
             }
             //--------------------------------------------------------
+
             //是否在導航葉面
-            if (Data.Navigation_Status) {
-                //初始化導航圖示
-                if (my_new_navigation.get_initMK()) {
-                    my_new_navigation.set_initMK(false);
-                    my_new_navigation.initUserMK(Data.now_position);
-                    my_new_navigation.Navigation(select_position, GPS_dis);
-                } else {
-
-                    //測試用變數test_dis會不斷加總5
-                    //my_new_navigation.Navigation(select_position, GPS_dis);
-                    my_new_navigation.Navigation(select_position, 5);
-                    //test_dis+=5;
-
-                    //my_new_navigation.Navigation(select_position, GPS_dis);
-                }
-            } else {
-                //移除導航所有事情
-                my_new_navigation.set_initMK(true);
-                my_new_navigation.Remove_Navigation_MK();
-                my_new_navigation.Final_Remove_Direction();
-                my_new_navigation.Remove_Straight_Marker();
-                my_new_navigation.Remove_First_Step();
-            }
+//            if (Data.Navigation_Status) {
+//                //初始化導航圖示
+//                if (my_new_navigation.get_initMK()) {
+//                    my_new_navigation.set_initMK(false);
+//                    my_new_navigation.initUserMK(Data.now_position);
+//                    if(API_dis!=0){
+//                        my_new_navigation.Navigation(select_position, API_dis);
+//                    }
+//                    else{
+//                        my_new_navigation.Navigation(select_position, GPS_dis);
+//                    }
+//
+//                } else {
+//
+//                    //測試用變數test_dis會不斷加總5
+//                    my_new_navigation.Navigation(select_position, GPS_dis);
+//                    //my_new_navigation.Navigation(select_position, 5);
+//                    //test_dis+=5;
+//
+//                    //my_new_navigation.Navigation(select_position, GPS_dis);
+//                }
+//            } else {
+//                //移除導航所有事情
+//                my_new_navigation.set_initMK(true);
+//                my_new_navigation.Remove_Navigation_MK();
+//                my_new_navigation.Final_Remove_Direction();
+//                my_new_navigation.Remove_Straight_Marker();
+//                my_new_navigation.Remove_First_Step();
+//            }
 
             //顯示資訊
             new Handler(Looper.getMainLooper()).post(new Runnable() {
@@ -349,6 +395,32 @@ public class MainActivity extends AppCompatActivity implements
         }
         catch (Exception e){
             Cal_Method.Catch_Error_Log("Main-Navigation", e.toString());
+        }
+    }
+    public void Chick_Navigation(LatLng position, double dis) {
+        if (Data.Navigation_Status) {
+            //初始化導航圖示
+            if (my_new_navigation.get_initMK()) {
+                my_new_navigation.set_initMK(false);
+                my_new_navigation.initUserMK(Data.now_position);
+                //my_new_navigation.Navigation(select_position, API_dis);
+                my_new_navigation.Navigation(select_position, dis);
+            } else {
+
+                //測試用變數test_dis會不斷加總5
+                //my_new_navigation.Navigation(select_position, GPS_dis);
+                //my_new_navigation.Navigation(select_position, 7);
+                //test_dis+=5;
+                my_new_navigation.Navigation(select_position, dis);
+                //my_new_navigation.Navigation(select_position, GPS_dis);
+            }
+        } else {
+            //移除導航所有事情
+            my_new_navigation.set_initMK(true);
+            my_new_navigation.Remove_Navigation_MK();
+            my_new_navigation.Final_Remove_Direction();
+            my_new_navigation.Remove_Straight_Marker();
+            my_new_navigation.Remove_First_Step();
         }
     }
     public void Save_patameter(LatLng GPS, LatLng api_start, LatLng api_end, LatLng cal){
@@ -548,7 +620,10 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     protected void onResume() {
         super.onResume();
-        sm.registerListener((SensorEventListener) this, sm.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION), SensorManager.SENSOR_DELAY_NORMAL);
+        sm.registerListener((SensorEventListener) this, sm.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION), SensorManager.SENSOR_DELAY_UI);
+        sm.registerListener((SensorEventListener) this, magneticSensor, SensorManager.SENSOR_DELAY_UI);
+        sm.registerListener((SensorEventListener) this, accelerometerSensor, SensorManager.SENSOR_DELAY_UI);
+        sm.registerListener((SensorEventListener)this, SensorOrientation, SensorManager.SENSOR_DELAY_UI);
     }
 
     @Override
@@ -645,123 +720,93 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onSensorChanged(SensorEvent sensorEvent) {
-        int sensorType = sensorEvent.sensor.getType();
-        switch (sensorType) {
-            case Sensor.TYPE_LINEAR_ACCELERATION:
-                float x = sensorEvent.values[0];
-                float y = sensorEvent.values[1];
-                float z = sensorEvent.values[2];
+        //if(sensorEvent.sensor.getType()==Sensor.TYPE_ACCELEROMETER){
+        if(sensorEvent.sensor.getType()==Sensor.TYPE_LINEAR_ACCELERATION){
+            float x = sensorEvent.values[0];
+            float y = sensorEvent.values[1];
+            float z = sensorEvent.values[2];
 
-                //float r = (float) Math.sqrt(x*x + y*y + z*z);
+            if(sensor_init){
+                sensor_init = false;
+                sensor_last_time = System.currentTimeMillis();
+            }
+            else {
+                sensor_now_time = System.currentTimeMillis();
+                sensor_pass_time = sensor_now_time - sensor_last_time;
+                sensor_pass_time_ms = sensor_pass_time / 1000.0;
+                my_layout.setdataviewNowSensorpasstime(Long.toString(sensor_pass_time));
+                sensor_last_time = sensor_now_time;
 
-                //System.out.println(y/r);
+                accCurrentValue = Math.sqrt(x*x + y*y + z*z);
 
-//                x /= r;
-//                y /= r;
-//                z /= r;
+                double accChange = Math.round((accCurrentValue - accPreviousValue)*10)/10.0;
+                double VChange   = Math.round((accChange * sensor_pass_time_ms)*10)/10.0;
+                accPreviousValue = accCurrentValue;
+                //System.out.println(VChange);
 
+//                if(change>0.1 || change<-0.1) {
+//                    sensor_speed = sensor_speed + change;
+//                }
 
-                if(sensor_init){
-                    sensor_init = false;
-                    sensor_last_time = System.currentTimeMillis();
+                if(init_Corrected_Value){
+                    init_Corrected_Value = false;
+                    Corrected_Value = accCurrentValue;
+                }else {
+                    double test_Value = Math.abs(Math.round((accCurrentValue - Corrected_Value) * 10) / 10.0);
+                    //int d = (int)(test_Value * sensor_pass_time_ms);
+                    double d = Math.round((test_Value * sensor_pass_time_ms)*100);
+                    total_dis = total_dis + d;
+                    //System.out.println(d);
+                    //sensor_speed = sensor_speed + (int)test_Value;
+
+                    my_layout.setdataviewNowSensorSpeedtm(Double.toString(total_dis)+"cm");
+                    my_layout.setdataviewNowSensorSpeedms(Double.toString(sensor_speed));
+                    my_layout.setDataViewBearing(Double.toString(test_Value));
                 }
-                else {
-                    sensor_now_time = System.currentTimeMillis();
-                    float tmp = sensor_now_time - sensor_last_time;
-                    //單位s
-                    sensor_pass_time = tmp / 1000;
-                    my_layout.setdataviewNowSensorx(Float.toString(x));
-                    //當下的瞬間加速度，時間10ms左右
-                    my_layout.setdataviewNowSensory(Float.toString(y));
-                    my_layout.setdataviewNowSensorz(Float.toString(z));
-                    my_layout.setdataviewNowSensorpasstime(Float.toString(sensor_pass_time)+"s");
-                    sensor_last_time = sensor_now_time;
+                //System.out.println(1.0f);
 
-                    //判斷加速度的大小
-                    double judge = Math.round(y * 10) / 10.0;
-                    //加速度
-                    double cal   = Math.round(y * 1000) / 1000.0;
-                    //System.out.println(cal);
-                    double V = 0;
+                //Low-Pass Filter
+                lowX = x * FILTERING_VALAUE + lowX * (1.0f - FILTERING_VALAUE);
+                lowY = y * FILTERING_VALAUE + lowY * (1.0f - FILTERING_VALAUE);
+                lowZ = z * FILTERING_VALAUE + lowZ * (1.0f - FILTERING_VALAUE);
 
-                    double t = sensor_pass_time;
+                //High-pass filter
+                float highX = x - lowX;
+                float highY = y - lowY;
+                float highZ = z - lowZ;
 
-                    //System.out.println(judge);
+                float Vx = highX * sensor_pass_time;
+                float Vy = highY * sensor_pass_time;
+                float Vz = highZ * sensor_pass_time;
 
-                    if(judge!=0){
-                        //V = V0 + at
+//                DisX = DisX + Vx * sensor_pass_time_ms;
+//                DisY = Math.abs(DisY + Vy * sensor_pass_time);
+//                DisZ = DisZ + Vz * sensor_pass_time;
 
-                        Speed = Speed + cal * t;
-                        Speed_tmp = Speed * 3600 /1000;
-                        //System.out.println(Speed);
-                        //---------------------------
-                        dis = Math.abs(Math.round(((cal * t * t)/2)*1000)/1000.0);
-                        total_dis = total_dis + dis;
-                        //System.out.println(Speed);
-                    }
-                    else{
-                        my_layout.setdataviewNowSensorSpeedms(Double.toString(Speed));
-                        my_layout.setdataviewNowSensorSpeedms(Double.toString(Speed_tmp));
-                        my_layout.setdataviewNowSensorSpeedtm(Double.toString(total_dis));
-                    }
-
-                    //my_layout.setdataviewNowSensorSpeedms(Double.toString(Speed) + "m/s");
-                    //加速度
-//                    float a = lon /100;
-//                    //V= V0 + at;
-//                    float flo = lon / 100 * sensor_pass_time;
-//                    Speed = Speed + a * sensor_pass_time;
-//                    //S = v0t + 1/2*at^2;
-//                    float local_dis =
-//                            Speed * sensor_pass_time + (a*sensor_pass_time*sensor_pass_time)/2;
-//
-//                    //System.out.println("flo = " + flo);
-//                    if(total_time>1){
-//                        Speed = Math.abs(dis) / total_time;
-//                        total_time = 0;
-//                        dis = 0;
-//                        //System.out.println(Speed);
-//                        int kmh = (int)Speed * 3600 / 1000;
-//                        my_layout.setdataviewNowSensorSpeedms(Float.toString(Speed) + "m/s");
-//                        my_layout.setdataviewNowSensorSpeedkmh(Integer.toString(kmh)+ "km/h");
-//                    }
-//                    else{
-//                        Speed = 0;
-//                        //dis = dis + Float.parseFloat(t);
-//                        //dis = dis + (float)flo;
-//                        dis = dis + flo;
-//
-//                        total_time = total_time + sensor_pass_time;
-//                    }
-//                    total_dis = total_dis + flo;
-//                    my_layout.setdataviewNowSensorSpeedtm(Float.toString(total_dis) + "m");
-//                    my_layout.setdataviewNowSensorSpeedm(Float.toString(dis) + "m");
+                DisX = DisX + x * sensor_pass_time_ms;
+                DisY = DisY + y * sensor_pass_time_ms;
+                DisZ = DisZ + z * sensor_pass_time_ms;
 
 
-                }
-//                if(Linear_Acceleration_Count<5) {
-//                    Speed = Speed + y;
-//                    Linear_Acceleration_Count++;
-//                }
-//                else{
-//                    Speed = Speed / 5;
-//                    Linear_Acceleration_Count = 0;
-//                }
-                //Speed_Count.add(y);
-                //System.out.println("x= " + Float.toString(x));
-                //System.out.println("y= " + Float.toString(y));
-                //System.out.println("z= " + Float.toString(z));
-//                if(Linear_Acceleration_Count >10) {
-//                    new Handler(Looper.getMainLooper()).post(new Runnable() {
-//                        public void run() {
-//                            my_layout.setdataviewNowSensor(Float.toString(y));
-//                            Linear_Acceleration_Count = 0;
-//                        }
-//                    });
-//                }
+                //output
+                //为什么highX作为瞬时加速度显示？
+//            TextView textX = (TextView)findViewById(R.id.x);
+//            textX.setText("x:" + String.valueOf(highX));
+//            TextView textY = (TextView)findViewById(R.id.y);
+//            textY.setText("y:" + String.valueOf(highY));
+//            TextView textZ = (TextView)findViewById(R.id.z);
+//            textZ.setText("Z:" + String.valueOf(highZ));
+
+//                my_layout.setdataviewNowSensorx(Double.toString(DisX));
+//                my_layout.setdataviewNowSensory(Double.toString(DisY));
+//                my_layout.setdataviewNowSensorz(Double.toString(DisZ));
+                my_layout.setdataviewNowSensorx(Float.toString(x));
+                my_layout.setdataviewNowSensory(Float.toString(y));
+                my_layout.setdataviewNowSensorz(Float.toString(z));
+            }
         }
-    }
 
+    }
     @Override
     public void onAccuracyChanged(Sensor sensor, int i) {
 
