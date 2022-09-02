@@ -24,6 +24,9 @@
     <!--Maps-->
     <color name="route_color">#000080</color>
     <color name="record_route_color">#8F8D8C</color>
+    <color name="record_GPS_route_color">#3F51B5</color>
+    <color name="record_API_route_color">#04D3BF</color>
+    <color name="record_Cal_route_color">#F44336</color>
 
     <!-- Instruction Icons -->
     <color name="dirMain">#3C3C3C</color>

@@ -35,6 +35,7 @@ import android.widget.Toast;
 import com.example.navigation.My.Cal_Method;
 import com.example.navigation.My.Data;
 import com.example.navigation.My.My_Event;
+import com.example.navigation.My.My_Json;
 import com.example.navigation.My.My_Layout;
 import com.example.navigation.My.My_Map;
 import com.example.navigation.My.My_New_Navigation;
@@ -164,6 +165,8 @@ public class MainActivity extends AppCompatActivity implements
     double Corrected_Value = 0;
     int peak = 0;
 
+    int smooth_step = 0;
+
     My_Snap_Road my_snap_road;
 
     //模擬GPS刷新
@@ -229,19 +232,40 @@ public class MainActivity extends AppCompatActivity implements
     //模擬GPS刷新--------------------------------------------
     final Runnable runnable = new Runnable() {
         public void run() {
-            // TODO Auto-generated method stub
-            // 需要背景作的事
+            // 需要背景作的事，平滑顯示、模擬GPS刷新
             while(true) {
-                if(!Data.GPS_Status) {
-                    if(Data.now_position!=null) {
+                //每秒執行(模擬GPS每秒刷新)
+//                if(smooth_step>10) {
+//                    if (!Data.GPS_Status) {
+//                        if (Data.now_position != null) {
+//                            Navigation(Data.now_position, "Thread");
+//                        }
+//                    } else {
+//                        Data.GPS_Status = false;
+//                    }
+//                    smooth_step = 0;
+//                }
+//                //每0.1秒執行
+//
+//                smooth_step += 1;
+//                if(Data.Navigation_Status) {
+//                    if (Data.now_position != null) {
+//                        //my_new_navigation.Navigation_test3(Data.now_position, 0, false);
+//                        //System.out.println("FYBR");
+//                        //my_new_navigation.smooth_navigation();
+//                        Navigation(Data.now_position, "Smooth");
+//                    }
+//                }
+                if (!Data.GPS_Status) {
+                    if (Data.now_position != null) {
                         Navigation(Data.now_position, "Thread");
                     }
-                }
-                else{
+                } else {
                     Data.GPS_Status = false;
                 }
-                SystemClock.sleep(1000);
+                SystemClock.sleep(99);
             }
+
         }
     };
     //------------------------------------------------------
@@ -317,13 +341,16 @@ public class MainActivity extends AppCompatActivity implements
                                         my_layout.setdataviewNowAPISpeedkmh(API_kmh + "km/h");
                                     }
                                 });
-                                if(last_cal_position!=null) {
-                                    select_position = Cal_Method.Drift(Data.now_position, now_API_position, last_cal_position);
-                                }
-                                else{
-                                    last_cal_position = cal_position;
-                                }
+//                                if(last_cal_position!=null) {
+//                                    select_position = Cal_Method.Drift(Data.now_position, now_API_position, last_cal_position);
+//                                }
+//                                else{
+//                                    last_cal_position = cal_position;
+//                                }
+                                //??
+                                select_position = now_API_position;
                             }
+                            //Chick_Navigation(select_position, API_dis, type);
                             Chick_Navigation(select_position, API_dis);
                             last_API_position = now_API_position;
                             //--------------------------------------------------------
@@ -332,7 +359,9 @@ public class MainActivity extends AppCompatActivity implements
                 });
             }
             else{
+                //thread
                 select_position = Data.now_position;
+                //Chick_Navigation(select_position, GPS_dis, type);
                 Chick_Navigation(select_position, GPS_dis);
             }
             //--------------------------------------------------------
@@ -397,6 +426,7 @@ public class MainActivity extends AppCompatActivity implements
             Cal_Method.Catch_Error_Log("Main-Navigation", e.toString());
         }
     }
+    //public void Chick_Navigation(LatLng position, double dis, String type) {
     public void Chick_Navigation(LatLng position, double dis) {
         if (Data.Navigation_Status) {
             //初始化導航圖示
@@ -409,9 +439,22 @@ public class MainActivity extends AppCompatActivity implements
 
                 //測試用變數test_dis會不斷加總5
                 //my_new_navigation.Navigation(select_position, GPS_dis);
-                //my_new_navigation.Navigation(select_position, 7);
-                //test_dis+=5;
-                my_new_navigation.Navigation(select_position, dis);
+                if(Data.AutoPlay) {
+                    my_new_navigation.Navigation(select_position, 7.5);
+//                    if(type.equals("Thread")) {
+//                        my_new_navigation.Navigation(select_position, 0.075);
+//                    }
+//                    if(type.equals("Smooth")){
+//                        my_new_navigation.Navigation(select_position, 0.075);
+//                    }
+                }
+                else {
+                    //此行為主要程式----------------------------------------
+                    //double mms = dis / 10.0;
+                    //my_new_navigation.Navigation(select_position, dis);
+                    my_new_navigation.Navigation(select_position, dis);
+                    //---------------------------------------------------
+                }
                 //my_new_navigation.Navigation(select_position, GPS_dis);
             }
         } else {

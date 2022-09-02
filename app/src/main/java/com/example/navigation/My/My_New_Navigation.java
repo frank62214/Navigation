@@ -85,9 +85,14 @@ public class My_New_Navigation {
 
     private double init_Dis = 0;
     private int too_far = 0;
-    private int redundant_dis = 0;
+    private double redundant_dis = 0;
     private int count_step = 0;
+    private double smooth_step = 0;
     private Handler handler = new Handler(Looper.getMainLooper());
+    double now_speed = 0;
+
+    double smooth_one_step_dis = 0;
+    double smooth_one_step_count = 0;
 
     public My_New_Navigation(Context cont, My_Layout layout, My_Map my_map_1) {
         context = cont;
@@ -100,6 +105,7 @@ public class My_New_Navigation {
 //        //Navigation_test1(now_position);
         //記得將dis修改回來，5米為測試用的
         //已將測試變數移至mainActivity
+        //----------------------------------------------------
 //        if(navigation_now_position==null) {
 //            Navigation_test2(now_position, dis);
 //        }
@@ -107,17 +113,29 @@ public class My_New_Navigation {
 //            Navigation_test2(navigation_now_position, dis);
 //
 //       }
-        //if(initData || too_far > 3) {
-        if(initData) {
+        //----------------------------------------------------
+        //handler.postDelayed(SmoothRunnable, 100);
+        if(initData || too_far > 3) {
+        //if(initData) {
+            //偏航處理
             if(too_far!=0){
                 Toast("重新規劃路線");
                 too_far = 0;
             }
+            if(!initData && Data.AutoPlay) {
+                //自動撥放
+                //Navigation_test2(now_position, dis);
+                Navigation_test2(now_position, dis);
+            }
+            else{
+                Call_API(now_position);
+            }
             initData = false;
-            Call_API(now_position);
         }else{
+            //Navigation_test2(now_position, dis);
             Navigation_test2(now_position, dis);
         }
+        //----------------------------------------------------
 //        try {
 //            //Navigation_MK_Position = now_position;
 //            //handler.postDelayed(NavigationCamera, 500);
@@ -201,10 +219,14 @@ public class My_New_Navigation {
                 //Draw_Direction(PolylineOverView);
                 init_Dis = Cal_Method.Cal_Distance(now_position, PolylineOverView.get(1));
                 //刷新參數
-                navigation_now_position = now_position;     //將相機位置改掉
+                smooth_one_step_dis = 0;
+                smooth_one_step_count = 0;
+                now_speed = 0;
+                navigation_now_position = null;     //將相機位置改掉
                 straight_now_step = 0;                      //刷新現在步數
                 count_step = 0;                             //刷新計算步數
-                Navigation_test2(now_position, 0);
+                Navigation_test2(now_position, 0.01);
+                //Navigation_test3(now_position, 0, true);
 
             }
         });
@@ -274,76 +296,80 @@ public class My_New_Navigation {
             Cal_Method.Catch_Error_Log("Navigation_test1", e.toString());
         }
     }
-
+    //開始
+    //smooth_one_step_dis = 0
     public void Navigation_test2(LatLng now_position, double dis) {
-        //用try catch會出事，原因未知
-       //try {
-//            if(initData || too_far > 3) {
-//                if(too_far!=0){
-//                    Toast("重新規劃路線");
-//                    too_far = 0;
-//                }
-//                initData = false;
-//                Call_API(now_position);
-//            }
-            if(straight_line_point!=null){
-                if(straight_line_point.size()==0){
-                    //Call_API(navigation_now_position);
-                    straight_line_point = Divide_Straight(PolylineOverView.get(count_step), PolylineOverView.get(count_step+1));
-                    Now_Bearing = Cal_Method.Cal_Bearing(PolylineOverView.get(count_step), PolylineOverView.get(count_step+1));
-                    navigation_now_position = straight_line_point.get(0);
-                    //Draw_Direction(navigation_now_position, PolylineOverView, count_step+1);
+        try{
+        //dis就是速度
+        //將速度存起來，每秒更新速度的時候(dis為速度)，將執行續不斷顯示的最終距離存起來
+        if(now_speed==0){
+            now_speed = dis;
+        }
+        //判斷每段PolyLine的距離，利用刷新等於0，計算是否要進到下一段顯示
+        if(smooth_one_step_dis == 0){
+            //取得每段判斷用的距離
+            smooth_one_step_dis = Cal_Method.Cal_Distance(PolylineOverView.get(count_step), PolylineOverView.get(count_step+1));
+            //取得每段顯示用的方向角
+            Now_Bearing = Cal_Method.Cal_Bearing(PolylineOverView.get(count_step), PolylineOverView.get(count_step+1));
+            //將每段判斷用的距離存入，偏航用的
+            init_Dis = smooth_one_step_dis;
+        }
+        //判斷距離是否大於計算平滑一段步數
+        if(smooth_one_step_count < smooth_one_step_dis) {
+            //判斷每次取得速度，將中間距離滑順處理
+            if (smooth_step < now_speed) {
+                //如果平滑步數小於秒速，便繼續進行平滑步速的處理
+                if (navigation_now_position == null) {
+                    //如果沒有導航顯示位置，取得導航顯示位置(基本在於每段的第0個點會取得)
+                    navigation_now_position = PolylineOverView.get(count_step);
                 }
-                if(redundant_dis!=0){
-                    dis += redundant_dis;
-                    redundant_dis = 0;
+                else {
+                    //平滑處理預計顯示10次，所以每0.1秒顯示一次
+                    double tmp = now_speed / 10.0;
+                    //修改導航顯示位置
+                    navigation_now_position = Cal_Method.Cal_LatLng(navigation_now_position, Now_Bearing, tmp);
+                    //增加平滑步數
+                    smooth_step += tmp;
+                    //增加一段平滑步數
+                    smooth_one_step_count += tmp;
                 }
-                //將目前位置加上位移的距離
-                straight_now_step += Math.round(dis);
-                //判斷目前位置小於，此段的總數
-                if(straight_now_step < straight_line_point.size()) {
-                    //取得位移後的經緯度
-                    navigation_now_position = straight_line_point.get(straight_now_step);
-                    //顯示
-                    //show(straight_line_point.get(straight_now_step));
-                    show(navigation_now_position);
-                }
-                if(straight_now_step >= straight_line_point.size()){
-                    //儲存多餘的距離(公尺)
-                    redundant_dis = straight_now_step - straight_line_point.size();
-                    //顯示最後一個點
-                    navigation_now_position = straight_line_point.get(straight_line_point.size()-1);
-                    //show(straight_line_point.get(straight_line_point.size()-1));
-                    show(navigation_now_position);
-                    //移動下一段距離
-                    count_step+=1;
-                    //刷新
-                    //將目前顯示的步數移除
-                    straight_now_step = 0;
-                    //將切割後的線段移除
-                    straight_line_point.removeAll(straight_line_point);
-                }
-                double now_dis = Cal_Method.Cal_Distance(now_position, PolylineOverView.get(count_step+1));
-                if(init_Dis < now_dis){
-                    too_far++;
-                }
-            }else{
-                Alert("抵達目的地");
-            }
+                //顯示所有東西(導航圖示、相機移動、畫線、歷史路徑)
+                show(navigation_now_position);
 
-            System.out.println("count:" + count_step);
-            System.out.println("size:" + PolylineOverView.size());
-            if(Cal_Method.Cal_Distance(navigation_now_position, Data.Destination)<10 ||
-               count_step >= PolylineOverView.size()-2 ){
-                //Data.Navigation_Status = false;
-                Alert("抵達目的地");
+            } else {
+                //如果平滑步數大於秒速，代表一小段平滑結束，刷新參數
+                //刷新平滑步數
+                smooth_step = 0;
+                //刷新秒速，為了取得下次的秒速
+                now_speed = 0;
             }
-//        }catch (Exception e) {
-//            System.out.println("Navigation_test2");
-//            System.out.println(e.toString());
-//            Cal_Method.Catch_Error_Log("Navigation_test2", e.toString());
-//        }
+        }
+        else{
+            //如果平滑步數 大於 每段的距離，便進行下一段
+            count_step++;
+            //將每段距離刷新
+            smooth_one_step_dis = 0;
+            //將導航顯示位置刷新
+            navigation_now_position = null;
+            //將平滑一段步數刷新
+            smooth_one_step_count = 0;
+        }
+        //取得目前與第一段的尾巴做距離判斷，
+        double now_dis = Cal_Method.Cal_Distance(now_position, PolylineOverView.get(count_step + 1));
+        //如果現在距離小於初始化的距離，刷新初始化距離
+        if (now_dis < init_Dis) {
+            init_Dis = now_dis;
+        }
+        else{
+            //否則記一次偏移，累計三次重新呼叫API
+            too_far++;
+        }
+    }catch (Exception e){
+            Cal_Method.Catch_Error_Log("Navigation_test2", e.toString());
+        }
     }
+
+
 
     //畫面顯示
     public void show(LatLng point){
@@ -378,10 +404,12 @@ public class My_New_Navigation {
         //System.out.println(divide_num);
         LatLng tmp = start;
         for(int i=0; i<divide_num; i++){
-            LatLng cal = Cal_Method.Cal_LatLng(tmp, bearing, 1);
+            LatLng cal = Cal_Method.Cal_LatLng(tmp, bearing, 1);//m
+            //LatLng cal = Cal_Method.Cal_LatLng(tmp, bearing, 0.02);//m
             ans.add(cal);
             tmp = cal;
         }
+
         //顯示計算的點
 //        new Handler(Looper.getMainLooper()).post(new Runnable() {
 //            public void run() {
@@ -396,6 +424,13 @@ public class My_New_Navigation {
 //                }
 //            }
 //        });
+        return ans;
+    }
+    public LatLng Next_Point(LatLng start, LatLng end, double dis) {
+        LatLng ans = new LatLng(0,0);
+        double bearing = Cal_Method.Cal_Bearing(start, end);
+        dis = dis / 10.0;
+        ans = Cal_Method.Cal_LatLng(start, bearing, dis);
         return ans;
     }
     public void add_predict_marker(LatLng point) {
@@ -584,7 +619,6 @@ public class My_New_Navigation {
             }
         }
     };
-
 
     private void settvNavigationSpeed(String text) {
         new Handler(Looper.getMainLooper()).post(new Runnable() {

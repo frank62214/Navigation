@@ -26,7 +26,6 @@
             android:layout_centerInParent="true"
             android:layout_above="@+id/viewnone"
             android:visibility="gone"/>
-
         <LinearLayout
             android:id="@+id/llNavButtonsCanvas"
             android:layout_width="wrap_content"
@@ -49,6 +48,18 @@
                 tools:ignore="ContentDescription,InvalidId"
                 android:layout_gravity="right|center_vertical"
                 android:visibility="gone"/>
+            <ImageButton
+                android:id="@+id/btnAutoPlay"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginBottom="5dp"
+                android:background="@drawable/btn_round"
+                app:srcCompat="@drawable/ic_autoplay"
+                android:layout_gravity="right|center_vertical"
+                tools:ignore="ContentDescription,InvalidId" />
             <ImageButton
                 android:id="@+id/btnWindow"
                 android:layout_width="50dp"
@@ -90,6 +101,18 @@
             android:orientation="horizontal"
             android:layout_gravity="right|center_vertical"
             android:layout_marginTop="5dp">
+            <ImageButton
+                android:id="@+id/btnHistoryDot"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginBottom="5dp"
+                android:background="@drawable/btn_round"
+                app:srcCompat="@drawable/ic_place"
+                tools:ignore="ContentDescription,InvalidId"
+                android:visibility="gone"/>
             <ImageButton
                 android:id="@+id/btnHistoryLine"
                 android:layout_width="50dp"

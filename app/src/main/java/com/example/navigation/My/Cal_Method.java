@@ -207,7 +207,7 @@ public class Cal_Method {
             // 第二個參數為是否 append
             // 若為 true，則新加入的文字會接續寫在文字檔的最後
             FileOutputStream Output = new FileOutputStream(file, true);
-            String string = function_name + "," + error;
+            String string = function_name + "," + error + "\n";
             Output.write(string.getBytes());
             Output.close();
         }
@@ -278,6 +278,39 @@ public class Cal_Method {
             string = string + "GPS" + "," + GPS + ",";
             string = string + "API" + "," + API   + ",";
             string = string + "Cal" + "," + Cal + "\n";
+
+            Output.write(string.getBytes());
+            Output.close();
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+    }
+    public static void Store_Dis(double dis, int step){
+        String date = "yyyyMMdd";
+        SimpleDateFormat date_df = new SimpleDateFormat(date);
+        date_df.applyPattern(date);
+        String filename = date_df.format(new Date()) + "-dis" + ".txt";
+        //String filename = type + ".txt";
+        // 存放檔案位置在 內部空間/Download/
+        File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+        File file = new File(path, filename);
+        try
+        {
+            // 第二個參數為是否 append
+            // 若為 true，則新加入的文字會接續寫在文字檔的最後
+            FileOutputStream Output = new FileOutputStream(file, true);
+
+            String dateformat = "kk:mm:ss";
+            SimpleDateFormat df = new SimpleDateFormat(dateformat);
+            df.applyPattern(dateformat);
+            //String string =  df.format(new Date()) + " : " + type + "\n";
+            //String string =  df.format(new Date()) + " : " + data.get(0)  + "\n";
+            String string = "";
+            //string = string + df.format(new Date()) + "," + data.get(i) + "\n";
+            string = string + df.format(new Date()) + ",";
+            string = string + dis + ", " + step + "\n";
 
             Output.write(string.getBytes());
             Output.close();

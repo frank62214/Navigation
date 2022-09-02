@@ -1,15 +1,19 @@
 package com.example.navigation.My;
 
+import static com.example.navigation.R.drawable.ic_polyline;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.media.Image;
 import android.os.Handler;
 import android.os.Looper;
+import android.provider.ContactsContract;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -47,7 +51,9 @@ public class My_Layout extends RelativeLayout {
     ImageButton btnSnapRoadSwitch;
     ImageButton btnTrash;
     ImageButton btnWindow;
+    ImageButton btnHistoryDot;
     ImageButton btnHistoryLine;
+    ImageButton btnAutoPlay;
 
     //activity_navigation
     LinearLayout llNext_Turn;
@@ -91,6 +97,7 @@ public class My_Layout extends RelativeLayout {
     LinearLayout llsearch_result;
     ProgressBar SearchProgressBar;
 
+
     public ArrayList<Button> Search_Button_Group = new ArrayList<Button>();
 
 
@@ -133,7 +140,9 @@ public class My_Layout extends RelativeLayout {
         btnSnapRoadSwitch = (ImageButton) layout_view.findViewById(R.id.btnSnapRoadSwitch);
         btnTrash      = (ImageButton) layout_view.findViewById(R.id.btnTrash);
         btnWindow     = (ImageButton) layout_view.findViewById(R.id.btnWindow);
+        btnHistoryDot = (ImageButton) layout_view.findViewById(R.id.btnHistoryDot);
         btnHistoryLine = (ImageButton) layout_view.findViewById(R.id.btnHistoryLine);
+        btnAutoPlay   = (ImageButton) layout_view.findViewById(R.id.btnAutoPlay);
 
         //取得activity_navigation的元件
         llNext_Turn   = (LinearLayout) navigation_view.findViewById(R.id.llNext_Turn);
@@ -180,6 +189,7 @@ public class My_Layout extends RelativeLayout {
         btnDrivingMode   = (ImageButton) layout_view.findViewById(R.id.btnDrivingMode);
         btnBicyclingMode = (ImageButton) layout_view.findViewById(R.id.btnBicyclingMode);
         btnWalkingMode   = (ImageButton) layout_view.findViewById(R.id.btnWalkingMode);
+
     }
     public void Select_Page(My_Map my_map){
         if(Data.Page_Order.get(Data.Page_Order.size()-1).equals(Data.Main_Page)){ Main_Page(my_map); }
@@ -319,9 +329,18 @@ public class My_Layout extends RelativeLayout {
         if(status.contains("Thread")){btnGPS.setVisibility(View.GONE);}
     }
     @SuppressLint("UseCompatLoadingForDrawables")
-    public void SetbtnHistory(boolean status){
-        if(status){btnHistory.setBackground(getContext().getResources().getDrawable(R.drawable.btn_round_pressed));}
-        else{btnHistory.setBackground(getContext().getResources().getDrawable(R.drawable.btn_round));}
+    public void SetbtnHistory(String mode){
+//        if(status){btnHistory.setBackground(getContext().getResources().getDrawable(R.drawable.btn_round_pressed));}
+//        else{btnHistory.setBackground(getContext().getResources().getDrawable(R.drawable.btn_round));}
+        if(mode.equals("dot")) {btnHistory.setImageResource(R.drawable.ic_place);}
+        if(mode.equals("line")) {btnHistory.setImageResource(R.drawable.ic_timeline);}
+        if(mode.equals("both")) {btnHistory.setImageResource(R.drawable.ic_polyline);}
+        if(mode.equals("none")) {btnHistory.setImageResource(R.drawable.ic_history);}
+    }
+    @SuppressLint("UseCompatLoadingForDrawables")
+    public void SetbtnHistoryDot(boolean status){
+        if(status){btnHistoryDot.setBackground(getContext().getResources().getDrawable(R.drawable.btn_round_pressed));}
+        else{btnHistoryDot.setBackground(getContext().getResources().getDrawable(R.drawable.btn_round));}
     }
     @SuppressLint("UseCompatLoadingForDrawables")
     public void SetbtnHistoryLine(boolean status){

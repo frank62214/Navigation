@@ -157,7 +157,8 @@ public class My_Map {
                     .bearing(bearing)
                     .tilt(tilt)
                     .build();
-            mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+            //mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+            mMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
         }
     }
     public void addMark(LatLng point){
@@ -257,7 +258,7 @@ public class My_Map {
             //mMap.addMarker(Navigation_test);
         }
         polylineOptions.color(context.getResources().getColor(R.color.route_color));
-        polylineOptions.width(30f);
+        polylineOptions.width(50f);
         Polyline navigation = mMap.addPolyline(polylineOptions);
         return navigation;
     }
@@ -296,23 +297,86 @@ public class My_Map {
     public void Draw_Record_Marker(){
         new Handler(Looper.getMainLooper()).post(new Runnable() {
             public void run() {
-                for(int i=0 ; i<Data.GPS_Record.size(); i++){
-                    GPS_Opt.position(Data.GPS_Record.get(i));
-                    GPS_Opt.icon(BitmapFromVector(R.drawable.rec_gps));
-                    GPS_Opt.title("GPS:" + Integer.toString(i));
-                    rec_gps.add(mMap.addMarker(GPS_Opt));
+                if(Data.Dot_Items[0]) {
+                    //測試中查看點
+                    System.out.println(rec_gps.size());
+                    //先移除原先的點，當作更新
+                    if(rec_gps.size()!=0) {
+                        for (int i = 0; i < rec_gps.size(); i++) {
+                            rec_gps.get(i).remove();
+                        }
+                        //移除ArrayList
+                        rec_gps.removeAll(rec_gps);
+                    }
+                    //將新的點畫上去
+                    for (int i = 0; i < Data.GPS_Record.size(); i++) {
+                        GPS_Opt.position(Data.GPS_Record.get(i));
+                        GPS_Opt.icon(BitmapFromVector(R.drawable.rec_gps));
+                        GPS_Opt.title("GPS:" + Integer.toString(i));
+                        rec_gps.add(mMap.addMarker(GPS_Opt));
+                    }
                 }
-                for(int i=0 ; i<Data.API_Record.size(); i++){
-                    API_Opt.position(Data.API_Record.get(i));
-                    API_Opt.icon(BitmapFromVector(R.drawable.rec_api));
-                    API_Opt.title("API:" + Integer.toString(i));
-                    rec_api.add(mMap.addMarker(API_Opt));
+                else{
+                    //將點從地圖上移除
+                    for (int i = 0; i < rec_gps.size(); i++) {
+                        rec_gps.get(i).remove();
+                    }
+                    //移除ArrayList
+                    rec_gps.removeAll(rec_gps);
                 }
-                for(int i=0 ; i<Data.Cal_Record.size(); i++){
-                    Cal_Opt.position(Data.Cal_Record.get(i));
-                    Cal_Opt.icon(BitmapFromVector(R.drawable.rec_cal));
-                    Cal_Opt.title("Cal:" + Integer.toString(i));
-                    rec_cal.add(mMap.addMarker(Cal_Opt));
+                if(Data.Dot_Items[1] ) {
+                    //測試中查看點
+                    System.out.println(rec_api.size());
+                    //先移除原先的點，當作更新
+                    if(rec_api.size()!=0) {
+                        for (int i = 0; i < rec_api.size(); i++) {
+                            rec_api.get(i).remove();
+                        }
+                        //移除ArrayList
+                        rec_api.removeAll(rec_api);
+                    }
+                    //將新的點畫上去
+                    for (int i = 0; i < Data.API_Record.size(); i++) {
+                        API_Opt.position(Data.API_Record.get(i));
+                        API_Opt.icon(BitmapFromVector(R.drawable.rec_api));
+                        API_Opt.title("API:" + Integer.toString(i));
+                        rec_api.add(mMap.addMarker(API_Opt));
+                    }
+                }
+                else{
+                    //將點從地圖上移除
+                    for(int i=0; i<rec_api.size();i++){
+                        rec_api.get(i).remove();
+                    }
+                    //移除ArrayList
+                    rec_api.removeAll(rec_api);
+                }
+                if(Data.Dot_Items[2]) {
+                    //測試中查看點
+                    System.out.println(rec_cal.size());
+                    //先移除原先的點，當作更新
+                    if(rec_cal.size()!=0) {
+                        for (int i = 0; i < rec_cal.size(); i++) {
+                            rec_cal.get(i).remove();
+                        }
+                        //移除ArrayList
+                        rec_cal.removeAll(rec_cal);
+                    }
+                    System.out.println(rec_cal.size());
+                    //將新的點畫上去
+                    for (int i = 0; i < Data.Cal_Record.size(); i++) {
+                        Cal_Opt.position(Data.Cal_Record.get(i));
+                        Cal_Opt.icon(BitmapFromVector(R.drawable.rec_cal));
+                        Cal_Opt.title("Cal:" + Integer.toString(i));
+                        rec_cal.add(mMap.addMarker(Cal_Opt));
+                    }
+                }
+                else{
+                    //將點從地圖上移除
+                    for(int i=0; i<rec_cal.size();i++){
+                        rec_cal.get(i).remove();
+                    }
+                    rec_cal.removeAll(rec_cal);
                 }
             }
         });
@@ -342,27 +406,54 @@ public class My_Map {
                 //                polylineOptions.color(context.getResources().getColor(R.color.record_route_color));
                 //                polylineOptions.width(20f);
                 //                Record_Route = mMap.addPolyline(polylineOptions);
-                PolylineOptions polylineOptions_GPS = new PolylineOptions();
-                PolylineOptions polylineOptions_API = new PolylineOptions();
-                PolylineOptions polylineOptions_Cal = new PolylineOptions();
-                for(int i=0 ; i<Data.GPS_Record.size(); i++){
-                    polylineOptions_GPS.add(Data.GPS_Record.get(i));
+                //GPS顯示與否
+                if(Data.Line_Items[0]) {
+                    if(GPS_Line!=null) {
+                        Remove_PolyLine(GPS_Line);
+                    }
+                    PolylineOptions polylineOptions_GPS = new PolylineOptions();
+                    for(int i=0 ; i<Data.GPS_Record.size(); i++){
+                        polylineOptions_GPS.add(Data.GPS_Record.get(i));
+                    }
+                    polylineOptions_GPS.color(context.getResources().getColor(R.color.record_GPS_route_color));
+                    polylineOptions_GPS.width(20f);
+                    GPS_Line = mMap.addPolyline(polylineOptions_GPS);
                 }
-                for(int i=0 ; i<Data.API_Record.size(); i++){
-                    polylineOptions_API.add(Data.API_Record.get(i));
+                else{
+                    Remove_PolyLine(GPS_Line);
                 }
-                for(int i=0 ; i<Data.Cal_Record.size(); i++){
-                    polylineOptions_Cal.add(Data.Cal_Record.get(i));
+                //API顯示與否
+                if(Data.Line_Items[1]){
+                    if(API_Line!=null) {
+                        Remove_PolyLine(API_Line);
+                    }
+                    PolylineOptions polylineOptions_API = new PolylineOptions();
+                    for(int i=0 ; i<Data.API_Record.size(); i++){
+                        polylineOptions_API.add(Data.API_Record.get(i));
+                    }
+                    polylineOptions_API.color(context.getResources().getColor(R.color.record_API_route_color));
+                    polylineOptions_API.width(20f);
+                    API_Line = mMap.addPolyline(polylineOptions_API);
                 }
-                polylineOptions_GPS.color(context.getResources().getColor(R.color.record_route_color));
-                polylineOptions_GPS.width(20f);
-                polylineOptions_API.color(context.getResources().getColor(R.color.record_route_color));
-                polylineOptions_API.width(20f);
-                polylineOptions_Cal.color(context.getResources().getColor(R.color.record_route_color));
-                polylineOptions_Cal.width(20f);
-                GPS_Line = mMap.addPolyline(polylineOptions_GPS);
-                API_Line = mMap.addPolyline(polylineOptions_API);
-                Cal_Line = mMap.addPolyline(polylineOptions_Cal);
+                else{
+                    Remove_PolyLine(API_Line);
+                }
+                //計算點顯示與否
+                if(Data.Line_Items[2]){
+                    if(Cal_Line!=null) {
+                        Remove_PolyLine(Cal_Line);
+                    }
+                    PolylineOptions polylineOptions_Cal = new PolylineOptions();
+                    for(int i=0 ; i<Data.Cal_Record.size(); i++){
+                        polylineOptions_Cal.add(Data.Cal_Record.get(i));
+                    }
+                    polylineOptions_Cal.color(context.getResources().getColor(R.color.record_Cal_route_color));
+                    polylineOptions_Cal.width(20f);
+                    Cal_Line = mMap.addPolyline(polylineOptions_Cal);
+                }
+                else{
+                    Remove_PolyLine(Cal_Line);
+                }
             }
         });
     }

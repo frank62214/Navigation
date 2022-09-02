@@ -1,11 +1,15 @@
 package com.example.navigation.My;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
@@ -32,6 +36,21 @@ public class My_Event {
 
     public void setEvent() {
         timer = new Timer();
+        my_layout.btnAutoPlay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(Data.AutoPlay){
+                    Data.AutoPlay = false;
+                    my_layout.btnAutoPlay.setBackgroundResource(R.drawable.btn_round);
+                    my_layout.Toast("關閉自動播放");
+                }
+                else{
+                    Data.AutoPlay = true;
+                    my_layout.btnAutoPlay.setBackgroundResource(R.drawable.btn_round_pressed);
+                    my_layout.Toast("開啟自動播放");
+                }
+            }
+        });
         my_layout.btnWindow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -69,39 +88,108 @@ public class My_Event {
                 }
             }
         });
-        my_layout.btnHistoryLine.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(Data.HistoryLine_Status){
-                    Data.HistoryLine_Status = false;
-                    my_layout.SetbtnHistoryLine(false);
-                    my_map.Remove_Record_Marker_PolyLine();
-                }
-                else{
-                    Data.HistoryLine_Status = true;
-                    my_layout.SetbtnHistoryLine(true);
-                    my_map.Draw_Record_Marker_PolyLine();
-                }
-            }
-        });
         my_layout.btnHistory.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //True 為顯示History
                 if(Data.History_Status) {
-                    my_layout.SetbtnHistory(false);
+                    //更改Status
                     Data.History_Status = false;
+                    //隱藏兩個按鈕
+                    my_layout.btnHistoryDot.setVisibility(View.GONE);
                     my_layout.btnHistoryLine.setVisibility(View.GONE);
-                    //my_layout.Toast("關閉歷史位置");
-                    my_map.Remove_Record_Marker();
+                    //更改圖示
+                    if(item_select(Data.Dot_Items) && item_select(Data.Line_Items)){
+                        my_layout.SetbtnHistory("both");
+                    }
+                    else if(item_select(Data.Dot_Items)){
+                        my_layout.SetbtnHistory("dot");
+                    }
+                    else if(item_select(Data.Line_Items)){
+                        my_layout.SetbtnHistory("line");
+                    }
+                    else{
+                        my_layout.SetbtnHistory("none");
+                    }
                 }else{
-                    my_layout.SetbtnHistory(true);
+                    //更改Status
                     Data.History_Status = true;
+                    //將圖示改回來
+                    my_layout.SetbtnHistory("none");
+                    //顯示按鈕
+                    my_layout.btnHistoryDot.setVisibility(View.VISIBLE);
                     my_layout.btnHistoryLine.setVisibility(View.VISIBLE);
-                    //my_layout.Toast("顯示歷史位置");
-                    my_map.Draw_Record_Marker();
                 }
             }
         });
+        my_layout.btnHistoryDot.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Set up the alert builder
+                AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
+                builder.setTitle("選擇要顯示的歷史紀錄(點)");
+
+                // Add a checkbox list
+                String[] animals = {"GPS", "API", "計算點"};
+                //boolean[] checkedItems = {Data.GPS_Line, Data.API_Line, Data.Cal_Line};
+                builder.setMultiChoiceItems(animals, Data.Dot_Items, new DialogInterface.OnMultiChoiceClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which, boolean isChecked) {
+                        Data.Dot_Items[which] = isChecked;
+                    }
+                });
+
+                // Add OK and Cancel buttons
+                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // The user clicked OK
+                        boolean select = item_select(Data.Dot_Items);
+                        my_map.Draw_Record_Marker();
+                        my_layout.SetbtnHistoryDot(select);
+                    }
+                });
+                // Create and show the alert dialog
+                AlertDialog dialog = builder.create();
+                dialog.show();
+            }
+        });
+        my_layout.btnHistoryLine.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Set up the alert builder
+                AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
+                builder.setTitle("選擇要顯示的歷史紀錄(線)");
+
+                // Add a checkbox list
+                String[] animals = {"GPS", "API", "計算點"};
+                //boolean[] checkedItems = {Data.GPS_Line, Data.API_Line, Data.Cal_Line};
+                builder.setMultiChoiceItems(animals, Data.Line_Items, new DialogInterface.OnMultiChoiceClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which, boolean isChecked) {
+                        Data.Line_Items[which] = isChecked;
+                    }
+                });
+
+                // Add OK and Cancel buttons
+                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // The user clicked OK
+                        boolean select = item_select(Data.Line_Items);
+                        my_map.Draw_Record_Marker_PolyLine();
+                        my_layout.SetbtnHistoryLine(select);
+                    }
+                });
+                // Create and show the alert dialog
+                AlertDialog dialog = builder.create();
+                dialog.show();
+            }
+        });
+
+
+
+
         my_layout.btnRecord.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -288,6 +376,14 @@ public class My_Event {
                 }
             });
         }
+    }
+    private boolean item_select(boolean[] item){
+        for(int i=0; i<item.length; i++){
+            if(item[i]){
+                return true;
+            }
+        }
+        return false;
     }
     public void close_keyboard(View view){
         InputMethodManager inputMethodManager = (InputMethodManager)view.getContext().getSystemService(view.getContext().INPUT_METHOD_SERVICE);

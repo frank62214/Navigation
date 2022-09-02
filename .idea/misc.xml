@@ -13,6 +13,7 @@
         <entry key="..\:/Android/Navigation/app/src/main/res/drawable/dir_turnleft.xml" value="0.1640625" />
         <entry key="..\:/Android/Navigation/app/src/main/res/drawable/dir_turnright.xml" value="0.1640625" />
         <entry key="..\:/Android/Navigation/app/src/main/res/drawable/ic_add_road.xml" value="0.1" />
+        <entry key="..\:/Android/Navigation/app/src/main/res/drawable/ic_autoplay.xml" value="0.1795" />
         <entry key="..\:/Android/Navigation/app/src/main/res/drawable/ic_bike_mode.xml" value="0.1625" />
         <entry key="..\:/Android/Navigation/app/src/main/res/drawable/ic_car_mode.xml" value="0.1625" />
         <entry key="..\:/Android/Navigation/app/src/main/res/drawable/ic_directions.xml" value="0.1640625" />
@@ -23,6 +24,8 @@
         <entry key="..\:/Android/Navigation/app/src/main/res/drawable/ic_navigation.xml" value="0.1640625" />
         <entry key="..\:/Android/Navigation/app/src/main/res/drawable/ic_near_me.xml" value="0.15989583333333332" />
         <entry key="..\:/Android/Navigation/app/src/main/res/drawable/ic_near_me_disabled.xml" value="0.15989583333333332" />
+        <entry key="..\:/Android/Navigation/app/src/main/res/drawable/ic_place.xml" value="0.151" />
+        <entry key="..\:/Android/Navigation/app/src/main/res/drawable/ic_polyline.xml" value="0.151" />
         <entry key="..\:/Android/Navigation/app/src/main/res/drawable/ic_satellite.xml" value="0.1" />
         <entry key="..\:/Android/Navigation/app/src/main/res/drawable/ic_search.xml" value="0.20833333333333334" />
         <entry key="..\:/Android/Navigation/app/src/main/res/drawable/ic_timeline.xml" value="0.1" />
@@ -34,6 +37,7 @@
         <entry key="..\:/Android/Navigation/app/src/main/res/layout/activity_main.xml" value="0.22" />
         <entry key="..\:/Android/Navigation/app/src/main/res/layout/activity_navigation.xml" value="0.33" />
         <entry key="..\:/Android/Navigation/app/src/main/res/layout/activity_search.xml" value="0.1921875" />
+        <entry key="..\:/Android/Navigation/app/src/main/res/layout/line_select.xml" value="0.4031496062992126" />
       </map>
     </option>
   </component>

@@ -54,5 +54,18 @@ public class Data {
     public static boolean History_Status = false;
     public static boolean HistoryLine_Status = false;
 
+    public static boolean[] Dot_Items = {false, false, false};
+    public static boolean[] Line_Items = {false, false, false};
+
+
+
+//    public static boolean GPS_Dot = false;
+//    public static boolean GPS_Line = false;
+//    public static boolean API_Dot = false;
+//    public static boolean API_Line = false;
+//    public static boolean Cal_Dot = false;
+//    public static boolean Cal_Line = false;
+
+    public static boolean AutoPlay = false;
 
 }
