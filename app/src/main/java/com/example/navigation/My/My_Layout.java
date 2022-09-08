@@ -259,6 +259,8 @@ public class My_Layout extends RelativeLayout {
                 llNext_Turn.setVisibility(View.GONE);
                 rlSearch.setBackgroundColor(getResources().getColor(R.color.transparent));
                 sv_search_result.setVisibility(View.GONE);
+                llUserArrow.setVisibility(View.GONE);
+
 
                 btnCarMode.setVisibility(View.GONE);
                 llMode.setVisibility(View.GONE);
@@ -276,6 +278,7 @@ public class My_Layout extends RelativeLayout {
             }
         });
     }
+
     public void Navigation_Page(My_Map my_map){
         //設定GPS刷新之後是否進入導航模式
         Data.Navigation_Status = true;
@@ -295,7 +298,7 @@ public class My_Layout extends RelativeLayout {
                 my_map.Remove_Direction();
 //                Data.Navigation_Status = true;
 //                System.out.println(Data.Navigation_Status);
-                //llUserArrow.setVisibility(View.VISIBLE);
+                llUserArrow.setVisibility(View.VISIBLE);
 
             }
         });

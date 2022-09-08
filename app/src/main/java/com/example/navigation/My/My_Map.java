@@ -157,8 +157,20 @@ public class My_Map {
                     .bearing(bearing)
                     .tilt(tilt)
                     .build();
-            //mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-            mMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+            mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+            //mMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+        }
+    }
+    public void moveCamera(LatLng point, float zoom, float bearing, float tilt, int Ms){
+        if(point!=null) {
+            cameraPosition = new CameraPosition.Builder()
+                    .target(point)
+                    .zoom(zoom)
+                    .bearing(bearing)
+                    .tilt(tilt)
+                    .build();
+            mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition),Ms, null);
+            //mMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
         }
     }
     public void addMark(LatLng point){
@@ -173,31 +185,32 @@ public class My_Map {
     public void set_Direction_Camera(){
         new Handler(Looper.getMainLooper()).post(new Runnable() {
             public void run() {
-                double S = 0 ;
-                double W = 0 ;
-                double N = 0 ;
-                double E = 0 ;
-                if(Data.now_position.latitude > Data.Destination.latitude){
-                    N = Data.now_position.latitude;
-                    S = Data.Destination.latitude;
-                }else{
-                    N = Data.Destination.latitude;
-                    S = Data.now_position.latitude;
+                if (Data.Destination != null) {
+                    double S = 0;
+                    double W = 0;
+                    double N = 0;
+                    double E = 0;
+                    if (Data.now_position.latitude > Data.Destination.latitude) {
+                        N = Data.now_position.latitude;
+                        S = Data.Destination.latitude;
+                    } else {
+                        N = Data.Destination.latitude;
+                        S = Data.now_position.latitude;
+                    }
+                    if (Data.now_position.longitude > Data.Destination.longitude) {
+                        E = Data.now_position.longitude;
+                        W = Data.Destination.longitude;
+                    } else {
+                        E = Data.Destination.longitude;
+                        W = Data.now_position.longitude;
+                    }
+                    LatLngBounds DestinationBounds = new LatLngBounds(
+                            new LatLng(S, W), // SW bounds
+                            new LatLng(N, E)  // NE bounds
+                    );
+                    mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(DestinationBounds, 300));
+                    //System.out.println(mMap.getCameraPosition().zoom);
                 }
-                if(Data.now_position.longitude > Data.Destination.longitude){
-                    E = Data.now_position.longitude;
-                    W = Data.Destination.longitude;
-                }
-                else{
-                    E = Data.Destination.longitude;
-                    W = Data.now_position.longitude;
-                }
-                LatLngBounds DestinationBounds = new LatLngBounds(
-                        new LatLng(S, W), // SW bounds
-                        new LatLng(N, E)  // NE bounds
-                );
-                mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(DestinationBounds, 300));
-                //System.out.println(mMap.getCameraPosition().zoom);
             }
         });
     }
@@ -230,7 +243,7 @@ public class My_Map {
 //            //mMap.addMarker(Navigation_test);
 //        }
         polylineOptions.color(context.getResources().getColor(R.color.route_color));
-        polylineOptions.width(30f);
+        polylineOptions.width(40f);
         Polyline navigation = mMap.addPolyline(polylineOptions);
         return navigation;
     }

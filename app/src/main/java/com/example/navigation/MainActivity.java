@@ -132,22 +132,11 @@ public class MainActivity extends AppCompatActivity implements
     double GPS_kmh = 0;
     double API_kmh = 0;
     double API_ms  = 0;
-    int ms = 0;
 
-    double sensor_x_sum = 0;
-    double sensor_y_sum = 0;
-    double sensor_z_sum = 0;
-
-    int cal_count = 0;
-
-    double test_dis=0.0;
 
     boolean sensor_init = true;
 
 
-    private Sensor aSensor=null;
-
-    private Sensor mSensor=null;
 
     private final float FILTERING_VALAUE = 0.1f;
     private float lowX,lowY,lowZ;
@@ -168,6 +157,8 @@ public class MainActivity extends AppCompatActivity implements
     int smooth_step = 0;
 
     My_Snap_Road my_snap_road;
+
+    boolean thread_once = true;
 
     //模擬GPS刷新
     private final Handler handler = new Handler();
@@ -230,10 +221,11 @@ public class MainActivity extends AppCompatActivity implements
         mLocationMgr = (LocationManager) getSystemService(LOCATION_SERVICE);
     }
     //模擬GPS刷新--------------------------------------------
-    final Runnable runnable = new Runnable() {
+
+    final Runnable GPS_Simulation = new Runnable() {
         public void run() {
             // 需要背景作的事，平滑顯示、模擬GPS刷新
-            while(true) {
+            //while(true) {
                 //每秒執行(模擬GPS每秒刷新)
 //                if(smooth_step>10) {
 //                    if (!Data.GPS_Status) {
@@ -256,21 +248,73 @@ public class MainActivity extends AppCompatActivity implements
 //                        Navigation(Data.now_position, "Smooth");
 //                    }
 //                }
-                if (!Data.GPS_Status) {
-                    if (Data.now_position != null) {
-                        Navigation(Data.now_position, "Thread");
-                    }
-                } else {
-                    Data.GPS_Status = false;
+//                if(Data.now_position!=null) {
+//                    if (smooth_step == 9) {
+//                        //每秒執行
+//                        //是否自動撥放
+//
+//                        if (Data.AutoPlay) {
+//                            Navigation(Data.now_position, "AutoPlay");
+//                            thread_once = false;
+//                        }
+//                        smooth_step = 0;
+//                    }
+//                    if(thread_once) {
+//                        Navigation(Data.now_position, "Thread");
+//                    }
+//                    else {
+//                        thread_once = true;
+//                    }
+//                    smooth_step += 1;
+//
+//                    Data.GPS_Status = false;
+//                }
+//                //System.out.println("FYBR");
+//                SystemClock.sleep(99);
+//            }
+            if(Data.now_position != null) {
+                if(Data.AutoPlay) {
+                    Navigation(Data.now_position, "GPS_Simulation");
                 }
-                SystemClock.sleep(99);
             }
-
+            Data.GPS_Status = false;
+            //System.out.println("GPS_Simulation");
+            handler.postDelayed(GPS_Simulation, 1000);
         }
     };
+    final Runnable Smooth = new Runnable() {
+        @Override
+        public void run() {
+            if(Data.now_position != null) {
+                Navigation(Data.now_position, "Smooth");
+            }
+            //System.out.println("Smooth");
+            handler.postDelayed(Smooth, 90);
+        }
+    };
+
+//    final Runnable GPS_Simulation = new Runnable() {
+//        public void run() {
+//            while (true) {
+//                if (Data.AutoPlay) {
+//
+//                    //Navigation(Data.now_position, "Thread");
+//                    if(smooth_step<10) {
+//                        Chick_Navigation(Data.now_position, 0);
+//                    }
+//                    else{
+//                        Chick_Navigation(Data.now_position, 7.5);
+//                        smooth_step = 0;
+//                    }
+//                    smooth_step+=1;
+//                }
+//                SystemClock.sleep(99);
+//            }
+//        }
+//    };
     //------------------------------------------------------
     public void Navigation(LatLng point, String type){
-        try {
+        //try {
             GPS_kmh = 0;
             API_kmh = 0;
             API_ms = 0;
@@ -351,18 +395,24 @@ public class MainActivity extends AppCompatActivity implements
                                 select_position = now_API_position;
                             }
                             //Chick_Navigation(select_position, API_dis, type);
-                            Chick_Navigation(select_position, API_dis);
+                            Chick_Navigation(select_position, API_dis, pass_time);
                             last_API_position = now_API_position;
                             //--------------------------------------------------------
                         }
                     }
                 });
             }
-            else{
+            else if(type.equals("GPS")){
                 //thread
                 select_position = Data.now_position;
                 //Chick_Navigation(select_position, GPS_dis, type);
-                Chick_Navigation(select_position, GPS_dis);
+                Chick_Navigation(Data.now_position, GPS_dis, pass_time);
+            }
+            else if(type.equals("GPS_Simulation")){
+                Chick_Navigation(Data.now_position, 10, pass_time);
+            }
+            else if(type.equals("Smooth")){
+                Chick_Navigation(Data.now_position, 0, pass_time);
             }
             //--------------------------------------------------------
 
@@ -421,41 +471,24 @@ public class MainActivity extends AppCompatActivity implements
                 Data.API_Record.removeAll(Data.API_Record);
                 Data.Cal_Record.removeAll(Data.Cal_Record);
             }
-        }
-        catch (Exception e){
-            Cal_Method.Catch_Error_Log("Main-Navigation", e.toString());
-        }
+//        }
+//        catch (Exception e){
+//            Cal_Method.Catch_Error_Log("Main-Navigation", e.toString());
+//        }
     }
     //public void Chick_Navigation(LatLng position, double dis, String type) {
-    public void Chick_Navigation(LatLng position, double dis) {
+    public void Chick_Navigation(LatLng position, double dis, long pass_time) {
         if (Data.Navigation_Status) {
             //初始化導航圖示
             if (my_new_navigation.get_initMK()) {
                 my_new_navigation.set_initMK(false);
-                my_new_navigation.initUserMK(Data.now_position);
+               // my_new_navigation.initUserMK(Data.now_position);
                 //my_new_navigation.Navigation(select_position, API_dis);
-                my_new_navigation.Navigation(select_position, dis);
+                my_new_navigation.Navigation(position, dis, pass_time);
             } else {
-
-                //測試用變數test_dis會不斷加總5
-                //my_new_navigation.Navigation(select_position, GPS_dis);
-                if(Data.AutoPlay) {
-                    my_new_navigation.Navigation(select_position, 7.5);
-//                    if(type.equals("Thread")) {
-//                        my_new_navigation.Navigation(select_position, 0.075);
-//                    }
-//                    if(type.equals("Smooth")){
-//                        my_new_navigation.Navigation(select_position, 0.075);
-//                    }
-                }
-                else {
-                    //此行為主要程式----------------------------------------
-                    //double mms = dis / 10.0;
-                    //my_new_navigation.Navigation(select_position, dis);
-                    my_new_navigation.Navigation(select_position, dis);
-                    //---------------------------------------------------
-                }
-                //my_new_navigation.Navigation(select_position, GPS_dis);
+                //此行為主要程式----------------------------------------
+                my_new_navigation.Navigation(position, dis, pass_time);
+                //---------------------------------------------------
             }
         } else {
             //移除導航所有事情
@@ -464,6 +497,9 @@ public class MainActivity extends AppCompatActivity implements
             my_new_navigation.Final_Remove_Direction();
             my_new_navigation.Remove_Straight_Marker();
             my_new_navigation.Remove_First_Step();
+            //my_map.set_Direction_Camera();
+
+            //my_layout.Direction_Page(my_map);
         }
     }
     public void Save_patameter(LatLng GPS, LatLng api_start, LatLng api_end, LatLng cal){
@@ -555,8 +591,12 @@ public class MainActivity extends AppCompatActivity implements
         //my_sensor.registerListener();
         //-------------------------------------------------
         //模擬GPS刷新
-        Thread t = new Thread(runnable);
+        //Thread t = new Thread(runnable);
+        Thread t= new Thread(GPS_Simulation);
         t.start();
+        Thread t2 = new Thread(Smooth);
+        t2.start();
+        //handler.postDelayed(GPS_Simulation, 1000);
         //-------------------------------------------------
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override

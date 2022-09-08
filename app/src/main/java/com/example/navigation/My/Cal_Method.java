@@ -204,10 +204,12 @@ public class Cal_Method {
         File file = new File(path, filename);
         try
         {
+            String dateformat = "kk:mm:ss";
+            SimpleDateFormat df = new SimpleDateFormat(dateformat);
             // 第二個參數為是否 append
             // 若為 true，則新加入的文字會接續寫在文字檔的最後
             FileOutputStream Output = new FileOutputStream(file, true);
-            String string = function_name + "," + error + "\n";
+            String string = df + ", " +  function_name + ", " + error + "\n";
             Output.write(string.getBytes());
             Output.close();
         }
