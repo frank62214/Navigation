@@ -7,12 +7,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
-import android.Manifest;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -24,23 +21,17 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
-import android.os.SystemClock;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.navigation.My.Cal_Method;
 import com.example.navigation.My.Data;
 import com.example.navigation.My.My_Event;
-import com.example.navigation.My.My_Json;
 import com.example.navigation.My.My_Layout;
 import com.example.navigation.My.My_Map;
 import com.example.navigation.My.My_New_Navigation;
 import com.example.navigation.My.My_Sensor;
 import com.example.navigation.My.My_Snap_Road;
+import com.example.navigation.My.Navigation;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -48,12 +39,9 @@ import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.UiSettings;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -61,13 +49,10 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Objects;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.Random;
 
 public class MainActivity extends AppCompatActivity implements
         OnMapReadyCallback,
@@ -90,6 +75,7 @@ public class MainActivity extends AppCompatActivity implements
     private My_Map my_map;
     private My_Event my_event;
     private My_New_Navigation my_new_navigation;
+    private Navigation navigation;
     private My_Sensor my_sensor;
 
     private SensorManager sm;
@@ -133,7 +119,6 @@ public class MainActivity extends AppCompatActivity implements
     double API_kmh = 0;
     double API_ms  = 0;
 
-
     boolean sensor_init = true;
 
 
@@ -162,6 +147,14 @@ public class MainActivity extends AppCompatActivity implements
 
     //模擬GPS刷新
     private final Handler handler = new Handler();
+
+    private boolean init = true;
+    private long last_time = 0;
+    private long now_time = 0;
+
+    long sim_start = 0;
+    long sim_end   = 0;
+    long sim_time  = 0;
 
     @RequiresApi(api = Build.VERSION_CODES.S)
     @Override
@@ -215,69 +208,93 @@ public class MainActivity extends AppCompatActivity implements
                 //Cal_Speed();
                 //導航的Function
                 Data.GPS_Status = true;
-                Navigation(Data.now_position, "GPS");
+                //Navigation(Data.now_position, "GPS");
+                GPS_data();
             }
         };
         mLocationMgr = (LocationManager) getSystemService(LOCATION_SERVICE);
+    }
+    public void GPS_data(){
+        Data.GPS_Record.add(Data.now_position);
+        if(init){
+            //初始化數據
+            init = false;
+            last_GPS_position = Data.now_position;
+            last_time = System.currentTimeMillis();
+            navigation.now_position = Data.now_position;
+        }
+        else{
+            //取距離
+            GPS_dis = Cal_Method.Cal_Distance(last_GPS_position, Data.now_position);
+            last_GPS_position = Data.now_position;
+            total_dis = total_dis + GPS_dis;
+            //取時間
+            now_time = System.currentTimeMillis();
+            pass_time = now_time - last_time;
+            last_time = now_time;
+            //更新至導航
+            navigation.now_distance = GPS_dis;
+            navigation.passtime = pass_time;
+            navigation.now_position = Data.now_position;
+        }
+        show_GPS();
+    }
+    public void show_GPS(){
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                my_layout.Set_GPS_Status(Data.GPS_Status);
+                my_layout.setdataviewRefreshGPSdis(GPS_dis + "m");
+                my_layout.setdataviewNowGPSPassTime(pass_time + "ms");
+                my_layout.setdataviewTotalGPSdis(total_dis + "m");
+            }
+        });
+    }
+    public void show_GPS_status(){
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                my_layout.Set_GPS_Status(Data.GPS_Status);
+            }
+        });
     }
     //模擬GPS刷新--------------------------------------------
 
     final Runnable GPS_Simulation = new Runnable() {
         public void run() {
+            //取時間
+            if(sim_start == 0){
+                sim_start = System.currentTimeMillis();
+            }
+            sim_end = System.currentTimeMillis();
+            sim_time = sim_end - sim_start;
+            sim_start = sim_end;
             // 需要背景作的事，平滑顯示、模擬GPS刷新
-            //while(true) {
-                //每秒執行(模擬GPS每秒刷新)
-//                if(smooth_step>10) {
-//                    if (!Data.GPS_Status) {
-//                        if (Data.now_position != null) {
-//                            Navigation(Data.now_position, "Thread");
-//                        }
-//                    } else {
-//                        Data.GPS_Status = false;
-//                    }
-//                    smooth_step = 0;
-//                }
-//                //每0.1秒執行
-//
-//                smooth_step += 1;
-//                if(Data.Navigation_Status) {
-//                    if (Data.now_position != null) {
-//                        //my_new_navigation.Navigation_test3(Data.now_position, 0, false);
-//                        //System.out.println("FYBR");
-//                        //my_new_navigation.smooth_navigation();
-//                        Navigation(Data.now_position, "Smooth");
-//                    }
-//                }
-//                if(Data.now_position!=null) {
-//                    if (smooth_step == 9) {
-//                        //每秒執行
-//                        //是否自動撥放
-//
-//                        if (Data.AutoPlay) {
-//                            Navigation(Data.now_position, "AutoPlay");
-//                            thread_once = false;
-//                        }
-//                        smooth_step = 0;
-//                    }
-//                    if(thread_once) {
-//                        Navigation(Data.now_position, "Thread");
-//                    }
-//                    else {
-//                        thread_once = true;
-//                    }
-//                    smooth_step += 1;
-//
-//                    Data.GPS_Status = false;
-//                }
-//                //System.out.println("FYBR");
-//                SystemClock.sleep(99);
-//            }
             if(Data.now_position != null) {
                 if(Data.AutoPlay) {
-                    Navigation(Data.now_position, "GPS_Simulation");
+                    //Navigation(Data.now_position, "GPS_Simulation");
+                    Random x = new Random();
+                    int a = 0 + x.nextInt(15);
+                    //int a = 17;
+                    navigation.now_distance = a;
+                    navigation.passtime     = sim_time;
+                    total_dis += a;
+                    System.out.println(a);
+                    show_GPS();
+                    if(Data.compensate_dis_test!=0){
+                        navigation.compensate_dis = Data.compensate_dis_test;
+                        Data.compensate_dis_test = 0;
+                    }
+                    //-------------------------------
+                    //navigation.Navigation_Process();
+                    //-------------------------------
                 }
+//                else{
+//                    navigation.now_distance = 0;
+//                }
             }
             Data.GPS_Status = false;
+            show_GPS_status();
             //System.out.println("GPS_Simulation");
             handler.postDelayed(GPS_Simulation, 1000);
         }
@@ -286,32 +303,17 @@ public class MainActivity extends AppCompatActivity implements
         @Override
         public void run() {
             if(Data.now_position != null) {
-                Navigation(Data.now_position, "Smooth");
+                //Navigation(Data.now_position, "Smooth");
+                if(Data.Navigation_Status) {
+                    navigation.Navigation_Process();
+                    //total_dis += GPS_dis;
+                }
             }
             //System.out.println("Smooth");
-            handler.postDelayed(Smooth, 90);
+            //Data.GPS_Status = false;
+            handler.postDelayed(Smooth, 80);
         }
     };
-
-//    final Runnable GPS_Simulation = new Runnable() {
-//        public void run() {
-//            while (true) {
-//                if (Data.AutoPlay) {
-//
-//                    //Navigation(Data.now_position, "Thread");
-//                    if(smooth_step<10) {
-//                        Chick_Navigation(Data.now_position, 0);
-//                    }
-//                    else{
-//                        Chick_Navigation(Data.now_position, 7.5);
-//                        smooth_step = 0;
-//                    }
-//                    smooth_step+=1;
-//                }
-//                SystemClock.sleep(99);
-//            }
-//        }
-//    };
     //------------------------------------------------------
     public void Navigation(LatLng point, String type){
         //try {
@@ -343,6 +345,7 @@ public class MainActivity extends AppCompatActivity implements
             //Data.GPS_Record.add(point);
             //紀錄API定位
             if (type.equals("GPS") && Data.SnapRoad_Status) {
+                //利用GPS向Google API取得訂位
                 my_snap_road.setSnapRoadUrl();
                 my_snap_road.SearchLocation(new My_Snap_Road.onDataReadyCallback() {
                     @Override
@@ -403,8 +406,7 @@ public class MainActivity extends AppCompatActivity implements
                 });
             }
             else if(type.equals("GPS")){
-                //thread
-                select_position = Data.now_position;
+                //select_position = Data.now_position;
                 //Chick_Navigation(select_position, GPS_dis, type);
                 Chick_Navigation(Data.now_position, GPS_dis, pass_time);
             }
@@ -451,7 +453,8 @@ public class MainActivity extends AppCompatActivity implements
             new Handler(Looper.getMainLooper()).post(new Runnable() {
                 @Override
                 public void run() {
-                    my_layout.Set_GPS_Status(type);
+                    //my_layout.Set_GPS_Status(type);
+                    my_layout.Set_GPS_Status(Data.GPS_Status);
                     my_layout.setdataviewRecordTimer("更新間格時間:" + pass_time + "ms");
                     my_layout.setdataviewNowAPIPassTime(API_pass_time + "ms");
                     my_layout.setdataviewRefreshGPSdis(GPS_dis + "m");
@@ -460,6 +463,7 @@ public class MainActivity extends AppCompatActivity implements
 //                    my_layout.setdataviewNowAPISpeedkmh(API_kmh + "km/h");
                     my_layout.setdataviewNowGPSSpeedms(GPS_ms + "ms");
                     my_layout.setdataviewNowGPSSpeedkmh(GPS_kmh + "km/h");
+                    my_layout.setdataviewNowGPSPassTime(pass_time + "ms");
                     //my_layout.setdataviewCalPosition(cal_position.toString());
 
 
@@ -587,6 +591,7 @@ public class MainActivity extends AppCompatActivity implements
         my_layout.Select_Page(my_map);
         //-------------------------------------------------
         my_new_navigation = new My_New_Navigation(this, my_layout, my_map);
+        navigation = new Navigation(this, my_layout, my_map);
         //my_sensor = new My_Sensor(this);
         //my_sensor.registerListener();
         //-------------------------------------------------
@@ -838,11 +843,11 @@ public class MainActivity extends AppCompatActivity implements
                     double test_Value = Math.abs(Math.round((accCurrentValue - Corrected_Value) * 10) / 10.0);
                     //int d = (int)(test_Value * sensor_pass_time_ms);
                     double d = Math.round((test_Value * sensor_pass_time_ms)*100);
-                    total_dis = total_dis + d;
+                    //total_dis = total_dis + d;
                     //System.out.println(d);
                     //sensor_speed = sensor_speed + (int)test_Value;
 
-                    my_layout.setdataviewNowSensorSpeedtm(Double.toString(total_dis)+"cm");
+                    //my_layout.setdataviewNowSensorSpeedtm(Double.toString(total_dis)+"cm");
                     my_layout.setdataviewNowSensorSpeedms(Double.toString(sensor_speed));
                     my_layout.setDataViewBearing(Double.toString(test_Value));
                 }

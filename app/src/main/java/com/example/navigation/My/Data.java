@@ -1,6 +1,8 @@
 package com.example.navigation.My;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
 import java.util.stream.Stream;
@@ -41,9 +43,13 @@ public class Data {
     //Navigation data
     public static boolean Navigation_Status = false;
     public static boolean GPS_Status = false;
+    public static boolean Nav_History = false;
     public static ArrayList<LatLng> API_Record = new ArrayList<LatLng>();
     public static ArrayList<LatLng> GPS_Record = new ArrayList<LatLng>();
     public static ArrayList<LatLng> Cal_Record = new ArrayList<LatLng>();
+    public static ArrayList<LatLng> Nav_Record = new ArrayList<LatLng>();
+    public static MarkerOptions Nav_Opt = new MarkerOptions();
+    public static ArrayList<Marker> Nav_marker = new ArrayList<Marker>();
 
     //CarMode data
     public static boolean CarMode_Status = false;
@@ -67,5 +73,6 @@ public class Data {
 //    public static boolean Cal_Line = false;
 
     public static boolean AutoPlay = false;
+    public static int compensate_dis_test = 0;
 
 }

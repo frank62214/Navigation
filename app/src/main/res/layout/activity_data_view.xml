@@ -33,19 +33,62 @@
                 android:layout_height="wrap_content"
                 android:text="計算的經緯度"
                 android:textColor="@color/black"
-                android:textSize="10dp" />
+                android:textSize="10dp"
+                android:visibility="gone"/>
             <TextView
-                android:id="@+id/data_view_Record_Timer"
+                android:id="@+id/data_view_GPS_Simulation_S"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="錄影時間"
+                android:text="Nav模擬GPS刷新時間: 0ms"
                 android:textColor="@color/black"
                 android:textSize="10dp" />
             <TextView
-                android:id="@+id/data_view_Refresh_API_dis"
+                android:id="@+id/data_view_PolyLine_Dis"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="API更新距離"
+                android:text="Nav PolyLine累計距離: 0m"
+                android:textColor="@color/black"
+                android:textSize="10dp" />
+            <TextView
+                android:id="@+id/data_view_Total_Compensate_Dis"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Nav 補償累計距離: 0m"
+                android:textColor="@color/black"
+                android:textSize="10dp" />
+            <TextView
+                android:id="@+id/divider3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="-----------------------------------------------------"
+                android:textColor="@color/black"
+                android:textSize="10dp"/>
+            <TextView
+                android:id="@+id/data_view_Navigation_Now_Distance"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Nav目前距離: 0m"
+                android:textColor="@color/black"
+                android:textSize="10dp"/>
+            <TextView
+                android:id="@+id/data_view_Navigation_Count_Dis"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Nav累計距離: 0m"
+                android:textColor="@color/black"
+                android:textSize="10dp"/>
+            <TextView
+                android:id="@+id/divider0"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="-----------------------------------------------------"
+                android:textColor="@color/black"
+                android:textSize="10dp"/>
+            <TextView
+                android:id="@+id/data_view_Total_GPS_dis"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="GPS累計距離"
                 android:textColor="@color/black"
                 android:textSize="10dp" />
             <TextView
@@ -56,40 +99,80 @@
                 android:textColor="@color/black"
                 android:textSize="10dp" />
             <TextView
+                android:id="@+id/data_view_Now_GPS_Pass_Time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="GPS經過時間:"
+                android:textColor="@color/black"
+                android:textSize="10dp" />
+            <TextView
+                android:id="@+id/data_view_Now_GPS_Speed_ms"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="GPS目前秒速:0 m/s"
+                android:textColor="@color/black"
+                android:textSize="10dp" />
+            <TextView
+                android:id="@+id/data_view_Now_GPS_Speed_kmh"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="GPS目前時速:0 km/h"
+                android:textColor="@color/black"
+                android:textSize="10dp" />
+            <TextView
+                android:id="@+id/divider1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="-----------------------------------------------------"
+                android:textColor="@color/black"
+                android:textSize="10dp"/>
+            <TextView
+                android:id="@+id/data_view_Record_Timer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="錄影時間"
+                android:textColor="@color/black"
+                android:textSize="10dp"
+                android:visibility="gone"/>
+            <TextView
+                android:id="@+id/data_view_Refresh_API_dis"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="API更新距離:0.0m"
+                android:textColor="@color/black"
+                android:textSize="10dp" />
+
+            <TextView
                 android:id="@+id/data_view_Now_API_Pass_Time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="目前API秒速:"
+                android:text="API經過時間:0ms"
                 android:textColor="@color/black"
                 android:textSize="10dp" />
+
             <TextView
                 android:id="@+id/data_view_Now_API_Speed_ms"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="目前API秒速:"
+                android:text="API目前秒速:0 m/s"
                 android:textColor="@color/black"
                 android:textSize="10dp" />
             <TextView
                 android:id="@+id/data_view_Now_API_Speed_kmh"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="目前API時速:"
+                android:text="API目前時速:0 km/h"
                 android:textColor="@color/black"
                 android:textSize="10dp" />
-                <TextView
-                    android:id="@+id/data_view_Now_GPS_Speed_ms"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="目前GPS秒速:"
-                    android:textColor="@color/black"
-                    android:textSize="10dp" />
+
             <TextView
-                android:id="@+id/data_view_Now_GPS_Speed_kmh"
+                android:id="@+id/divider2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="目前GPS時速:"
+                android:text="-----------------------------------------------------"
                 android:textColor="@color/black"
-                android:textSize="10dp" />
+                android:textSize="10dp"/>
+
             <TextView
                 android:id="@+id/data_view_Now_Sensor_Speed_tm"
                 android:layout_width="wrap_content"

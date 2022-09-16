@@ -631,4 +631,26 @@ public class My_Map {
     public Marker Add_Marker(MarkerOptions MKopt){
         return mMap.addMarker(MKopt);
     }
+    public void Nav(){
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            public void run() {
+                for(int i=0; i<Data.Nav_Record.size(); i++){
+                    Data.Nav_Opt.position(Data.Nav_Record.get(i));
+                    Data.Nav_Opt.icon(Cal_Method.BitmapFromVector(context, R.drawable.history_point));
+                    Data.Nav_marker.add(Add_Marker(Data.Nav_Opt));
+                }
+                Data.Nav_History = true;
+            }
+        });
+    }
+    public void removeNav(){
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            public void run() {
+                for(int i=0; i<Data.Nav_marker.size(); i++){
+                    Remove_Marker(Data.Nav_marker.get(i));
+                }
+                Data.Nav_History = false;
+            }
+        });
+    }
 }

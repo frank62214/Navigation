@@ -103,93 +103,11 @@ public class My_New_Navigation {
     }
 
     public void Navigation(LatLng now_position, double dis, long pass_time) {
-        //if(initData || too_far > 10) {
         if(initData) {
-            //偏航處理
-//            if(too_far!=0){
-//                Toast("重新規劃路線");
-//                too_far = 0;
-//            }
-//            if(!initData && Data.AutoPlay) {
-//                //自動撥放
-//                //Navigation_test2(now_position, dis);
-//                Navigation_test2(now_position, dis);
-//            }
-//            else{
-//                Call_API(now_position);
-//            }
-            Call_API(now_position);
-
+            //Call_API(now_position);
         }else{
-            //Navigation_test2(now_position, dis);
             Navigation_test2(now_position, dis, pass_time);
         }
-        //----------------------------------------------------
-//        try {
-//            //Navigation_MK_Position = now_position;
-//            //handler.postDelayed(NavigationCamera, 500);
-//            //handler.postDelayed(ChangeUserMK, 500);
-//            my_direction.searchDirection(now_position);
-//            my_direction.SearchNavigationData(new My_Direction.onNavigationDataReadyCallBack() {
-//                @Override
-//                public void onDataReady(String text) {
-//                    //Navigation_MK_Position = now_position;
-//                    //取得資料
-//                    Next_Step_Distance = My_Json.Get_Next_Step_Distance(text);
-//                    Routes = My_Json.Get_Steps(text);
-//                    PolylineOverView = My_Json.Get_Navigation_OverView_PolyLine(text);
-//                    Road = My_Json.Get_Navigation_Road(text);
-//                    Road_Detail = My_Json.Get_Navigation_Road_Detail(text);
-//                    //取得方向角與位置
-//                    Now_Bearing = Cal_Method.Cal_Bearing(PolylineOverView.get(0), PolylineOverView.get(1));
-//                    //Navigation_MK_Position = PolylineOverView.get(0);
-//                    //初始化API與計算
-//                    if(init_API){
-//                        init_API = false;
-//                        API_last_time = System.currentTimeMillis();
-//                        API_last_position = PolylineOverView.get(0);
-//                    }
-//                    else {
-//                        //計算時間
-//                        API_now_time = System.currentTimeMillis();
-//                        API_pass_time = API_now_time - API_last_time;
-//                        API_last_time = API_now_time;
-//                        //計算距離
-//                        API_now_position = PolylineOverView.get(0);
-//                        move_distance = Cal_Method.Cal_Distance(API_last_position, API_now_position);
-//                        API_last_position = API_now_position;
-//
-//                        //計算速度
-//                        API_ms = (move_distance / API_pass_time) * 1000;
-//                        my_layout.settvNavigationSpeed(Double.toString(API_ms));
-//
-//                        if (API_ms != 0) {
-//                            //預測位置
-//                            double dis = (API_ms / 1000 * API_pass_time);
-//                            API_cal_position = Cal_Method.Cal_LatLng(API_now_position, Now_Bearing, dis);
-//                            //Navigation_MK_Position = Cal_Method.Navigation_Drift(API_now_position, API_cal_position);
-//                            //將預測的點打出來
-//                            add_predict_marker(API_cal_position);
-//                            //判斷觸發飄移
-//                            if (Cal_Method.Navigation_Drift(API_now_position, API_cal_position)) {
-//                                //觸發飄移，利用計算後的值顯示
-//                                Navigation_MK_Position = API_cal_position;
-//                                API_now_position = API_cal_position;
-//                            } else {
-//                                Navigation_MK_Position = API_now_position;
-//                            }
-//                            //移動相機、導航標記與繪圖
-//                            NavigationCamera(Navigation_MK_Position, Now_Bearing);
-//                            ChangeUserMK(Navigation_MK_Position, Now_Bearing);
-//                            Draw_Direction(Navigation_MK_Position , PolylineOverView);
-//                        }
-//                    }
-//                }
-//            });
-//        }
-//        catch (Exception e){
-//           Cal_Method.Catch_Error_Log("Navigation", e.toString());
-//        }
     }
     public void Call_API(LatLng now_position){
         try {
@@ -203,7 +121,6 @@ public class My_New_Navigation {
                     Next_Step_Distance = My_Json.Get_Next_Step_Distance(text);
                     Routes = My_Json.Get_Steps(text);
                     PolylineOverView = My_Json.Get_Navigation_OverView_PolyLine(text);
-                    System.out.println(PolylineOverView.get(0));
                     Road = My_Json.Get_Navigation_Road(text);
                     Road_Detail = My_Json.Get_Navigation_Road_Detail(text);
                     straight_line_point = Divide_Straight(PolylineOverView.get(0), PolylineOverView.get(1));
@@ -302,10 +219,10 @@ public class My_New_Navigation {
         //try{
             //dis就是速度
             //將速度存起來，每秒更新速度的時候(dis為速度)，將執行續不斷顯示的最終距離存起來
-//            if(redundant_dis != 0){
-//                dis += redundant_dis;
-//                redundant_dis = 0;
-//            }
+            if(redundant_dis != 0){
+                dis += redundant_dis;
+                redundant_dis = 0;
+            }
 //            if(now_speed==0 || dis !=0){
 //                now_speed = dis;
 //            }
@@ -351,7 +268,7 @@ public class My_New_Navigation {
                 }
                 //顯示所有東西(導航圖示、相機移動、畫線、歷史路徑)
                 show(navigation_now_position, (int)pass_time);
-
+                //------------------------------------------------------------------------
                 //計算偏行
                 double real_dis = Cal_Method.Cal_Distance(now_position, PolylineOverView.get(count_step + 1));
                 double cal_dis  = Cal_Method.Cal_Distance(navigation_now_position, PolylineOverView.get(count_step + 1));
@@ -362,8 +279,7 @@ public class My_New_Navigation {
                     }
                     Toast("重新規劃路線");
                 }
-
-
+                //------------------------------------------------------------------------
             } else {
                 //如果平滑步數大於秒速，代表一小段平滑結束，刷新參數
                 //刷新平滑步數
@@ -397,7 +313,6 @@ public class My_New_Navigation {
         }
         //抵達目的地
         if((count_step+1) == PolylineOverView.size() && !initData){
-            System.out.println("FYBR");
             Data.Navigation_Status = false;
             initData = true;
             handler.postDelayed(End_Navigation, 200);
@@ -433,7 +348,6 @@ public class My_New_Navigation {
                 Draw_Direction(navigation_now_position, PolylineOverView, count_step+1);
             }});
     }
-
     public void add_marker(LatLng point){
         try {
             straight_Opt.position(point);

@@ -36,6 +36,21 @@ public class My_Event {
 
     public void setEvent() {
         timer = new Timer();
+        my_layout.btnNavHistoryRoute.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(Data.Nav_History){
+                    my_layout.btnNavHistoryRoute.setBackgroundResource(R.drawable.btn_round);
+                    my_layout.Toast("關閉歷史紀錄");
+                    my_map.removeNav();
+                }
+                else{
+                    my_layout.btnNavHistoryRoute.setBackgroundResource(R.drawable.btn_round_pressed);
+                    my_layout.Toast("開啟歷史紀錄");
+                    my_map.Nav();
+                }
+            }
+        });
         my_layout.btnAutoPlay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -79,12 +94,15 @@ public class My_Event {
                 if(Data.SnapRoad_Status){
                     Data.SnapRoad_Status = false;
                     my_layout.btnSnapRoadSwitch.setBackgroundResource(R.drawable.btn_round);
-                    my_layout.Toast("關閉SnapRoad");
+                    my_layout.Toast("關閉SnapRoad補償");
                 }
                 else{
                     Data.SnapRoad_Status = true;
                     my_layout.btnSnapRoadSwitch.setBackgroundResource(R.drawable.btn_round_pressed);
-                    my_layout.Toast("開啟SnapRoad");
+                    my_layout.Toast("開啟SnapRoad補償");
+                }
+                if(Data.AutoPlay) {
+                    Data.compensate_dis_test = 10;
                 }
             }
         });

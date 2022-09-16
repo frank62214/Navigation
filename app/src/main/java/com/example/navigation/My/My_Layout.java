@@ -54,6 +54,7 @@ public class My_Layout extends RelativeLayout {
     ImageButton btnHistoryDot;
     ImageButton btnHistoryLine;
     ImageButton btnAutoPlay;
+    ImageButton btnNavHistoryRoute;
 
     //activity_navigation
     LinearLayout llNext_Turn;
@@ -89,6 +90,13 @@ public class My_Layout extends RelativeLayout {
     TextView data_view_Refresh_API_dis;
     TextView data_view_Cal_Position;
     TextView data_view_Now_API_Pass_Time;
+    TextView data_view_Now_GPS_Pass_Time;
+    TextView data_view_Total_GPS_dis;
+    TextView data_view_Navigation_Count_Dis;
+    TextView data_view_Navigation_Now_Distance;
+    TextView data_view_GPS_Simulation_S;
+    TextView data_view_PolyLine_Dis;
+    TextView data_view_Total_Compensate_Dis;
 
     //activity_search
     RelativeLayout rlSearch;
@@ -143,6 +151,7 @@ public class My_Layout extends RelativeLayout {
         btnHistoryDot = (ImageButton) layout_view.findViewById(R.id.btnHistoryDot);
         btnHistoryLine = (ImageButton) layout_view.findViewById(R.id.btnHistoryLine);
         btnAutoPlay   = (ImageButton) layout_view.findViewById(R.id.btnAutoPlay);
+        btnNavHistoryRoute = (ImageButton) layout_view.findViewById(R.id.btnNavHistoryRoute);
 
         //取得activity_navigation的元件
         llNext_Turn   = (LinearLayout) navigation_view.findViewById(R.id.llNext_Turn);
@@ -177,6 +186,14 @@ public class My_Layout extends RelativeLayout {
         data_view_Refresh_API_dis  = (TextView) lldata_view.findViewById(R.id.data_view_Refresh_API_dis);
         data_view_Cal_Position     = (TextView) lldata_view.findViewById(R.id.data_view_Cal_Position);
         data_view_Now_API_Pass_Time = (TextView) lldata_view.findViewById(R.id.data_view_Now_API_Pass_Time);
+        data_view_Now_GPS_Pass_Time = (TextView) lldata_view.findViewById(R.id.data_view_Now_GPS_Pass_Time);
+        data_view_Total_GPS_dis = (TextView) lldata_view.findViewById(R.id.data_view_Total_GPS_dis);
+        data_view_Navigation_Count_Dis = (TextView) lldata_view.findViewById(R.id.data_view_Navigation_Count_Dis);
+        data_view_Navigation_Now_Distance = (TextView) lldata_view.findViewById(R.id.data_view_Navigation_Now_Distance);
+        data_view_GPS_Simulation_S = (TextView) lldata_view.findViewById(R.id.data_view_GPS_Simulation_S);
+        data_view_PolyLine_Dis  = (TextView) lldata_view.findViewById(R.id.data_view_PolyLine_Dis);
+        data_view_Total_Compensate_Dis = (TextView) lldata_view.findViewById(R.id.data_view_Total_Compensate_Dis);
+
         //取得Search Layout的元件
         rlSearch = (RelativeLayout) search_view.findViewById(R.id.rlSearch);
         et_search = (EditText) rlSearch.findViewById(R.id.et_search);
@@ -248,6 +265,14 @@ public class My_Layout extends RelativeLayout {
             my_map.set_Direction_Camera();
         }
         if(Data.Page_Order.get(Data.Page_Order.size()-1)!=Data.Direction_Page)   Data.Page_Order.add(Data.Direction_Page);
+        if(Data.Page_Order.get(Data.Page_Order.size()-2)==Data.Navigation_Page)   {
+            Data.Page_Order.remove(Data.Page_Order.size()-1);
+            Data.Page_Order.remove(Data.Page_Order.size()-1);
+        }
+        if(Data.Page_Order.get(Data.Page_Order.size()-1)==Data.Direction_Page){
+            my_map.Draw_Direction(Data.Decoder_Steps);
+            my_map.set_Direction_Camera();
+        }
         //Data.Page_Order.add(Data.Direction_Page);
         new Handler(Looper.getMainLooper()).post(new Runnable() {
             public void run() {
@@ -327,9 +352,12 @@ public class My_Layout extends RelativeLayout {
         if(turn.contains("向右轉")){ic_Next_Turn.setImageResource(R.drawable.dir_turnright);}
         if(turn.contains("向左轉")){ic_Next_Turn.setImageResource(R.drawable.dir_turnleft);}
     }
-    public void Set_GPS_Status(String status){
-        if(status.contains("GPS")){btnGPS.setVisibility(View.VISIBLE);}
-        if(status.contains("Thread")){btnGPS.setVisibility(View.GONE);}
+    public void Set_GPS_Status(boolean type){
+        //if(status.contains("GPS")){btnGPS.setVisibility(View.VISIBLE);}
+        //if(status.contains("GPS_Simulation")){btnGPS.setVisibility(View.GONE);}
+        //if(status.contains("Smooth")){btnGPS.setVisibility(View.GONE);}
+        if(type){btnGPS.setVisibility(View.VISIBLE);}
+        else{btnGPS.setVisibility(View.GONE);}
     }
     @SuppressLint("UseCompatLoadingForDrawables")
     public void SetbtnHistory(String mode){
@@ -351,23 +379,34 @@ public class My_Layout extends RelativeLayout {
         else{btnHistoryLine.setBackground(getContext().getResources().getDrawable(R.drawable.btn_round));}
     }
     //Set Text
-    public void setNextRoadText(String text){
-        tv_Next_Road.setText(text);
-    }
-    public void setNextRoadDetailText(String text){
-        tv_Next_Road_Detail.setText(text);
-    }
-    public void setNowPosition(String text){
-        tv_Now_Position.setText(text);
-    }
-    public void setNextRoadDistance(String text) {
-        tv_Next_Dis.setText("距離前方路口" + text + "公尺");
-    }
+    //GPS相關
+    public void setdataviewNowGPSSpeedms(String text){ data_view_Now_GPS_Speed_ms.setText("GPS目前秒速:" + text);}
+    public void setdataviewNowGPSSpeedkmh(String text){ data_view_Now_GPS_Speed_kmh.setText("GPS目前時速:" + text);}
+    public void setdataviewNowGPSPassTime(String text){ data_view_Now_GPS_Pass_Time.setText("GPS經過時間:" + text); }
+    public void setdataviewRefreshGPSdis(String text){data_view_Refresh_GPS_dis.setText("GPS更新距離:"+text);}
+    public void setdataviewTotalGPSdis(String text) { data_view_Total_GPS_dis.setText("GPS累計距離" + text); }
+
+    //API相關
+    public void setdataviewNowAPISpeedms(String text){ data_view_Now_API_Speed_ms.setText("API目前秒速:" + text );}
+    public void setdataviewNowAPISpeedkmh(String text){ data_view_Now_API_Speed_kmh.setText("API目前時速:" + text);}
+    public void setdataviewNowAPIPassTime(String text){data_view_Now_API_Pass_Time.setText("API經過時間:" + text);}
+    public void setdataviewRefreshAPIdis(String text){data_view_Refresh_API_dis.setText("API更新距離"+ text);}
+    //沒有總距離
+
+    //導航用的距離紀錄
+    public void setdataviewNavigationCountDis(String text) { data_view_Navigation_Count_Dis.setText("Nav累計距離:" + text); }
+    public void setdataviewNavigationNowDistance(String text){ data_view_Navigation_Now_Distance.setText("Nav目前距離:" + text);}
+    public void setdataviewGPSSimulationS(String text){ data_view_GPS_Simulation_S.setText("Nav模擬GPS刷新時間:" + text);}
+    public void setdataviewPolyLineDis(String text){ data_view_PolyLine_Dis.setText("Nav PolyLine累計距離: " + text);}
+    public void setdataviewTotalCompensateDis(String text){ data_view_Total_Compensate_Dis.setText("Nav 補償累計距離:" + text);}
+
+    public void setNextRoadText(String text){tv_Next_Road.setText(text);}
+    public void setNextRoadDetailText(String text){tv_Next_Road_Detail.setText(text);}
+    public void setNowPosition(String text){tv_Now_Position.setText(text); }
+    public void setNextRoadDistance(String text) {tv_Next_Dis.setText("距離前方路口" + text + "公尺");}
     public void setDisToDestination(String text) {tv_to_Destination_dis.setText("距離目的地還有" + text + "公尺");}
-    public void setdataviewNowAPISpeedms(String text){ data_view_Now_API_Speed_ms.setText("目前API秒速:" + text );}
-    public void setdataviewNowAPISpeedkmh(String text){ data_view_Now_API_Speed_kmh.setText("目前API時速:" + text);}
-    public void setdataviewNowGPSSpeedms(String text){ data_view_Now_GPS_Speed_ms.setText("目前GPS秒速:" + text);}
-    public void setdataviewNowGPSSpeedkmh(String text){ data_view_Now_GPS_Speed_kmh.setText("目前GPS時速:" + text);}
+
+
     public void setdataviewNowSensorSpeedm(String text){ data_view_Now_Sensor_Speed_m.setText("目前Sensor距離:"+text);}
     public void setdataviewNowSensorSpeedtm(String text) { data_view_Now_Sensor_Speed_tm.setText("目前Sensor總距離:" + text);}
     public void setdataviewNowSensorSpeedms(String text) { data_view_Now_Sensor_Speed_ms.setText("目前Sensor秒速" + text);}
@@ -377,10 +416,11 @@ public class My_Layout extends RelativeLayout {
     public void setdataviewNowSensorz(String text){ data_view_Now_Sensor_z.setText("Sensor Z數值:" + text);}
     public void setdataviewNowSensorpasstime(String text) {data_view_Now_Sensor_pass_time.setText("感測器經過時間:" + text); }
     public void setdataviewRecordTimer(String text){ data_view_Record_Timer.setText(text);}
-    public void setdataviewRefreshGPSdis(String text){data_view_Refresh_GPS_dis.setText("GPS更新距離:"+text);}
-    public void setdataviewRefreshAPIdis(String text){data_view_Refresh_API_dis.setText("API更新距離"+ text);}
+
+
     public void setdataviewCalPosition(String text){data_view_Cal_Position.setText("計算經緯度:"+text);}
-    public void setdataviewNowAPIPassTime(String text){data_view_Now_API_Pass_Time.setText("API經過時間:" + text);}
+
+
     //-----------------------------------------------------------------------------------------------------------------------
     //Navigation Data
     public void settvNavigationSpeed(String text){ tv_Navigation_Speed.setText("現在速度:" + text); }

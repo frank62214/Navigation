@@ -49,6 +49,17 @@
                 android:layout_gravity="right|center_vertical"
                 android:visibility="gone"/>
             <ImageButton
+                android:id="@+id/btnNavHistoryRoute"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginBottom="5dp"
+                android:background="@drawable/btn_round"
+                app:srcCompat="@drawable/ic_history_route"
+                android:layout_gravity="right|center_vertical"
+                tools:ignore="ContentDescription,InvalidId" />
+            <ImageButton
                 android:id="@+id/btnAutoPlay"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
@@ -147,7 +158,8 @@
                 android:layout_marginRight="5dp"
                 android:background="@drawable/rec_button_press_up"
                 tools:ignore="ContentDescription,InvalidId"
-                android:layout_gravity="right|center_vertical"/>
+                android:layout_gravity="right|center_vertical"
+                android:visibility="gone"/>
         <LinearLayout
             android:id="@+id/llMode"
             android:layout_width="wrap_content"
