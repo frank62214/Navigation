@@ -75,4 +75,24 @@ public class Data {
     public static boolean AutoPlay = false;
     public static int compensate_dis_test = 0;
 
+    public static double Compass_Bearing = 0;
+
+    public static boolean AccStatus = false;
+    public static boolean CalStatus = false;
+
+    //private static final int[] sides = {0, 45, 90, 135, 180, 225, 270, 315, 360};
+    public static final LatLng[] gps_simulator_location = new LatLng[]{
+            new LatLng(22.6511068, 120.3127655),
+            new LatLng(22.651043, 120.313139),
+            new LatLng(22.650969, 120.313340),
+            new LatLng(22.650870, 120.313555),
+            new LatLng(22.650848, 120.313683),
+            new LatLng(22.650739, 120.313815),
+            new LatLng(22.650745, 120.313978),
+            new LatLng(22.650732, 120.314140),
+            new LatLng(22.650771, 120.314282),
+            new LatLng(22.650806, 120.314400),
+            new LatLng(22.650835, 120.314608),
+            new LatLng(22.650880, 120.314754)
+    };
 }

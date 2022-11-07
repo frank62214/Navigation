@@ -16,76 +16,121 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:ignore="ExtraText">
 
-
         <LinearLayout
             android:id="@+id/llNext_Turn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
             android:layout_margin="10dp"
-            android:background="@drawable/bg_route"
-            android:orientation="horizontal"
-            android:visibility="gone">
-            <ImageView
-                android:id="@+id/ic_Next_Turn"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:layout_margin="10dp"
-                app:srcCompat="@drawable/dir_continue" />
+            android:layout_marginStart="15dp"
+            android:layout_marginEnd="15dp"
+            android:layout_marginBottom="15dp"
+            android:orientation="vertical">
+
+
             <LinearLayout
-                android:id="@+id/Next_Turn_Text"
+                android:id="@+id/llNext_Turn_1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
-                android:background="@drawable/bg_route"
-                android:orientation="vertical">
+                android:layout_alignParentTop="true"
+                android:background="@drawable/bg_navigation"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/ic_Next_Turn"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:layout_margin="10dp"
+                    app:srcCompat="@drawable/up_arrow" />
+
+                <LinearLayout
+                    android:id="@+id/Next_Turn_Text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:background="@drawable/bg_route"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tv_Next_Road"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="下一條路"
+                        android:textColor="@color/white"
+                        android:textSize="35dp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tv_Next_Road_Detail"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="下一條路細節"
+                        android:textColor="@color/white"
+                        android:textSize="15dp" />
+
+                    <TextView
+                        android:id="@+id/tv_Next_Dis"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="距離前方路口:"
+                        android:textColor="@color/black"
+                        android:textSize="15dp" />
+
+                    <TextView
+                        android:id="@+id/tv_Now_Position"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="現在位置:"
+                        android:textColor="@color/black"
+                        android:textSize="10dp"
+                        android:visibility="gone" />
+
+                    <TextView
+                        android:id="@+id/tv_to_Destination_dis"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="距離終點位置:"
+                        android:textColor="@color/black"
+                        android:textSize="10dp"
+                        android:visibility="gone" />
+
+                    <TextView
+                        android:id="@+id/tv_Navigation_Speed"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="現在速度:"
+                        android:textColor="@color/black"
+                        android:textSize="10dp"
+                        android:visibility="gone" />
+
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/llNext_Next_Turn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_navigation_below"
+                android:orientation="horizontal">
+
                 <TextView
-                    android:id="@+id/tv_Next_Road"
+                    android:id="@+id/tv_Next_Next_Turn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="下一條路"
-                    android:textSize="35dp"
-                    android:textColor="@color/white"
-                    android:textStyle="bold" />
-                <TextView
-                    android:id="@+id/tv_Next_Road_Detail"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="下一條路細節"
-                    android:textSize="15dp"
-                    android:textColor="@color/white" />
-                <TextView
-                    android:id="@+id/tv_Next_Dis"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="距離前方路口"
-                    android:textSize="15dp"
-                    android:textColor="@color/black" />
-                <TextView
-                    android:id="@+id/tv_Now_Position"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="現在位置:"
-                    android:textSize="10dp"
-                    android:textColor="@color/black" />
-                <TextView
-                    android:id="@+id/tv_to_Destination_dis"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="距離終點位置:"
-                    android:textSize="10dp"
-                    android:textColor="@color/black"/>
-                <TextView
-                    android:id="@+id/tv_Navigation_Speed"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="現在速度:"
-                    android:textSize="10dp"
-                    android:textColor="@color/black"/>
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="15dp"
+                    android:text="接下來:"
+                    android:textColor="@color/black"
+                    android:textSize="15dp" />
+
+                <ImageView
+                    android:id="@+id/ic_Next_Next_Turn"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_margin="5dp"
+                    app:srcCompat="@drawable/up_arrow" />
 
             </LinearLayout>
         </LinearLayout>
-
         <LinearLayout
             android:id="@+id/llUserArrow"
             android:layout_width="match_parent"

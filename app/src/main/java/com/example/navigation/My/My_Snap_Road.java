@@ -33,6 +33,9 @@ public class My_Snap_Road {
     public void setSnapRoadUrl(){
         url = Snap_Road_url_1 + Data.now_position.latitude + "," + Data.now_position.longitude + Snap_Road_url_2 + key;
     }
+    public void setSnapRoadUrl(LatLng position){
+        url = Snap_Road_url_1 + position.latitude + "," + position.longitude + Snap_Road_url_2 + key;
+    }
     public void SearchLocation(final My_Snap_Road.onDataReadyCallback callback) {
         try {
             Runnable runnable = new Runnable() {

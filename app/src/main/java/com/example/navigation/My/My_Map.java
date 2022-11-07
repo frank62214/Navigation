@@ -540,6 +540,14 @@ public class My_Map {
         }
 
     }
+    public void Remove_Direction(Polyline polyline){
+        //禁止使用Thread 會導致畫面畫不出來
+        //System.out.println(Direction.getPoints().size());
+        if (polyline != null) {
+            polyline.remove();
+        }
+
+    }
     public void Remove_Record_Route(){
         if(Record_Route!=null){
             Record_Route.remove();

@@ -236,7 +236,9 @@ public class My_Direction {
             my_json.get_json(routes, polyline_overview, "overview_polyline");
             my_json.get_json(polyline_overview, points, "points");
             Polyline_decoder(points, direction);
-
+            if(Data.Decoder_Steps.size()!=0){
+                Data.Decoder_Steps.removeAll(Data.Decoder_Steps);
+            }
             Polyline_decoder(points, Data.Decoder_Steps);
             //取得Direction 細節
             ArrayList<String> legs = new ArrayList<String>();

@@ -58,7 +58,8 @@
                 android:background="@drawable/btn_round"
                 app:srcCompat="@drawable/ic_history_route"
                 android:layout_gravity="right|center_vertical"
-                tools:ignore="ContentDescription,InvalidId" />
+                tools:ignore="ContentDescription,InvalidId"
+                android:visibility="gone"/>
             <ImageButton
                 android:id="@+id/btnAutoPlay"
                 android:layout_width="50dp"
@@ -93,7 +94,20 @@
                 android:background="@drawable/btn_round"
                 app:srcCompat="@drawable/ic_trash"
                 android:layout_gravity="right|center_vertical"
-                tools:ignore="ContentDescription,InvalidId" />
+                tools:ignore="ContentDescription,InvalidId"
+                android:visibility="gone"/>
+            <ImageButton
+                android:id="@+id/btnSnapCalSwitch"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginBottom="5dp"
+                android:background="@drawable/btn_round"
+                app:srcCompat="@drawable/ic_calculate"
+                android:layout_gravity="right|center_vertical"
+                tools:ignore="ContentDescription,InvalidId"
+                android:visibility="gone"/>
             <ImageButton
                 android:id="@+id/btnSnapRoadSwitch"
                 android:layout_width="50dp"
@@ -105,6 +119,18 @@
                 app:srcCompat="@drawable/ic_add_road"
                 android:layout_gravity="right|center_vertical"
                 tools:ignore="ContentDescription,InvalidId" />
+            <ImageButton
+                android:id="@+id/btnAccSwitch"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginBottom="5dp"
+                android:background="@drawable/btn_round"
+                app:srcCompat="@drawable/ic_sensor"
+                android:layout_gravity="right|center_vertical"
+                tools:ignore="ContentDescription,InvalidId"
+                android:visibility="gone"/>
         <LinearLayout
             android:id="@+id/ll"
             android:layout_width="wrap_content"
@@ -215,8 +241,7 @@
                 android:background="@drawable/btn_round"
                 app:srcCompat="@drawable/ic_near_me"
                 tools:ignore="ContentDescription,InvalidId"
-                android:layout_gravity="right|center_vertical"
-                android:visibility="gone"/>
+                android:layout_gravity="right|center_vertical" />
             <ImageButton
                 android:id="@+id/btnDirections"
                 android:layout_width="50dp"
@@ -227,7 +252,7 @@
                 android:background="@drawable/btn_round"
                 app:srcCompat="@drawable/ic_directions"
                 tools:ignore="ContentDescription,InvalidId"
-                android:layout_gravity="right|center_vertical"/>
+                android:layout_gravity="right|center_vertical" />
             <ImageButton
                 android:id="@+id/btnNavigation"
                 android:layout_width="50dp"

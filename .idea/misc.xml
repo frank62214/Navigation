@@ -4,17 +4,21 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Android/Navigation/app/src/main/res/drawable/bg_route.xml" value="0.1640625" />
+        <entry key="..\:/Android/Navigation/app/src/main/res/drawable/bg_route_round.xml" value="0.149" />
+        <entry key="..\:/Android/Navigation/app/src/main/res/drawable/bg_route_up.xml" value="0.149" />
         <entry key="..\:/Android/Navigation/app/src/main/res/drawable/bg_search.xml" value="0.20833333333333334" />
         <entry key="..\:/Android/Navigation/app/src/main/res/drawable/btn_round.xml" value="0.1546875" />
         <entry key="..\:/Android/Navigation/app/src/main/res/drawable/btn_round_press.xml" value="0.1546875" />
         <entry key="..\:/Android/Navigation/app/src/main/res/drawable/btn_round_pressed.xml" value="0.1546875" />
         <entry key="..\:/Android/Navigation/app/src/main/res/drawable/btn_round_up.xml" value="0.1546875" />
         <entry key="..\:/Android/Navigation/app/src/main/res/drawable/dir_continue.xml" value="0.1640625" />
+        <entry key="..\:/Android/Navigation/app/src/main/res/drawable/dir_continue_small.xml" value="0.1955" />
         <entry key="..\:/Android/Navigation/app/src/main/res/drawable/dir_turnleft.xml" value="0.1640625" />
         <entry key="..\:/Android/Navigation/app/src/main/res/drawable/dir_turnright.xml" value="0.1640625" />
         <entry key="..\:/Android/Navigation/app/src/main/res/drawable/ic_add_road.xml" value="0.1" />
         <entry key="..\:/Android/Navigation/app/src/main/res/drawable/ic_autoplay.xml" value="0.1795" />
         <entry key="..\:/Android/Navigation/app/src/main/res/drawable/ic_bike_mode.xml" value="0.1625" />
+        <entry key="..\:/Android/Navigation/app/src/main/res/drawable/ic_calculate.xml" value="0.107" />
         <entry key="..\:/Android/Navigation/app/src/main/res/drawable/ic_car_mode.xml" value="0.1625" />
         <entry key="..\:/Android/Navigation/app/src/main/res/drawable/ic_directions.xml" value="0.1640625" />
         <entry key="..\:/Android/Navigation/app/src/main/res/drawable/ic_focus.xml" value="0.1546875" />
@@ -29,14 +33,15 @@
         <entry key="..\:/Android/Navigation/app/src/main/res/drawable/ic_polyline.xml" value="0.151" />
         <entry key="..\:/Android/Navigation/app/src/main/res/drawable/ic_satellite.xml" value="0.1" />
         <entry key="..\:/Android/Navigation/app/src/main/res/drawable/ic_search.xml" value="0.20833333333333334" />
+        <entry key="..\:/Android/Navigation/app/src/main/res/drawable/ic_sensor.xml" value="0.1" />
         <entry key="..\:/Android/Navigation/app/src/main/res/drawable/ic_timeline.xml" value="0.1" />
         <entry key="..\:/Android/Navigation/app/src/main/res/drawable/ic_trash.xml" value="0.1" />
         <entry key="..\:/Android/Navigation/app/src/main/res/drawable/ic_walk_mode.xml" value="0.1625" />
         <entry key="..\:/Android/Navigation/app/src/main/res/drawable/ic_window.xml" value="0.1" />
         <entry key="..\:/Android/Navigation/app/src/main/res/drawable/mk_user_arrow.xml" value="0.17395833333333333" />
-        <entry key="..\:/Android/Navigation/app/src/main/res/layout/activity_data_view.xml" value="0.22" />
+        <entry key="..\:/Android/Navigation/app/src/main/res/layout/activity_data_view.xml" value="0.3431952662721893" />
         <entry key="..\:/Android/Navigation/app/src/main/res/layout/activity_main.xml" value="0.22" />
-        <entry key="..\:/Android/Navigation/app/src/main/res/layout/activity_navigation.xml" value="0.5" />
+        <entry key="..\:/Android/Navigation/app/src/main/res/layout/activity_navigation.xml" value="0.33" />
         <entry key="..\:/Android/Navigation/app/src/main/res/layout/activity_search.xml" value="0.1921875" />
         <entry key="..\:/Android/Navigation/app/src/main/res/layout/line_select.xml" value="0.4031496062992126" />
       </map>

@@ -28,6 +28,7 @@ public class My_Event {
     private double time = 0.0;
     private Timer timer;
     private TimerTask timerTask;
+    private Handler handler = new Handler(Looper.getMainLooper());
 
     public My_Event(My_Layout layout, My_Map map) {
         my_layout = layout;
@@ -36,6 +37,36 @@ public class My_Event {
 
     public void setEvent() {
         timer = new Timer();
+        my_layout.btnSnapCalSwitch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(Data.CalStatus){
+                    Data.CalStatus = false;
+                    my_layout.btnSnapCalSwitch.setBackgroundResource(R.drawable.btn_round);
+                    my_layout.Toast("關閉計算補償");
+                }
+                else{
+                    Data.CalStatus = true;
+                    my_layout.btnSnapCalSwitch.setBackgroundResource(R.drawable.btn_round_pressed);
+                    my_layout.Toast("開啟計算補償");
+                }
+            }
+        });
+        my_layout.btnAccSwitch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(Data.AccStatus){
+                    Data.AccStatus = false;
+                    my_layout.btnAccSwitch.setBackgroundResource(R.drawable.btn_round);
+                    my_layout.Toast("關閉加速度計補償");
+                }
+                else{
+                    Data.AccStatus = true;
+                    my_layout.btnAccSwitch.setBackgroundResource(R.drawable.btn_round_pressed);
+                    my_layout.Toast("開啟加速度計補償");
+                }
+            }
+        });
         my_layout.btnNavHistoryRoute.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -281,6 +312,7 @@ public class My_Event {
             public void onClick(View view) {
                 Toast.makeText(my_layout.getContext(), "開始導航", Toast.LENGTH_SHORT).show();
                 my_layout.Navigation_Page(my_map);
+
 //                My_Navigation my_navigation = new My_Navigation(my_layout, my_map);
 //                Thread t = new Thread(my_navigation);
 //                t.start();
@@ -349,18 +381,13 @@ public class My_Event {
                 });
             }
         });
+
         my_layout.btnCarMode.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
             public void onClick(View view) {
-                //Data.Page_Order.add(Data.CarMode_Page);
                 my_layout.CarMode_Page();
                 my_map.setMyLocationEnabled(false);
-                My_Sensor my_sensor = new My_Sensor(my_layout.getContext());
-                my_sensor.registerListener();
-                My_CarMode my_carMode = new My_CarMode(my_layout, my_map);
-                Thread t = new Thread(my_carMode);
-                t.start();
             }
         });
     }

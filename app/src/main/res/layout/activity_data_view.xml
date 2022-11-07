@@ -49,6 +49,35 @@
                 android:text="Nav PolyLine累計距離: 0m"
                 android:textColor="@color/black"
                 android:textSize="10dp" />
+
+            <TextView
+                android:id="@+id/divider3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="-----------------------------------------------------"
+                android:textColor="@color/black"
+                android:textSize="10dp"/>
+            <TextView
+                android:id="@+id/data_view_getBearing"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Nav getBearing(): 0"
+                android:textColor="@color/black"
+                android:textSize="10dp" />
+            <TextView
+                android:id="@+id/data_view_Coefficient"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Nav當下係數: 0"
+                android:textColor="@color/black"
+                android:textSize="10dp" />
+            <TextView
+                android:id="@+id/data_view_Seneor_Current_dis"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Nav當下Sensor數值: 0ms"
+                android:textColor="@color/black"
+                android:textSize="10dp" />
             <TextView
                 android:id="@+id/data_view_Total_Compensate_Dis"
                 android:layout_width="wrap_content"
@@ -57,12 +86,13 @@
                 android:textColor="@color/black"
                 android:textSize="10dp" />
             <TextView
-                android:id="@+id/divider3"
+                android:id="@+id/data_view_Navigation_Cal_Distance"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="-----------------------------------------------------"
+                android:text="Nav計算距離: 0m"
                 android:textColor="@color/black"
                 android:textSize="10dp"/>
+
             <TextView
                 android:id="@+id/data_view_Navigation_Now_Distance"
                 android:layout_width="wrap_content"
@@ -184,7 +214,7 @@
                 android:id="@+id/data_view_Now_Sensor_Speed_m"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="目前Sensora距離:"
+                android:text="目前Sensor距離:"
                 android:textColor="@color/black"
                 android:textSize="10dp" />
             <TextView

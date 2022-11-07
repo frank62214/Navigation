@@ -55,11 +55,16 @@ public class My_Layout extends RelativeLayout {
     ImageButton btnHistoryLine;
     ImageButton btnAutoPlay;
     ImageButton btnNavHistoryRoute;
+    ImageButton btnAccSwitch;
+    ImageButton btnSnapCalSwitch;
+
 
     //activity_navigation
     LinearLayout llNext_Turn;
     LinearLayout llUserArrow;
+    LinearLayout llNext_Next_Turn;
     ImageView ic_Next_Turn;
+    ImageView ic_Next_Next_Turn;
     TextView tv_Next_Road;
     TextView tv_Next_Road_Detail;
     TextView tv_Now_Position;
@@ -97,6 +102,10 @@ public class My_Layout extends RelativeLayout {
     TextView data_view_GPS_Simulation_S;
     TextView data_view_PolyLine_Dis;
     TextView data_view_Total_Compensate_Dis;
+    TextView data_view_Navigation_Cal_Distance;
+    TextView data_view_Seneor_Current_dis;
+    TextView data_view_Coefficient;
+    TextView data_view_getBearing;
 
     //activity_search
     RelativeLayout rlSearch;
@@ -152,11 +161,15 @@ public class My_Layout extends RelativeLayout {
         btnHistoryLine = (ImageButton) layout_view.findViewById(R.id.btnHistoryLine);
         btnAutoPlay   = (ImageButton) layout_view.findViewById(R.id.btnAutoPlay);
         btnNavHistoryRoute = (ImageButton) layout_view.findViewById(R.id.btnNavHistoryRoute);
+        btnAccSwitch = (ImageButton) layout_view.findViewById(R.id.btnAccSwitch);
+        btnSnapCalSwitch = (ImageButton) layout_view.findViewById(R.id.btnSnapCalSwitch);
 
         //取得activity_navigation的元件
         llNext_Turn   = (LinearLayout) navigation_view.findViewById(R.id.llNext_Turn);
         llUserArrow   = (LinearLayout) navigation_view.findViewById(R.id.llUserArrow);
+        llNext_Next_Turn = (LinearLayout) navigation_view.findViewById(R.id.llNext_Next_Turn);
         ic_Next_Turn          = (ImageView) llNext_Turn.findViewById(R.id.ic_Next_Turn);
+        ic_Next_Next_Turn      = (ImageView) llNext_Turn.findViewById(R.id.ic_Next_Next_Turn);
         tv_Next_Road          = (TextView) llNext_Turn.findViewById(R.id.tv_Next_Road);
         tv_Next_Road_Detail   = (TextView) llNext_Turn.findViewById(R.id.tv_Next_Road_Detail);
         tv_Now_Position       = (TextView) llNext_Turn.findViewById(R.id.tv_Now_Position);
@@ -193,6 +206,10 @@ public class My_Layout extends RelativeLayout {
         data_view_GPS_Simulation_S = (TextView) lldata_view.findViewById(R.id.data_view_GPS_Simulation_S);
         data_view_PolyLine_Dis  = (TextView) lldata_view.findViewById(R.id.data_view_PolyLine_Dis);
         data_view_Total_Compensate_Dis = (TextView) lldata_view.findViewById(R.id.data_view_Total_Compensate_Dis);
+        data_view_Navigation_Cal_Distance = (TextView) lldata_view.findViewById(R.id.data_view_Navigation_Cal_Distance);
+        data_view_Seneor_Current_dis = (TextView) lldata_view.findViewById(R.id.data_view_Seneor_Current_dis);
+        data_view_Coefficient = (TextView) lldata_view.findViewById(R.id.data_view_Coefficient);
+        data_view_getBearing = (TextView) lldata_view.findViewById(R.id.data_view_getBearing);
 
         //取得Search Layout的元件
         rlSearch = (RelativeLayout) search_view.findViewById(R.id.rlSearch);
@@ -223,6 +240,7 @@ public class My_Layout extends RelativeLayout {
         btnNavigation.setVisibility(View.GONE);
         sv_search_result.setVisibility(View.GONE);
         llNext_Turn.setVisibility(View.GONE);
+        llUserArrow.setVisibility(View.GONE);
 
         //關閉元件
         btnViewSearch.setEnabled(false);
@@ -232,14 +250,20 @@ public class My_Layout extends RelativeLayout {
         my_map.setMyLocationEnabled(true);
         llMode.setVisibility(View.VISIBLE);
         btnDirections.setVisibility(View.VISIBLE);
+        btnCarMode.setVisibility(View.VISIBLE);
 
         //刪除元件
         Remove_Result();
         my_map.Remove_Navigation_MK();
         Data.Destination = null;
+        if(Navigation.Direction!=null){Navigation.Direction.remove();}
+        if(Navigation.car!=null){
+            Navigation.car.remove();
+            Navigation.car = null;
+        }
 
         //移動相機
-        my_map.moveCamera(Data.now_position, 15,  0);
+        my_map.moveCamera(Data.now_position, 15, 0,  0);
 
         //狀態解除
         Data.CarMode_Status = false;
@@ -276,6 +300,7 @@ public class My_Layout extends RelativeLayout {
         //Data.Page_Order.add(Data.Direction_Page);
         new Handler(Looper.getMainLooper()).post(new Runnable() {
             public void run() {
+                my_map.Remove_Direction(Navigation.Direction);
                 my_map.set_Direction_Camera();
                 data_view_Now_Page.setText("現在頁面: " + Data.Direction_Page);
                 //隱藏元件
@@ -318,7 +343,7 @@ public class My_Layout extends RelativeLayout {
                 rlSearch.setVisibility(View.GONE);
                 btnNavigation.setVisibility(View.GONE);
                 llNext_Turn.setVisibility(View.VISIBLE);
-                my_map.setMyLocationEnabled(false);
+                //my_map.setMyLocationEnabled(false);
                 btnRecord.setVisibility(View.GONE);
                 my_map.Remove_Direction();
 //                Data.Navigation_Status = true;
@@ -329,6 +354,8 @@ public class My_Layout extends RelativeLayout {
         });
     }
     public void CarMode_Page(){
+        //設定GPS刷新之後是否進入導航模式
+        Data.CarMode_Status = true;
         Data.Page_Order.add(Data.CarMode_Page);
         new Handler(Looper.getMainLooper()).post(new Runnable() {
             public void run() {
@@ -338,19 +365,41 @@ public class My_Layout extends RelativeLayout {
                 rlSearch.setVisibility(View.GONE);
                 btnNavigation.setVisibility(View.GONE);
                 btnDirections.setVisibility(View.GONE);
+                btnCarMode.setVisibility(View.GONE);
 
                 llNext_Turn.setVisibility(View.VISIBLE);
-//                Data.Navigation_Status = true;
-//                System.out.println(Data.Navigation_Status);
-                //llUserArrow.setVisibility(View.VISIBLE);
+                llUserArrow.setVisibility(View.VISIBLE);
 
             }
         });
     }
     public void Set_Turn_Pic(String turn){
-        if(turn.contains("繼續直行")){ic_Next_Turn.setImageResource(R.drawable.dir_continue);}
-        if(turn.contains("向右轉")){ic_Next_Turn.setImageResource(R.drawable.dir_turnright);}
-        if(turn.contains("向左轉")){ic_Next_Turn.setImageResource(R.drawable.dir_turnleft);}
+        if(turn.contains("前進")){ic_Next_Turn.setImageResource(R.drawable.up_arrow);}
+        if(turn.contains("繼續直行")){ic_Next_Turn.setImageResource(R.drawable.up_arrow);}
+        if(turn.contains("向右轉")){ic_Next_Turn.setImageResource(R.drawable.turn_right);}
+        if(turn.contains("向右急轉")){ic_Next_Turn.setImageResource(R.drawable.fast_turn_right);}
+        if(turn.contains("靠右")){ic_Next_Turn.setImageResource(R.drawable.close_right);}
+        if(turn.contains("向左轉")){ic_Next_Turn.setImageResource(R.drawable.turn_left);}
+        if(turn.contains("向左急轉")){ic_Next_Turn.setImageResource(R.drawable.fast_turn_left);}
+        if(turn.contains("靠左")){ic_Next_Turn.setImageResource(R.drawable.close_left);}
+        if(turn.contains("目的地")){ic_Next_Turn.setImageResource(R.drawable.on_road);}
+        if(turn.contains("目的地在右邊")){ic_Next_Turn.setImageResource(R.drawable.on_right);}
+        if(turn.contains("目的地在左邊")){ic_Next_Turn.setImageResource(R.drawable.on_left);}
+        if(turn.contains("迴轉")){ic_Next_Turn.setImageResource(R.drawable.turn_around);}
+    }
+    public void Set_Next_Next_Turn_Pic(String turn){
+        //ic_Next_Next_Turn
+        if(turn.contains("繼續直行")){ic_Next_Next_Turn.setImageResource(R.drawable.dir_continue);}
+        if(turn.contains("向右轉")){ic_Next_Next_Turn.setImageResource(R.drawable.dir_turnright);}
+        if(turn.contains("向左轉")){ic_Next_Next_Turn.setImageResource(R.drawable.dir_turnleft);}
+    }
+    public void Next_Next_Turn_ll_show(boolean show){
+        if(show){
+            llNext_Next_Turn.setVisibility(View.VISIBLE);
+        }
+        else{
+            llNext_Next_Turn.setVisibility(View.GONE);
+        }
     }
     public void Set_GPS_Status(boolean type){
         //if(status.contains("GPS")){btnGPS.setVisibility(View.VISIBLE);}
@@ -399,12 +448,17 @@ public class My_Layout extends RelativeLayout {
     public void setdataviewGPSSimulationS(String text){ data_view_GPS_Simulation_S.setText("Nav模擬GPS刷新時間:" + text);}
     public void setdataviewPolyLineDis(String text){ data_view_PolyLine_Dis.setText("Nav PolyLine累計距離: " + text);}
     public void setdataviewTotalCompensateDis(String text){ data_view_Total_Compensate_Dis.setText("Nav 補償累計距離:" + text);}
+    public void setdataviewNavigationCalDistance(String text) {data_view_Navigation_Cal_Distance.setText("Nav計算距離:" + text);}
+    public void setdataviewSeneorCurrentdis(String text){ data_view_Seneor_Current_dis.setText("Nav當下Sensor數值:" + text ); }
+    public void setdataviewCoefficient(String text) {data_view_Coefficient.setText("Nav當下係數:"+ text);}
+    public void setdataviewgetBearing(String text) { data_view_getBearing.setText("Nav getBearing():" + text); }
 
     public void setNextRoadText(String text){tv_Next_Road.setText(text);}
     public void setNextRoadDetailText(String text){tv_Next_Road_Detail.setText(text);}
     public void setNowPosition(String text){tv_Now_Position.setText(text); }
-    public void setNextRoadDistance(String text) {tv_Next_Dis.setText("距離前方路口" + text + "公尺");}
+    public void setNextRoadDistance(String text) {tv_Next_Dis.setText("距離前方路口:" + text);}
     public void setDisToDestination(String text) {tv_to_Destination_dis.setText("距離目的地還有" + text + "公尺");}
+
 
 
     public void setdataviewNowSensorSpeedm(String text){ data_view_Now_Sensor_Speed_m.setText("目前Sensor距離:"+text);}

@@ -153,7 +153,7 @@ public class Cal_Method {
         // after generating our bitmap we are returning our bitmap.
         return BitmapDescriptorFactory.fromBitmap(bitmap);
     }
-    //polyline解碼
+    //polyline解碼，一次解碼玩
     public static ArrayList<LatLng> PolyLine_Decoder(ArrayList<String> points){
         ArrayList<LatLng> polyline = new ArrayList<LatLng>();
         for (int i = 0; i < points.size(); i++) {
@@ -193,7 +193,43 @@ public class Cal_Method {
         }
         return  polyline;
     }
-
+    public static ArrayList<LatLng> PolyLine_Decoder(String points){
+        ArrayList<LatLng> polyline = new ArrayList<LatLng>();
+        String encoded = points;
+        int index = 0, len = encoded.length();
+        int decoded_lat = 0;
+        int decoded_lng = 0;
+        //get one char in loop
+        while (index < len) {
+            int b, shift = 0, result = 0;
+            do {
+                //get on char to calculate decoder
+                b = encoded.charAt(index++);
+                //step 1: number reduce 63
+                b = b - 63;
+                //step 2: number logic operation(AND) 0x1f and then left shift one bit
+                result |= (b & 0x1f) << shift;
+                //step 3: five bit for one block
+                shift += 5;
+            } while (b >= 0x20);
+            //step 4: if first bit is one need to bit upside down, and do shift on right one bit.
+            int dlat = ((result & 1) != 0 ? ~(result >> 1) : (result >> 1));
+            decoded_lat += dlat;
+            shift = 0;
+            result = 0;
+            //do the same thing with lng
+            do {
+                b = encoded.charAt(index++) - 63;
+                result |= (b & 0x1f) << shift;
+                shift += 5;
+            } while (b >= 0x20);
+            int dlng = ((result & 1) != 0 ? ~(result >> 1) : (result >> 1));
+            decoded_lng += dlng;
+            LatLng p = new LatLng((((double) decoded_lat / 1E5)), (((double) decoded_lng / 1E5)));
+            polyline.add(p);
+        }
+        return  polyline;
+    }
     public static void Catch_Error_Log(String function_name, String error){
         String date = "yyyyMMdd";
         SimpleDateFormat date_df = new SimpleDateFormat(date);
@@ -313,6 +349,39 @@ public class Cal_Method {
             //string = string + df.format(new Date()) + "," + data.get(i) + "\n";
             string = string + df.format(new Date()) + ",";
             string = string + dis + ", " + step + "\n";
+
+            Output.write(string.getBytes());
+            Output.close();
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+    }
+    public static void Navigation_Catch_Parameter(String s){
+        String date = "yyyyMMdd";
+        SimpleDateFormat date_df = new SimpleDateFormat(date);
+        date_df.applyPattern(date);
+        String filename = date_df.format(new Date()) + "Navigation-parameter" + ".txt";
+        //String filename = type + ".txt";
+        // 存放檔案位置在 內部空間/Download/
+        File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+        File file = new File(path, filename);
+        try
+        {
+            // 第二個參數為是否 append
+            // 若為 true，則新加入的文字會接續寫在文字檔的最後
+            FileOutputStream Output = new FileOutputStream(file, true);
+
+            String dateformat = "kk:mm:ss";
+            SimpleDateFormat df = new SimpleDateFormat(dateformat);
+            df.applyPattern(dateformat);
+            //String string =  df.format(new Date()) + " : " + type + "\n";
+            //String string =  df.format(new Date()) + " : " + data.get(0)  + "\n";
+            String string = "";
+            //string = string + df.format(new Date()) + "," + data.get(i) + "\n";
+            string = string + df.format(new Date()) + "\n";
+            string = string + s + "\n";
 
             Output.write(string.getBytes());
             Output.close();
