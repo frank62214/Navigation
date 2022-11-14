@@ -257,10 +257,13 @@ public class MainActivity extends AppCompatActivity implements
             //更新位置
             last_GPS_position = Data.now_position;
             //更新至車用模式
-            carMode.now_position = Data.now_position;
-            //carMode.now_bearing = GPS_Bearing;
-            carMode.gps_distance = GPS_dis;
-            carMode.Call_API();
+            //當短暫的更新時不進入顯示
+            if(GPS_dis > 3){
+                //carMode.setPosition(Data.now_position);
+                carMode.now_position = Data.now_position;
+                carMode.now_distance = GPS_dis;
+                carMode.Call_API();
+            }
             //carMode.get_position = true;
             //carMode.now_distance = GPS_dis;
 
@@ -303,8 +306,9 @@ public class MainActivity extends AppCompatActivity implements
                     if(Data.Navigation_Status || Data.CarMode_Status) {
                         //Random x = new Random();
                         //int a = 0 + x.nextInt(15);
-                        int a = 17;
+                        int a = 8;
                         navigation.now_distance = a;
+                        carMode.now_distance = a;
                         total_dis += a;
                         show_GPS();
                     }
@@ -319,9 +323,11 @@ public class MainActivity extends AppCompatActivity implements
         @Override
         public void run() {
             if(Data.now_position != null) {
-                if(Data.Navigation_Status || Data.CarMode_Status) {
-                    navigation.Navigation_Process();
-                }
+//                if(Data.Navigation_Status || Data.CarMode_Status) {
+//                    navigation.Navigation_Process();
+//                }
+                if(Data.Navigation_Status) navigation.Navigation_Process();
+                if(Data.CarMode_Status) carMode.carMode_Process();
             }
             handler.postDelayed(Smooth, 80);
         }
@@ -332,12 +338,12 @@ public class MainActivity extends AppCompatActivity implements
             new Handler(Looper.getMainLooper()).post(new Runnable() {
                 @Override
                 public void run() {
-                    Toast.makeText(MainActivity.this,
-                            "啟動刷新",
-                            Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(MainActivity.this,
+//                            "啟動刷新",
+//                            Toast.LENGTH_SHORT).show();
                 }
             });
-            init = true;
+            //init = true;
         }
     };
     //------------------------------------------------------
@@ -433,6 +439,8 @@ public class MainActivity extends AppCompatActivity implements
                         LatLng last = new LatLng(location.getLatitude(), location.getLongitude());
                         Data.now_position = last;
                         my_map.initCamera(Data.now_position);
+                        carMode.now_position = Data.now_position;
+                        //carMode.setPosition(Data.now_position);
                         //float bearing = location.getBearing();
                         //my_layout.setDataViewBearing(last.toString());
                         //my_layout.setDataViewBearing(Float.toString(bearing));

@@ -358,6 +358,13 @@ public class My_Json {
             System.out.println(i + " : " + arrayList.get(i));
         }
     }
+    public static void show1(ArrayList<ArrayList<LatLng>> arrayList){
+        for(int i=0; i<arrayList.size();i++){
+            for(int j=0; j < arrayList.get(i).size(); j++){
+                System.out.println(i + " : " + arrayList.get(i).get(j));
+            }
+        }
+    }
     public static void show_detail(ArrayList<String> a, ArrayList<String> b, ArrayList<String> c){
         for(int i=0; i<a.size();i++){
             System.out.println(i + " : " + a.get(i) + " " + b.get(i) + " " + c.get(i));

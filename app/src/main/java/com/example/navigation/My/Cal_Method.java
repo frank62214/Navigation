@@ -254,6 +254,31 @@ public class Cal_Method {
             e.printStackTrace();
         }
     }
+    public static void Catch_Log(String function_name, String text){
+        String date = "yyyyMMdd";
+        SimpleDateFormat date_df = new SimpleDateFormat(date);
+        date_df.applyPattern(date);
+        String filename = date_df.format(new Date()) + "-log" + ".txt";
+        // 存放檔案位置在 內部空間/Download/
+        File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+        File file = new File(path, filename);
+        try
+        {
+            String dateformat = "kk:mm:ss";
+            //SimpleDateFormat df = new SimpleDateFormat(dateformat);
+            // 第二個參數為是否 append
+            // 若為 true，則新加入的文字會接續寫在文字檔的最後
+            FileOutputStream Output = new FileOutputStream(file, true);
+            //String string = df + ", " +  function_name + ", " + text + "\n";
+            String string =  text + ",";
+            Output.write(string.getBytes());
+            Output.close();
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+    }
     public static void Navigation_Catch_Log(String s, LatLng API, LatLng Cal){
         String date = "yyyyMMdd";
         SimpleDateFormat date_df = new SimpleDateFormat(date);

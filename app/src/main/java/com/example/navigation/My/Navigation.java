@@ -143,7 +143,7 @@ public class Navigation {
                         //now_direction = Cal_Method.Cal_LatLng(now_position, Now_Bearing, now_distance * 2);
                         //now_direction = Cal_Method.Cal_LatLng(now_position, Now_Bearing, 500);
                         now_direction = Cal_Method.Cal_LatLng(now_position, now_bearing, 500);
-                        add_marker(now_direction);
+                        //add_marker(now_direction);
                         my_direction.setDistanceUrl(now_position, now_direction);
                     }
                     my_direction.SearchNavigationData(new My_Direction.onNavigationDataReadyCallBack() {
@@ -439,7 +439,7 @@ public class Navigation {
             //now_direction = Cal_Method.Cal_LatLng(Navigation_Now_Position, Now_Bearing, 50);
             //now_direction = Cal_Method.Cal_LatLng(Navigation_Now_Position, bearing, 50);
             now_direction = Cal_Method.Cal_LatLng(now_position, bearing, 500);
-            add_marker(now_direction);
+            //add_marker(now_direction);
             //my_direction.setDistanceUrl(Navigation_Now_Position, now_direction);
             my_direction.setDistanceUrl(now_position, now_direction);
             my_direction.SearchNavigationData(new My_Direction.onNavigationDataReadyCallBack() {
