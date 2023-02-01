@@ -31,7 +31,7 @@ public class My_CarMode{
     public double now_distance;
 
 
-    private LatLng nowPosition , lastPosition;
+    private LatLng nowPosition, nowDestination, lastDestination;
     private float nowBearing = 0 , lastBearing = 361;
     private double nowDistance = 0;
     private double passDistance = 0;
@@ -55,22 +55,30 @@ public class My_CarMode{
     private boolean halfCall  = false;
     private boolean callApi   = true;
     private boolean dataReady = false;
+    private boolean close   = true;
+    private boolean away    = false;
+    private boolean callReady = false;
     private void RestoreData(RouteData data){
-        Routes        = data.Routes;
-        PolyLineSteps = data.PolyLineSteps;
-        firstSteps    = data.firstSteps;
+        Routes          = data.Routes;
+        PolyLineSteps   = data.PolyLineSteps;
+        firstSteps      = data.firstSteps;
+        nowDestination  = data.nowDestination;
         //nowBearing    = data.Bearing;
         //nowPosition   = data.Position;
-        firstStepsDis = data.firstStepsDis;
+        firstStepsDis   = data.firstStepsDis;
     }
     public void Call_API() {
         if(Data.CarMode_Status && callApi) {
             callApi = false;
             LatLng pos = now_position;
-            LatLng tmp = Cal_Method.Cal_LatLng(now_position, nowBearing, 500);
+            LatLng tmp = Cal_Method.Cal_LatLng(now_position, nowBearing, 1500);
+            if(nowDestination!=null){ pos = nowDestination; }
+            System.out.println("pos" + pos);
             if(Data.AutoPlay) {
-                tmp = Cal_Method.Cal_LatLng(nowPosition, nowBearing, 500);
-                pos = nowPosition;
+                tmp = Cal_Method.Cal_LatLng(pos, nowBearing, 1500);
+                System.out.println("nowBearing" + nowBearing);
+                System.out.println("tmp" + tmp);
+                //pos = nowDestination;
             }
             my_direction.setDistanceUrl(pos, tmp);
             my_direction.SearchNavigationData(new My_Direction.onNavigationDataReadyCallBack() {
@@ -81,19 +89,19 @@ public class My_CarMode{
                         RestoreData(now);
                         nowBearing  = now.Bearing;
                         nowPosition = now.Position;
-                        My_Json.show(now.Routes);
+                        My_Json.show(now.firstSteps);
                         show(nowPosition, nowBearing);
                     }
                     else{
-                        next.StoreData(text, 1);
-                        My_Json.show(next.Routes);
+                        next.StoreData(text, 0);
+                        My_Json.show(next.firstSteps);
                         dataReady = false;
-                        RestoreData(next);
-                        allClean();
+                        callReady = true;
+//                        RestoreData(next);
+//                        allClean();
                     }
                     halfCall = false;
                     dataReady = true;
-
 //
 //                PolylineOverView = My_Json.Get_Navigation_OverView_PolyLine(text);
 //
@@ -155,6 +163,8 @@ public class My_CarMode{
     private LatLng finalPosition;
     private float finalBearing;
     private int count=0;
+    private int countRoute = 0;
+    private double lastDis = 0;
     public void carMode_Process(){
         Call_API();
         if(dataReady){
@@ -173,30 +183,19 @@ public class My_CarMode{
                 if(countFirstStepDis > firstStepsDis){
                     countFirstSteps++;
                     double tmp = countFirstStepDis - firstStepsDis;
+                    if(countFirstSteps >= firstSteps.size()-1){
+                        allClean();
+                        //finalDis = 0;
+                        count += 1;
+                        firstSteps = PolyLineSteps.get(count);
+                    }
                     LatLng first  = firstSteps.get(countFirstSteps);
                     LatLng second = firstSteps.get(countFirstSteps + 1);
                     nowBearing  = calBearing(first, second);
+                    System.out.println(nowBearing);
                     firstStepsDis = calDistance(first, second);
                     nowPosition = calPosition(first, nowBearing, tmp);
                     countFirstStepDis = tmp;
-                }
-
-                if(finalDis > 0){
-                    countFirstStepDis = 0;
-                    finalPosition = calPosition(finalPosition, finalBearing, dis);
-                    nowPosition = finalPosition;
-                    finalDis = finalDis - dis;
-                }
-                else if(finalDis!=0){
-                    double tmp = Math.abs(finalDis);
-                    count = 1;
-                    LatLng first  = firstSteps.get(countFirstSteps);
-                    LatLng second = firstSteps.get(countFirstSteps + 1);
-                    nowBearing  = calBearing(first, second);
-                    firstStepsDis = calDistance(first, second);
-                    nowPosition = calPosition(first, nowBearing, tmp);
-                    finalDis = 0;
-                    //nowPosition =
                 }
                 double targetDis = calDistance(now_position, nowPosition);
                 if(targetDis>30 && !Data.AutoPlay){
@@ -207,20 +206,48 @@ public class My_CarMode{
                 }
 
                 //double newRoute = calDistance(now_position, Routes.get(0));
-                double newRoute = calDistance(nowPosition, Routes.get(count));
-                if(newRoute < 50 && finalDis == 0){
-                    finalDis = newRoute;
-                    finalPosition = nowPosition;
-                    finalBearing  = nowBearing;
-                    callApi = true;
-                    halfCall  = true;
+                //double newDis = calDistance(nowPosition, Routes.get(count));
+                double newDis = calDistance(nowPosition, nowDestination);
+//                if(newDis < 50 && finalDis == 0){
+//                    finalDis = newDis;
+//                    count = 0;
+////
+////                    finalPosition = nowPosition;
+////                    finalBearing  = nowBearing;
+//                    callApi = true;
+//                    halfCall  = true;
+//                }
+                if(finalDis < newDis){//遠離
+                    if(newDis > 10 && away) {
+                        close = true; away = false;
+                        callApi = true;
+                        halfCall = true;
+                    }
                 }
+                else{
+                    if(newDis < 50 && close){
+                        close = false; away = true;
+                        if(callReady){
+                            RestoreData(next);
+                            allClean();
+                            count = 0;
+                            callReady = false;
+                        }
+                    }
+                }
+                finalDis = newDis;
                 show(nowPosition, nowBearing);
             }
         }
 
     }
+    private LatLng getDestination(){
+        LatLng dest = nowDestination;
+        if(lastDestination!=null) dest = lastDestination;
+        return  dest;
+    }
     private void allClean(){
+        System.out.println("allClean");
         //now_distance = 0;
         countDis = 0;
         countFirstStepDis = 0;

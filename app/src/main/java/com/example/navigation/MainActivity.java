@@ -258,7 +258,7 @@ public class MainActivity extends AppCompatActivity implements
             last_GPS_position = Data.now_position;
             //更新至車用模式
             //當短暫的更新時不進入顯示
-            if(GPS_dis > 3){
+            if(GPS_dis > 5){
                 //carMode.setPosition(Data.now_position);
                 carMode.now_position = Data.now_position;
                 carMode.now_distance = GPS_dis;
